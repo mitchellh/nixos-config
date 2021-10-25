@@ -1,4 +1,8 @@
 { config, pkgs, ... }: {
+  imports = [
+    ./vm-shared.nix
+  ];
+
   boot.kernelPatches = [
     # https://github.com/NixOS/nixpkgs/pull/140587
     # This will be unnecessary in a bit.
