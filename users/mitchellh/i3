@@ -1,0 +1,207 @@
+set $mod Mod4
+
+#----------------------------------------------------------------------
+# Look & Feel
+#----------------------------------------------------------------------
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:Dank Mono 10
+
+# Window visuals
+new_window pixel 2
+new_float pixel 2
+floating_minimum_size 400x300
+floating_maximum_size -1x-1
+focus_follows_mouse no
+
+# Reading colors from resources
+set_from_resource $back			i3wm.background #1D1F21
+set_from_resource $black		i3wm.color0		#282A2E
+set_from_resource $grey			i3wm.color8		#373B41
+set_from_resource $lightgrey	i3wm.color7		#707880
+set_from_resource $white		i3wm.color15	#C5C8C6
+set_from_resource $yellow		i3wm.color11	#F0C674
+set_from_resource $red			i3wm.color9		#CC6666
+set_from_resource $darkred		i3wm.color1		#A54242
+set_from_resource $green		i3wm.color10	#B5BD56
+
+#class                  border      backgr.     text        split
+client.focused          $green     $green       $black      $red
+client.focused_inactive $grey       $grey       $lightgrey  $grey
+client.unfocused        $grey       $grey       $lightgrey  $grey
+client.urgent           $red        $red        $black      $red
+client.background       $back
+
+#----------------------------------------------------------------------
+# Startup
+#----------------------------------------------------------------------
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# No background
+exec --no-startup-id xsetroot -solid $back
+
+#----------------------------------------------------------------------
+# Keybindings
+#----------------------------------------------------------------------
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+bindsym $mod+o exec rofi -show run
+
+# start a terminal
+bindsym $mod+n exec kitty
+bindsym $mod+d split h
+bindsym $mod+Shift+d split v
+
+# kill focused window
+bindsym $mod+w kill
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# enter fullscreen mode for the focused container
+bindsym $mod+Shift+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+Shift+s layout stacking
+bindsym $mod+Shift+w layout tabbed
+bindsym $mod+Shift+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+Shift+a focus parent
+
+# focus the child container
+#bindsym $mod+Shift+d focus child
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+#----------------------------------------------------------------------
+# Resize Mode
+#----------------------------------------------------------------------
+set $mode_resize Resize / Move
+
+# This mode will make it easier to resize and move workspaces without
+# having to bind a bunch of obscure bindings.
+mode "$mode_resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Focus parent and child
+        bindsym a focus parent
+        bindsym $mod+a focus parent
+        bindsym c focus child
+        bindsym $mod+c focus child
+
+        # Move containers
+        bindsym 1 move container to workspace number $ws1; workspace number $ws1
+        bindsym 2 move container to workspace number $ws2; workspace number $ws2
+        bindsym 3 move container to workspace number $ws3; workspace number $ws3
+        bindsym 4 move container to workspace number $ws4; workspace number $ws4
+        bindsym 5 move container to workspace number $ws5; workspace number $ws5
+        bindsym 6 move container to workspace number $ws6; workspace number $ws6
+        bindsym 7 move container to workspace number $ws7; workspace number $ws7
+        bindsym 8 move container to workspace number $ws8; workspace number $ws8
+        bindsym 9 move container to workspace number $ws9; workspace number $ws9
+        bindsym 0 move container to workspace number $ws10; workspace number $ws10
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "$mode_resize"
+
+#----------------------------------------------------------------------
+# System Mode
+#----------------------------------------------------------------------
+# shutdown / restart / suspend...
+set $mode_system System (e) logout, (r) reboot, (Ctrl+s) shutdown
+
+mode "$mode_system" {
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Ctrl+s exec --no-startup-id systemctl poweroff -i, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+BackSpace mode "$mode_system"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+    status_command i3status
+
+    font pango:Dank Mono 10
+    colors {
+        background $back
+    }
+}

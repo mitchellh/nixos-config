@@ -1,0 +1,41 @@
+general {
+    output_format = "dzen2"
+    interval = 5
+    colors = true
+    color_good = "#8C9440"
+    color_bad = "#A54242"
+    color_degraded = "#DE935F"
+}
+
+order += "disk /"
+order += "run_watch DHCP"
+order += "run_watch VPN"
+order += "ethernet eth0"
+order += "load"
+order += "tztime local"
+
+ethernet eth0 {
+        # if you use %speed, i3status requires root privileges
+        format_up = "E: %ip (%speed)"
+        format_down = "E: down"
+}
+
+run_watch DHCP {
+        pidfile = "/var/run/dhclient*.pid"
+}
+
+run_watch VPN {
+        pidfile = "/var/run/vpnc/pid"
+}
+
+tztime local {
+        format = "%Y-%m-%d %H:%M:%S"
+}
+
+load {
+        format = "%1min"
+}
+
+disk "/" {
+        format = "%avail"
+}
