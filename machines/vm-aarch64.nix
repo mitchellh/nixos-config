@@ -10,7 +10,6 @@
       name = "efi-initrd-support";
       patch = null;
       extraConfig = ''
-        DRM_SIMPLEDRM n
         EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER y
       '';
     }
