@@ -37,7 +37,7 @@ window.
 
 **How does web application development work?** I use the VM's IP. Even
 though it isn't strictly static, it never changes since I rarely run
-other VMs. You just have to make sure software in the VM listents
+other VMs. You just have to make sure software in the VM listens
 on `0.0.0.0` so that it isn't only binding to loopback.
 
 **Does copy/paste work?** Yes.
