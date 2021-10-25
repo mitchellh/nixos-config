@@ -69,6 +69,8 @@ be an Apple Silicon machine soon.
 
 ## Setup
 
+Video: https://www.youtube.com/watch?v=ubDMLoWz76U
+
 If you need an ISO for NixOS, you can build your own in the `iso` folder.
 For x86-64, I usually just download the official ISO, but I build the
 ISO from scratch for aarch64.
