@@ -73,7 +73,12 @@ Video: https://www.youtube.com/watch?v=ubDMLoWz76U
 
 If you need an ISO for NixOS, you can build your own in the `iso` folder.
 For x86-64, I usually just download the official ISO, but I build the
-ISO from scratch for aarch64.
+ISO from scratch for aarch64. There is a make target `build-iso` you can use for
+building an ISO. You'll also need a `docker` running on your machine for building an ISO.
+
+```
+$ make build-iso
+```
 
 Create a VMware Fusion VM with the following settings. My configurations
 are made for VMware Fusion exclusively currently and you will have issues
