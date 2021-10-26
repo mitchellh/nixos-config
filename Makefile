@@ -12,6 +12,8 @@ MAKEFILE_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 # The name of the nixosConfiguration in the flake
 NIXNAME ?= vm-intel
 
+SSH_OPTIONS=-o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+
 switch:
 	sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake ".#${NIXNAME}"
 
@@ -26,7 +28,7 @@ test:
 # NOTE(mitchellh): I'm sure there is a way to do this and bootstrap all
 # in one step but when I tried to merge them I got errors. One day.
 vm/bootstrap0:
-	ssh -p$(NIXPORT) root@$(NIXADDR) " \
+	ssh $(SSH_OPTIONS) -p$(NIXPORT) root@$(NIXADDR) " \
 		parted /dev/$(NIXBLOCKDEVICE) -- mklabel gpt; \
 		parted /dev/$(NIXBLOCKDEVICE) -- mkpart primary 512MiB -8GiB; \
 		parted /dev/$(NIXBLOCKDEVICE) -- mkpart primary linux-swap -8GiB 100\%; \
@@ -57,7 +59,7 @@ vm/bootstrap:
 	NIXUSER=root $(MAKE) vm/copy
 	NIXUSER=root $(MAKE) vm/switch
 	$(MAKE) vm/secrets
-	ssh -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
+	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
 		sudo reboot; \
 	"
 
@@ -65,19 +67,19 @@ vm/bootstrap:
 # copy our secrets into the VM
 vm/secrets:
 	# GPG keyring
-	rsync -av -e ssh \
+	rsync -av -e 'ssh $(SSH_OPTIONS)' \
 		--exclude='.#*' \
 		--exclude='S.*' \
 		--exclude='*.conf' \
 		$(HOME)/.gnupg/ $(NIXUSER)@$(NIXADDR):~/.gnupg
 	# SSH keys
-	rsync -av -e ssh \
+	rsync -av -e 'ssh $(SSH_OPTIONS)' \
 		--exclude='environment' \
 		$(HOME)/.ssh/ $(NIXUSER)@$(NIXADDR):~/.ssh
 
 # copy the Nix configurations into the VM.
 vm/copy:
-	rsync -av -e 'ssh -p$(NIXPORT)' \
+	rsync -av -e 'ssh $(SSH_OPTIONS) -p$(NIXPORT)' \
 		--exclude='vendor/' \
 		--exclude='.git/' \
 		--exclude='.git-crypt/' \
@@ -87,6 +89,6 @@ vm/copy:
 # run the nixos-rebuild switch command. This does NOT copy files so you
 # have to run vm/copy before.
 vm/switch:
-	ssh -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
+	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
 		sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake \"/nix-config#${NIXNAME}\" \
 	"
