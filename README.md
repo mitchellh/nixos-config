@@ -73,7 +73,7 @@ Video: https://www.youtube.com/watch?v=ubDMLoWz76U
 
 If you need an ISO for NixOS, you can build your own in the `iso` folder.
 For x86-64, I usually just download the official ISO, but I build the
-ISO from scratch for aarch64. There is a make target `build-iso` you can use for
+ISO from scratch for aarch64. There is a make target `iso/nixos.iso` you can use for
 building an ISO. You'll also need a `docker` running on your machine for building an ISO.
 
 ```
