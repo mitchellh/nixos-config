@@ -77,7 +77,7 @@ ISO from scratch for aarch64. There is a make target `build-iso` you can use for
 building an ISO. You'll also need a `docker` running on your machine for building an ISO.
 
 ```
-$ make build-iso
+$ make iso/nixos.iso
 ```
 
 Create a VMware Fusion VM with the following settings. My configurations

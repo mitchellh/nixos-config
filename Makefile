@@ -96,5 +96,5 @@ vm/switch:
 	"
 
 # Build an ISO image
-build-iso:
+iso/nixos.iso:
 	cd iso; ./build.sh
