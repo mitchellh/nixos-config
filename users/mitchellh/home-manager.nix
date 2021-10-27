@@ -259,7 +259,7 @@ let sources = import ../../nix/sources.nix; in {
 
   xresources.extraConfig = builtins.readFile ./Xresources;
 
-  # Make sursor not tiny on HiDPI screens
+  # Make cursor not tiny on HiDPI screens
   xsession.pointerCursor = {
     name = "Vanilla-DMZ";
     package = pkgs.vanilla-dmz;

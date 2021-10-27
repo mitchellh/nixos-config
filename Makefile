@@ -85,6 +85,7 @@ vm/copy:
 		--exclude='vendor/' \
 		--exclude='.git/' \
 		--exclude='.git-crypt/' \
+		--exclude='iso/' \
 		--rsync-path="sudo rsync" \
 		$(MAKEFILE_DIR)/ $(NIXUSER)@$(NIXADDR):/nix-config
 
