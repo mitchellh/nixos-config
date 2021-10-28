@@ -16,6 +16,7 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.htop
     pkgs.jq
     pkgs.rofi
+    pkgs.go
     pkgs.gopls
     pkgs.tree
     pkgs.watch
