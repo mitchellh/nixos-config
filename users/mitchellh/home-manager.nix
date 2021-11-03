@@ -195,7 +195,7 @@ let sources = import ../../nix/sources.nix; in {
     };
   };
 
-    programs.kitty = {
+  programs.kitty = {
     enable = true;
     extraConfig = builtins.readFile ./kitty;
   };
