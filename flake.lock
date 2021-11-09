@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1634851050,
+        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -42,6 +57,27 @@
         "type": "github"
       }
     },
+    "nix-pgquarrel": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1636500939,
+        "narHash": "sha256-d3Q0u6lgAbjm1VUzn5AfMTE7F2mB5eHa7uV15+1mvUI=",
+        "owner": "mitchellh",
+        "repo": "nix-pgquarrel",
+        "rev": "2ee742eb7b9b8c8180ec593ab674a1cc61aa62b8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mitchellh",
+        "repo": "nix-pgquarrel",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1635070614,
@@ -78,6 +114,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "home-manager-unstable": "home-manager-unstable",
+        "nix-pgquarrel": "nix-pgquarrel",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable"
       }

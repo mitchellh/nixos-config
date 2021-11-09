@@ -21,19 +21,27 @@
       url = "github:nix-community/home-manager/release-21.05";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    # Other packages
+    nix-pgquarrel.url = "github:mitchellh/nix-pgquarrel";
+    nix-pgquarrel.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixpkgs-unstable, home-manager-unstable }: let
+  outputs = { self, nixpkgs, home-manager, nixpkgs-unstable, home-manager-unstable, ... }@inputs: let
     mkVM = import ./lib/mkvm.nix;
+
+    # Overlays is the list of overlays we want to apply from flake inputs.
+    overlays = [ inputs.nix-pgquarrel.overlay ];
   in {
-    nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" {
+    nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" rec {
+      inherit overlays;
       nixpkgs = nixpkgs-unstable;
       home-manager = home-manager-unstable;
       system = "aarch64-linux";
       user   = "mitchellh";
     };
 
-    nixosConfigurations.vm-intel = mkVM "vm-intel" {
+    nixosConfigurations.vm-intel = mkVM "vm-intel" rec {
       inherit nixpkgs home-manager;
       system = "x86_64-linux";
       user   = "mitchellh";
