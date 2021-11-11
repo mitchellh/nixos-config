@@ -18,6 +18,11 @@ let sources = import ../../nix/sources.nix; in rec {
       src = sources.vim-misc;
     };
 
+    vim-pgsql = vimUtils.buildVimPlugin {
+      name = "vim-pgsql";
+      src = sources.vim-pgsql;
+    };
+
     vim-tla = vimUtils.buildVimPlugin {
       name = "tla.vim";
       src = sources.vim-tla;

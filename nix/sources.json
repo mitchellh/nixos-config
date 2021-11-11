@@ -239,6 +239,18 @@
         "url": "https://github.com/crispgm/nord-vim/archive/cc5b0e9f472bdcbdaa701c94302796fb1e64e8d4.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "vim-pgsql": {
+        "branch": "master",
+        "description": "The best PostgreSQL plugin for Vim!",
+        "homepage": null,
+        "owner": "lifepillar",
+        "repo": "pgsql.vim",
+        "rev": "d5ed1475088e85654281902a08637a632ff7409c",
+        "sha256": "18bz65llksdj0yvafnifvs74g0qhar9vg0xx3s46q4iq6zr6cybv",
+        "type": "tarball",
+        "url": "https://github.com/lifepillar/pgsql.vim/archive/d5ed1475088e85654281902a08637a632ff7409c.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "vim-pigeon": {
         "branch": "master",
         "description": "Vim syntax for https://github.com/mna/pigeon, a parser generator built for Go.",
