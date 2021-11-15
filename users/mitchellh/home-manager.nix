@@ -227,6 +227,7 @@ let sources = import ../../nix/sources.nix; in {
       customVim.vim-misc
       customVim.vim-pgsql
       customVim.vim-tla
+      customVim.vim-zig
       customVim.pigeon
       customVim.AfterColors
 

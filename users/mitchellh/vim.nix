@@ -28,6 +28,11 @@ let sources = import ../../nix/sources.nix; in rec {
       src = sources.vim-tla;
     };
 
+    vim-zig = vimUtils.buildVimPlugin {
+      name = "zig.vim";
+      src = sources.vim-zig;
+    };
+
     dracula = vimUtils.buildVimPlugin {
       name = "dracula";
       src = sources.vim-dracula;

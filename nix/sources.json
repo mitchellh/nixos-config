@@ -274,5 +274,17 @@
         "type": "tarball",
         "url": "https://github.com/hwayne/tla.vim/archive/0d6d453a401542ce1db247c6fd139ac99b8a5add.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "vim-zig": {
+        "branch": "master",
+        "description": "Vim configuration for Zig",
+        "homepage": null,
+        "owner": "ziglang",
+        "repo": "zig.vim",
+        "rev": "0adf3a1407bdf60a6c1446fb6a9a05c9823e4290",
+        "sha256": "0sdjznbzwj180g1jgn6rizbq2dq2clpcj1rj1xb3m127w4rgqhyj",
+        "type": "tarball",
+        "url": "https://github.com/ziglang/zig.vim/archive/0adf3a1407bdf60a6c1446fb6a9a05c9823e4290.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
