@@ -11,6 +11,7 @@ let sources = import ../../nix/sources.nix; in {
   # per-project flakes sourced with direnv and nix-shell, so this is
   # not a huge list.
   home.packages = [
+    pkgs.bat
     pkgs.fzf
     pkgs.git-crypt
     pkgs.htop
