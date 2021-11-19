@@ -223,6 +223,7 @@ let sources = import ../../nix/sources.nix; in {
     package = pkgs.neovim-nightly;
 
     plugins = with pkgs; [
+      customVim.vim-cue
       customVim.vim-fish
       customVim.vim-fugitive
       customVim.vim-misc

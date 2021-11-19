@@ -179,6 +179,18 @@
         "url": "https://github.com/mitchellh/tree-sitter-proto/archive/42d82fa18f8afe59b5fc0b16c207ee4f84cb185f.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "vim-cue": {
+        "branch": "master",
+        "description": "cuelang/cue syntax highlighting plugin for vim, derived from google/vim-jsonnet",
+        "homepage": null,
+        "owner": "jjo",
+        "repo": "vim-cue",
+        "rev": "bd1a62303d096aa24fe4160a475645087f8770b3",
+        "sha256": "01f89ki0w2j58pfdvb8w0sf1x5nqgqh3bldinifpd4pysnqhniai",
+        "type": "tarball",
+        "url": "https://github.com/jjo/vim-cue/archive/bd1a62303d096aa24fe4160a475645087f8770b3.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "vim-dracula": {
         "branch": "master",
         "description": "🧛🏻‍♂️ Dark theme for Vim",
