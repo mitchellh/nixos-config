@@ -8,29 +8,6 @@
   # customizations to make this work on aarch64.
   disabledModules = [ "virtualisation/vmware-guest.nix" ];
 
-  boot.kernelPatches = [
-    # https://github.com/NixOS/nixpkgs/pull/140587
-    # This will be unnecessary in a bit.
-    {
-      name = "efi-initrd-support";
-      patch = null;
-      extraConfig = ''
-        EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER y
-      '';
-    }
-
-    # I don't know why this is necessary. This worked WITHOUT this
-    # at one point, and then suddenly started requiring it. I need to
-    # figure this out.
-    {
-      name = "fix-kernel-build";
-      patch = null;
-      extraConfig = ''
-        DRM_SIMPLEDRM n
-      '';
-    }
-  ];
-
   # Interface is this on M1
   networking.interfaces.ens160.useDHCP = true;
 
