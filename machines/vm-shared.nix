@@ -77,11 +77,7 @@
     fontDir.enable = true;
 
     fonts = [
-      (builtins.path {
-        name = "custom-fonts";
-        path = ../secret/fonts;
-        recursive = true;
-      })
+      pkgs.fira-code
     ];
   };
 
