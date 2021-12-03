@@ -200,7 +200,7 @@ bindsym $mod+BackSpace mode "$mode_system"
 bar {
     status_command i3status
 
-    font pango:Dank Mono 10
+    font pango:Dank Mono 14
     colors {
         background $back
     }
