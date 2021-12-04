@@ -200,7 +200,7 @@ bindsym $mod+BackSpace mode "$mode_system"
 bar {
     status_command i3status
 
-    font pango:Fira Code 12
+    font pango:Fira Code 10
     colors {
         background $back
     }

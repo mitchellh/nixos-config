@@ -83,6 +83,7 @@ let sources = import ../../nix/sources.nix; in {
 
   programs.direnv= {
     enable = true;
+
     config = {
       whitelist = {
         prefix= [
