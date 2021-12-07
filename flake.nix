@@ -18,15 +18,16 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Other packages
-    nix-pgquarrel.url = "github:mitchellh/nix-pgquarrel";
-    nix-pgquarrel.inputs.nixpkgs.follows = "nixpkgs";
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = { self, nixpkgs, home-manager, nixpkgs-unstable, ... }@inputs: let
     mkVM = import ./lib/mkvm.nix;
 
     # Overlays is the list of overlays we want to apply from flake inputs.
-    overlays = [ inputs.nix-pgquarrel.overlay ];
+    overlays = [
+      inputs.neovim-nightly-overlay.overlay
+    ];
   in {
     nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" rec {
       inherit overlays nixpkgs home-manager;

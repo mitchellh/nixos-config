@@ -9,7 +9,7 @@ nixpkgs.lib.nixosSystem rec {
     # Apply our overlays. Overlays are keyed by system type so we have
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
-    { nixpkgs.overlays = map (x: x.${system}) overlays; }
+    { nixpkgs.overlays = overlays; }
 
     ../hardware/${name}.nix
     ../machines/${name}.nix
