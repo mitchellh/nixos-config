@@ -87,7 +87,7 @@ on other virtualization solutions without minor changes.
   * ISO: NixOS 21.05 or later.
   * Disk: SATA 150 GB+
   * CPU/Memory: I give at least half my cores and half my RAM, as much as you can.
-  * Graphcs: Full acceleration, full resolution, maximum graphics RAM.
+  * Graphics: Full acceleration, full resolution, maximum graphics RAM.
   * Network: Shared with my Mac.
   * Remove sound card, remove video camera.
   * Profile: Disable almost all keybindings
