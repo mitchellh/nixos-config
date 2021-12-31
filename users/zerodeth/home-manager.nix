@@ -138,10 +138,10 @@ let sources = import ../../nix/sources.nix; in {
 
   programs.git = {
     enable = true;
-    userName = "Mitchell Hashimoto";
-    userEmail = "mitchell.hashimoto@gmail.com";
+    userName = "Sherif Abdalla";
+    userEmail = "sherif@abdalla.uk";
     signing = {
-      key = "523D5DC389D273BC";
+      key = "FDA619F16BBFA377";
       signByDefault = true;
     };
     aliases = {
