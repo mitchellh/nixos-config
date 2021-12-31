@@ -162,7 +162,7 @@ let sources = import ../../nix/sources.nix; in {
   programs.go = {
     enable = true;
     goPath = "code/go";
-    goPrivate = [ "github.com/zerodeth" "github.com/hashicorp" "rfc822.mx" ];
+    goPrivate = [ "github.com/mitchellh" "github.com/hashicorp" "rfc822.mx" ];
   };
 
   programs.tmux = {
