@@ -8,6 +8,10 @@
   # Interface is this on Intel Fusion
   networking.interfaces.ens33.useDHCP = true;
 
+  # Lots of stuff that uses aarch64 that claims doesn't work, but actually works.
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnsupportedSystem = true;
+
   # Shared folder to host works on Intel
   fileSystems."/host" = {
     fsType = "fuse./run/current-system/sw/bin/vmhgfs-fuse";
