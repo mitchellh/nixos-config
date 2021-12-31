@@ -9,7 +9,7 @@
     home = "/home/zerodeth";
     extraGroups = [ "docker" "wheel" ];
     shell = pkgs.fish;
-    hashedPassword = "6yCK0m3Oglcj4ZkUXwbjrG403LBZkfNwlhgrQAqOospGJXJZ27dI84CbIYBNsTgsoH650C1EBsbCKesSVPSpB1";
+    hashedPassword = "$6$XECGl7SdC.v$BxPSgsoFRxE49v.mU0R5j4MEWloixaxiKx43k6SNNzayRWuLl1UuvMARou8.e9fjxDNqChXuzXYKRKn1rRWL41";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHjOxtxbn5EivnsfDKeGaappZlcW9SGk81+i4xCZfE+y Sherif Abdalla"
     ];
