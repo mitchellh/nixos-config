@@ -20,8 +20,10 @@ $6$RGtlrdlYYMi$l8C5yMP96ySm.xxRcWZnNZRhf.ApXHkWwhWhk8X87S7VCQrEe9YCLQn1hezH.qUHU
 
 - [Cheatsheet](https://nixos.wiki/wiki/Cheatsheet)
 - [Flakes](https://nixos.wiki/wiki/Flakes)
+- [Practical Nix Flakes](https://serokell.io/blog/practical-nix-flakes)
 - [NixOS Home Manager for multi-user on NIX flake Installation and Configuration](https://mudrii.medium.com/nixos-home-manager-on-native-nix-flake-installation-and-configuration-22d018654f0c)
 - [Collection of NixOS](https://wiki.nikitavoloboev.xyz/operating-systems/linux/nixos)
+- [agenix - age-encrypted secrets for NixOS](https://github.com/ryantm/agenix)
 
 https://nixos.mayflower.consulting/blog/2021/01/28/nextcloud-stateversion/
 
