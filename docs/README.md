@@ -19,6 +19,7 @@ $6$RGtlrdlYYMi$l8C5yMP96ySm.xxRcWZnNZRhf.ApXHkWwhWhk8X87S7VCQrEe9YCLQn1hezH.qUHU
 ## Resources
 
 - [Cheatsheet](https://nixos.wiki/wiki/Cheatsheet)
+- **[How to Learn Nix](https://ianthehenry.com/posts/how-to-learn-nix/)**
 - [Flakes](https://nixos.wiki/wiki/Flakes)
 - [Practical Nix Flakes](https://serokell.io/blog/practical-nix-flakes)
 - [NixOS Home Manager for multi-user on NIX flake Installation and Configuration](https://mudrii.medium.com/nixos-home-manager-on-native-nix-flake-installation-and-configuration-22d018654f0c)
