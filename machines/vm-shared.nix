@@ -42,7 +42,7 @@
   # setup windowing environment
   services.xserver = {
     enable = true;
-    layout = "us";
+    layout = "uk";
     dpi = 220;
 
     desktopManager = {
