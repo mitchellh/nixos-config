@@ -1,5 +1,7 @@
 { sources }:
 ''
+  set relativenumber
+
 "--------------------------------------------------------------------
 " Fix vim paths so we load the vim-misc directory
 let g:vim_home_path = "~/.vim"
