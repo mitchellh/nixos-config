@@ -5,7 +5,7 @@ set $mod Mod4
 #----------------------------------------------------------------------
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:Fira Code 10
+font pango:Fira Code 8
 
 # Window visuals
 new_window pixel 2
@@ -200,7 +200,7 @@ bindsym $mod+BackSpace mode "$mode_system"
 bar {
     status_command i3status
 
-    font pango:Fira Code 10
+    font pango:Fira Code 8
     colors {
         background $back
     }
