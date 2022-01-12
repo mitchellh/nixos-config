@@ -19,6 +19,7 @@
 
     # Other packages
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    zig.url = "github:arqv/zig-overlay";
   };
 
   outputs = { self, nixpkgs, home-manager, nixpkgs-unstable, ... }@inputs: let
@@ -27,6 +28,11 @@
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
       inputs.neovim-nightly-overlay.overlay
+
+      # Zig doesn't export an overlay so we do it here
+      (final: prev: {
+        zig-master = inputs.zig.packages.${prev.system}.master.latest;
+      })
     ];
   in {
     nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" rec {
