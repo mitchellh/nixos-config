@@ -108,6 +108,14 @@ set this to the `NIXADDR` env var:
 $ export NIXADDR=<VM ip address>
 ```
 
+The Makefile assumes an Intel processor by default. If you are using an
+ARM-based processor (M1, etc.), you must change `NIXNAME` so that the ARM-based
+configuration is used:
+
+```
+$ export NIXNAME=vm-aarch64
+```
+
 Perform the initial bootstrap. This will install NixOS on the VM disk image
 but will not setup any other configurations yet. This prepares the VM for
 any NixOS customization:
