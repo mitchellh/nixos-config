@@ -17,6 +17,7 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.git-crypt
     pkgs.htop
     pkgs.jq
+    pkgs.ripgrep
     pkgs.rofi
     pkgs.tree
     pkgs.watch

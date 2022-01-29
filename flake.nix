@@ -14,15 +14,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # We have access to unstable nixpkgs if we want specific unstable packages.
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-
     # Other packages
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     zig.url = "github:arqv/zig-overlay";
   };
 
-  outputs = { self, nixpkgs, home-manager, nixpkgs-unstable, ... }@inputs: let
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: let
     mkVM = import ./lib/mkvm.nix;
 
     # Overlays is the list of overlays we want to apply from flake inputs.
