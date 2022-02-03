@@ -269,10 +269,10 @@
         "homepage": null,
         "owner": "mitchellh",
         "repo": "vim-misc",
-        "rev": "9b1e85dadb0e00087e470f7d4fa1e42ad31a2fe0",
-        "sha256": "06sa5dbcz4fn3n2xswbkl6f2zs8w7fk1babkjdhm5q3rbp6rxybf",
+        "rev": "1205bd43e9b692d253572eddaf784977ae46f35b",
+        "sha256": "1n6dsgppzgy95inq6mbqmphgbv7s97aslfmwdgasd8zy8grbd623",
         "type": "tarball",
-        "url": "https://github.com/mitchellh/vim-misc/archive/9b1e85dadb0e00087e470f7d4fa1e42ad31a2fe0.tar.gz",
+        "url": "https://github.com/mitchellh/vim-misc/archive/1205bd43e9b692d253572eddaf784977ae46f35b.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "vim-nord": {
