@@ -140,6 +140,8 @@ let sources = import ../../nix/sources.nix; in {
       gp = "git push";
       gs = "git status";
       gt = "git tag";
+      
+      "..." = "cd ../..";
 
       # Two decades of using a Mac has made this such a strong memory
       # that I'm just going to keep it consistent.
