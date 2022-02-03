@@ -14,3 +14,11 @@
       - For Windows key, use: Either Command Key
   - Fusion Shortcuts
     - Select only (Ungrab Mouse & Keyboard) & (Hide Menu Bar in Full Screen)
+
+
+- Network | Addional nic as public
+```sh
+ifconfig -a
+if link set ens35 up
+ifconfig ens35 192.168.159.23
+```
