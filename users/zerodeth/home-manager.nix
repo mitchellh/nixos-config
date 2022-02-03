@@ -32,6 +32,12 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.tlaplusToolbox
     pkgs.tetex
 
+    pkgs.nodejs-14_x
+    pkgs.yarn
+    #pkgs.vscode
+    pkgs.vscode-fhs
+    #pkgs.vscode-with-extensions
+
     pkgs.kubectl
     pkgs.minikube
     pkgs.kustomize
