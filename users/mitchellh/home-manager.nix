@@ -241,6 +241,7 @@ let sources = import ../../nix/sources.nix; in {
       customVim.AfterColors
 
       customVim.vim-nord
+      customVim.nvim-comment
       customVim.nvim-lspconfig
       customVim.nvim-plenary # required for telescope
       customVim.nvim-telescope
