@@ -114,3 +114,22 @@ end
 # `fnix -p go` to get an environment with Go but use the fish shell along
 # with it.
 alias fnix "nix-shell --run fish"
+
+
+#-------------------------------------------------------------------------------
+# Kubernetes
+#-------------------------------------------------------------------------------
+# Krew is the plugin manager for kubectl command-line tool.
+# Show a tree of object hierarchies through ownerReferences.
+set -gx PATH $PATH $HOME/.krew/bin
+
+#-------------------------------------------------------------------------------
+# Aliases
+#-------------------------------------------------------------------------------
+# 
+# 
+# . ~/.config/fish/kubectl_aliases.fish
+# [ -f "$HOME/.config/fish/kubectl_aliases.fish" ] && . "./kubectl_aliases.fish"
+
+# eval (thefuck --alias | tr '\n' ';')
+source "$HOME/.config/shell/shell_env"

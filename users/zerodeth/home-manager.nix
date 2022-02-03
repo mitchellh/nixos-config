@@ -31,7 +31,19 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.tlaplusToolbox
     pkgs.tetex
 
-    pkgs.asdf-vm
+    pkgs.kubectl
+    pkgs.minikube
+    pkgs.kustomize
+    pkgs.kubernetes-helm
+    
+    # cluster management tool
+    pkgs.k9s
+    pkgs.lens
+    pkgs.krew
+    # pkgs.kubecolor #TODO unstable
+    
+    pkgs.kind                # kubernetes in docker
+
   ];
 
   #---------------------------------------------------------------------

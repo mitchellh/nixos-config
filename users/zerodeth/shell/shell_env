@@ -1,0 +1,36 @@
+#!/usr/bin/env nix-shell
+
+# `shell_env.sh` is a main file for any general-case utils.
+#
+# This file is used as a source file for zsh.
+
+# === Plugin management ===
+
+# Antibody is a shell plugin manager made from the ground up thinking about performance.
+# Documentation can be found at https://getantibody.github.io
+# A plugin file is basically text file ~/.zsh_plugins.txt that has one plugin per line.
+
+# antibody bundle < ~/.zsh_plugins.txt > ~/.zsh_plugins.sh
+# source ~/.zsh_plugins.sh
+
+# source <(antibody init)
+# antibody bundle < ~/.zsh_plugins.txt
+# antibody update
+
+# === Shell parts ===
+
+# source "$HOME/.shell/.aliases"
+# source "$HOME/.shell/.exports"
+# source "$HOME/.shell/.completions"
+# source "$HOME/.shell/.external"
+# source "$HOME/.shell/.prompt"
+# source "$HOME/.shell/.functions"
+source "$HOME/.config/shell/kubectl_aliases"
+# source "$HOME/.shell/.bindkey"
+# source "$HOME/.shell/.tmux"
+
+# === Local variables and overrides ===
+
+# if [[ -f "$HOME/.shell_env_local" ]]; then
+#   source "$HOME/.shell_env_local"
+# fi
