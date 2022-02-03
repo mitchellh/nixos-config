@@ -297,4 +297,46 @@ let sources = import ../../nix/sources.nix; in {
     package = pkgs.vanilla-dmz;
     size = 128;
   };
+
+  programs.htop = {
+    enable = true;
+
+    settings = {
+      # header_margin = false;
+      # hideKernelThreads = true;
+      # hideThreads = true;
+      # hideUserlandThreads = true;
+      # sortKey = "PERCENT_CPU";
+      # left_meters = [ "LeftCPUs2" "Memory" "Swap" "Hostname" ];
+      # right_meters = [ "RightCPUs2" "Tasks" "LoadAverage" "Uptime" ];
+      # left_meters = [ "LeftCPUs2" "Memory" "CPU" ];
+      # right_meters = [ "RightCPUs2" "Tasks" "LoadAverage" "Uptime" ];
+
+      fields = [ 50 0 48 17 18 38 39 40 2 46 47 49 1 ];
+      sort_key = 111;
+      sort_direction = 1;
+      hide_threads = 1;
+      hide_kernel_threads = 1;
+      hide_userland_threads = 1;
+      shadow_other_users = 0;
+      show_thread_names = 0;
+      show_program_path = 1;
+      highlight_base_name = 0;
+      highlight_megabytes = 0;
+      highlight_threads = 0;
+      tree_view = 1;
+      header_margin = 1;
+      detailed_cpu_time = 1;
+      cpu_count_from_zero = 1;
+      update_process_names = 0;
+      account_guest_in_cpu_meter = 0;
+      color_scheme = 6;
+      delay = 15;
+      left_meters = [ "CPU" "AllCPUs" ];
+      left_meter_modes = [ 2 1 ];
+      right_meters = [ "Blank" "Clock" "Uptime" "LoadAverage" "Tasks" "Swap" "Memory" ];
+      right_meter_modes = [ 2 2 2 2 2 2 2 ];
+    };
+  };
+
 }
