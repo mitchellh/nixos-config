@@ -63,6 +63,18 @@ let sources = import ../../nix/sources.nix; in rec {
       src = sources.vim-nord;
     };
 
+    nvim-plenary = vimUtils.buildVimPlugin {
+      name = "nvim-plenary";
+      src = sources.nvim-plenary;
+      buildPhase = ":";
+    };
+
+    nvim-telescope = vimUtils.buildVimPlugin {
+      name = "nvim-telescope";
+      src = sources.nvim-telescope;
+      buildPhase = ":";
+    };
+
     nvim-treesitter = vimUtils.buildVimPlugin {
       name = "nvim-treesitter";
       src = sources.nvim-treesitter;
