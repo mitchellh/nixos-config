@@ -12,6 +12,7 @@ let sources = import ../../nix/sources.nix; in {
   # not a huge list.
   home.packages = [
     pkgs.bat
+    pkgs.fd
     pkgs.firefox
     pkgs.fzf
     pkgs.git-crypt
@@ -263,12 +264,14 @@ let sources = import ../../nix/sources.nix; in {
       customVim.AfterColors
 
       customVim.vim-nord
+      customVim.nvim-comment
       customVim.nvim-lspconfig
+      customVim.nvim-plenary # required for telescope
+      customVim.nvim-telescope
       customVim.nvim-treesitter
       customVim.nvim-treesitter-playground
       customVim.nvim-treesitter-textobjects
 
-      vimPlugins.ctrlp
       vimPlugins.vim-airline
       vimPlugins.vim-airline-themes
       vimPlugins.vim-eunuch

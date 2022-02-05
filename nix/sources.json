@@ -59,6 +59,18 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/3b1789322fcbcb5cf51228d732752714f1bf77da.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nvim-comment": {
+        "branch": "master",
+        "description": ":brain: :muscle: // Smart and powerful comment plugin for neovim. Supports treesitter, dot repeat, left-right/up-down motions, hooks, and more",
+        "homepage": "",
+        "owner": "numToStr",
+        "repo": "Comment.nvim",
+        "rev": "af51a8af6b213336345f36fc7aba65f9c3316696",
+        "sha256": "1zzv4f1rxqfl9saf90gf6h5cbcnw1jc4qqm63x3zkl6a8s9qpj51",
+        "type": "tarball",
+        "url": "https://github.com/numToStr/Comment.nvim/archive/af51a8af6b213336345f36fc7aba65f9c3316696.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nvim-lspconfig": {
         "branch": "master",
         "description": "Quickstart configurations for the Nvim LSP client",
@@ -69,6 +81,30 @@
         "sha256": "0w1nkiqnbskz8cj02nm9idhsavilk0akvfh4nagk72xvxvmxggi9",
         "type": "tarball",
         "url": "https://github.com/neovim/nvim-lspconfig/archive/9ca394ec3a9305a6c30018ee6f731c9b23a4b25e.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nvim-plenary": {
+        "branch": "master",
+        "description": "plenary: full; complete; entire; absolute; unqualified. All the lua functions I don't want to write twice.",
+        "homepage": null,
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
+        "rev": "e86dc9b11241ff69ece50c15a5cdd49d20d4c27c",
+        "sha256": "1yfiqkvk71i68hha2xdikfmch9qkn0di9gl14x4b9snvcf6l9plh",
+        "type": "tarball",
+        "url": "https://github.com/nvim-lua/plenary.nvim/archive/e86dc9b11241ff69ece50c15a5cdd49d20d4c27c.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nvim-telescope": {
+        "branch": "master",
+        "description": "Find, Filter, Preview, Pick. All lua, all the time.",
+        "homepage": "",
+        "owner": "nvim-telescope",
+        "repo": "telescope.nvim",
+        "rev": "f262e7d56d37625613c5de0df5a933cccacf13c5",
+        "sha256": "0gi31w0rpd14zmnnc883hji7vf8hi1njdprhm9lk3n6pslipgfmv",
+        "type": "tarball",
+        "url": "https://github.com/nvim-telescope/telescope.nvim/archive/f262e7d56d37625613c5de0df5a933cccacf13c5.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nvim-treesitter": {
@@ -233,10 +269,10 @@
         "homepage": null,
         "owner": "mitchellh",
         "repo": "vim-misc",
-        "rev": "0423e44469e3ac4233dfeb7e4183158434c485c0",
-        "sha256": "1k1p9bkfs4akh036glsgx782f1gdwyp96qd04mhnfrg0gggyvi07",
+        "rev": "1205bd43e9b692d253572eddaf784977ae46f35b",
+        "sha256": "1n6dsgppzgy95inq6mbqmphgbv7s97aslfmwdgasd8zy8grbd623",
         "type": "tarball",
-        "url": "https://github.com/mitchellh/vim-misc/archive/0423e44469e3ac4233dfeb7e4183158434c485c0.tar.gz",
+        "url": "https://github.com/mitchellh/vim-misc/archive/1205bd43e9b692d253572eddaf784977ae46f35b.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "vim-nord": {
@@ -293,10 +329,10 @@
         "homepage": null,
         "owner": "ziglang",
         "repo": "zig.vim",
-        "rev": "045bb41776280df1adaa2d63c7166684bf631a00",
-        "sha256": "1d4l6x9rwfxr9a2yfhq4ywhm72sky35ki0mr3hq7xy6xj5lpwgq7",
+        "rev": "0762d89c24f5a1da6bf26ca83f3719c379008ff9",
+        "sha256": "00vfyi79m85d8pv0cnhyj82nqlnwiqs5pkzbr9yn8mvy6r0hscf3",
         "type": "tarball",
-        "url": "https://github.com/ziglang/zig.vim/archive/045bb41776280df1adaa2d63c7166684bf631a00.tar.gz",
+        "url": "https://github.com/ziglang/zig.vim/archive/0762d89c24f5a1da6bf26ca83f3719c379008ff9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
