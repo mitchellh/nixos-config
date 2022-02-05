@@ -6,7 +6,6 @@ iso/nixos.iso
 #node
 .nix-node
 node_modules
-package-lock.json
 build
 npm-debug.log
 .env
