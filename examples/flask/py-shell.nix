@@ -1,7 +1,8 @@
+# nix-shell --pure --show-trace py-shell.nix
 with import <nixpkgs> {};
 
 stdenv.mkDerivation rec {
-  name = "python-environment";
+  name = "py-env";
 
   buildInputs = [ pkgs.python38 pkgs.python38Packages.flask pkgs.ffmpeg ];
 

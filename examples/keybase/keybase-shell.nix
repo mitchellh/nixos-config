@@ -1,3 +1,4 @@
+# nix-shell --pure --show-trace keybase-shell.nix
 with import <nixpkgs> {};
 
 stdenv.mkDerivation {
