@@ -36,7 +36,7 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.yarn
     #pkgs.vscode
     pkgs.vscode-fhs
-    #pkgs.vscode-with-extensions
+    pkgs.vscode-extensions.ms-vscode-remote.remote-ssh   #Fixing remote-ssh
 
     pkgs.kubectl
     pkgs.minikube
