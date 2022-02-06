@@ -36,7 +36,7 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.nodejs-14_x
     pkgs.yarn
     #pkgs.vscode
-    pkgs.vscode-fhs
+    # pkgs.vscode-fhs        #TODO: Non-Compitable with M1
     pkgs.vscode-extensions.ms-vscode-remote.remote-ssh   #Fixing remote-ssh
 
     pkgs.kubectl
@@ -48,7 +48,7 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.k9s
     pkgs.lens
     pkgs.krew
-    # pkgs.kubecolor #TODO unstable
+    # pkgs.kubecolor #TODO: unstable
     
     pkgs.kind                # kubernetes in docker
 
