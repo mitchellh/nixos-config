@@ -16,6 +16,11 @@ map super+equal      increase_font_size
 map super+minus    decrease_font_size
 map super+0 restore_font_size
 
+# Scrolling
+map super+shift+g       show_last_command_output
+map super+ctrl+p        scroll_to_prompt -1
+map super+ctrl+n        scroll_to_prompt 1
+
 #--------------------------------------------------------------------
 # Theme
 #--------------------------------------------------------------------
