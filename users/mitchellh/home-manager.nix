@@ -25,9 +25,14 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.zathura
     pkgs._1password
 
+    # Programming languages
     pkgs.go
     pkgs.gopls
     pkgs.zig-master
+
+    # Dev CLIs
+    pkgs.kubectl
+    pkgs.kubernetes-helm
 
     pkgs.tlaplusToolbox
     pkgs.tetex
