@@ -7,6 +7,9 @@
     # it'll impact your entire system.
     nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
 
+    # We use the unstable nixpkgs repo for some packages.
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-21.11";
 
@@ -26,9 +29,12 @@
     overlays = [
       inputs.neovim-nightly-overlay.overlay
 
-      # Zig doesn't export an overlay so we do it here
       (final: prev: {
+        # Zig doesn't export an overlay so we do it here
         zig-master = inputs.zig.packages.${prev.system}.master.latest;
+
+        # To get Kitty 0.24.x. Delete this once it hits release.
+        kitty = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.kitty;
       })
     ];
   in {
