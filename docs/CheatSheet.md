@@ -95,3 +95,10 @@ nix-env -u --keep-going --leq
 nix-store --query --references\
   $(nix-instantiate '<nixpkgs>' -A emacs)
 ```
+
+Print the store path of the `asdf-vm` package
+```bash
+nix eval --raw 'nixpkgs#asdf-vm'
+nix eval --raw 'nixpkgs#asdf-vm.pname'
+nix eval --raw 'nixpkgs#asdf-vm.version'
+```
