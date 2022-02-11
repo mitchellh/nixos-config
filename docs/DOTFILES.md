@@ -9,6 +9,8 @@
 - [Latest Visual Studio Code Insiders Flake](https://discourse.nixos.org/t/latest-visual-studio-code-insiders-flake/14951)
 - [NIXOS Configuration and Dotfiles](https://gitlab.com/Rizary/dotfiles.git)
 - **[cprussin dotfiles](https://github.com/cprussin/dotfiles)**
+- **[yurrriq dotfiles](https://github.com/yurrriq/dotfiles)**
+- **[kubukoz dotfiles](https://github.com/kubukoz/nix-config)**
 
 ### Fork from mitchellh
 - [](https://github.com/allancalix/nixos-config)
