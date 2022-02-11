@@ -33,3 +33,7 @@ Remote-ssh mac to nixos
 
 cd /home/zerodeth/.vscode-server/bin/899d46d82c4c95423fb7e10e68eba52050e30ba3/
 rm -rf node; sudo ln -s "$(which node)" node
+
+
+- cgo: C compiler "gcc" not found: exec: "gcc": executable file not found in $PATH
+Solution: `nix profile install nixpkgs#gcc`
