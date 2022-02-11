@@ -38,7 +38,7 @@ let sources = import ../../nix/sources.nix; in {
     # pkgs.vscode
     # pkgs.vscode-fhs        #TODO: Non-Compitable with M1
     pkgs.vscode-extensions.ms-vscode-remote.remote-ssh   #Fixing remote-ssh
-    
+
   ];
 
   #---------------------------------------------------------------------
@@ -144,6 +144,7 @@ let sources = import ../../nix/sources.nix; in {
       "fish-fzf"
       "fish-foreign-env"
       "theme-bobthefish"
+      "fish-kubectl-completions"
     ];
   };
 

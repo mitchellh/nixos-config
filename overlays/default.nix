@@ -6,6 +6,7 @@ final: prev: {
   create-dmg = final.callPackage ../pkgs/create-dmg.nix {};
   nomad-bin = final.callPackage ../pkgs/nomad-bin.nix {};
   terraform-bin = final.callPackage ../pkgs/terraform-bin.nix {};
+  fish-kubectl-completions = final.callPackage ../pkgs/shells/fish/kubectl-completions.nix { };
 
   # Have to force Go 1.17 because the default is fixed to 1.16
   # for reasons in the nixpkgs repository. We'll undo this when

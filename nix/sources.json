@@ -23,6 +23,18 @@
         "url": "https://github.com/jethrokuan/fzf/archive/24f4739fc1dffafcc0da3ccfbbd14d9c7d31827a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "fish-kubectl-completions": {
+        "branch": "main",
+        "description": "kubectl completions for fish shell",
+        "homepage": "",
+        "owner": "evanlucas",
+        "repo": "fish-kubectl-completions",
+        "rev": "ced676392575d618d8b80b3895cdc3159be3f628",
+        "sha256": "09qcj82qfs4y4nfwvy90y10xmx6vc9yp33nmyk1mpvx0dx6ri21r",
+        "type": "tarball",
+        "url": "https://github.com/evanlucas/fish-kubectl-completions/archive/ced676392575d618d8b80b3895cdc3159be3f628.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "go": {
         "branch": "go1.15.6",
         "description": "The Go programming language",
