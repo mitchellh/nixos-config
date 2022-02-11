@@ -18,7 +18,7 @@ stdenv.mkDerivation {
     pkgs.k9s
     pkgs.lens
     pkgs.krew
-    pkgs.kubecolor       //TODO: nixos-unstable has this, update channel to use it.
+    pkgs.kubecolor            #TODO: nixos-unstable has this, update channel to use it.
     pkgs.kind                    # kubernetes in docker
   ];
 
