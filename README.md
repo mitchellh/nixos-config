@@ -116,16 +116,8 @@ configuration is used:
 $ export NIXNAME=vm-aarch64
 ```
 
-Perform the initial bootstrap. This will install NixOS on the VM disk image
-but will not setup any other configurations yet. This prepares the VM for
-any NixOS customization:
-
-```
-$ make vm/bootstrap0
-```
-
-After the VM reboots, run the full bootstrap, this will finalize the
-NixOS customization using this configuration:
+Perform the bootstrap. This will install NixOS on the VM disk image together
+with customizations using this configuration:
 
 ```
 $ make vm/bootstrap
