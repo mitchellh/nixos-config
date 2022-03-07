@@ -19,6 +19,7 @@ $6$RGtlrdlYYMi$l8C5yMP96ySm.xxRcWZnNZRhf.ApXHkWwhWhk8X87S7VCQrEe9YCLQn1hezH.qUHU
 ## Resources
 
 - [Cheatsheet](https://nixos.wiki/wiki/Cheatsheet)
+- **[Nix package versions](https://lazamar.co.uk/nix-versions/)**
 - [Generations](https://nixos.wiki/wiki/NixOS#Generations)
 - **[How to Learn Nix](https://ianthehenry.com/posts/how-to-learn-nix/)**
 - [Collection of NixOS](https://wiki.nikitavoloboev.xyz/operating-systems/linux/nixos)
