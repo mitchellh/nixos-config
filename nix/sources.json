@@ -161,10 +161,10 @@
         "homepage": "",
         "owner": "oh-my-fish",
         "repo": "theme-bobthefish",
-        "rev": "a2ad38aa051aaed25ae3bd6129986e7f27d42d7b",
-        "sha256": "1fssb5bqd2d7856gsylf93d28n3rw4rlqkhbg120j5ng27c7v7lq",
+        "rev": "1eaed8c39951029fa7839859abd5518977a80f83",
+        "sha256": "18c5bmg5in6shy57l6sqfshda2dp91r5kgzrysmm10kihqxw0562",
         "type": "tarball",
-        "url": "https://github.com/oh-my-fish/theme-bobthefish/archive/a2ad38aa051aaed25ae3bd6129986e7f27d42d7b.tar.gz",
+        "url": "https://github.com/oh-my-fish/theme-bobthefish/archive/1eaed8c39951029fa7839859abd5518977a80f83.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "tmux-dracula": {
