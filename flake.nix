@@ -33,6 +33,9 @@
         # Zig doesn't export an overlay so we do it here
         zig-master = inputs.zig.packages.${prev.system}.master.latest;
 
+        # Go we always want the latest version
+        go = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.go_1_18;
+
         # To get Kitty 0.24.x. Delete this once it hits release.
         kitty = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.kitty;
       })
