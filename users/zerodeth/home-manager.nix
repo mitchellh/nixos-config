@@ -54,6 +54,7 @@ let sources = import ../../nix/sources.nix; in {
     MANPAGER = "sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
   };
 
+  home.file.".gdbinit".source = ./gdbinit;
   home.file.".inputrc".source = ./inputrc;
 
   xdg.configFile."i3/config".text = builtins.readFile ./i3;
