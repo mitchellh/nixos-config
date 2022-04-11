@@ -89,10 +89,10 @@
         "homepage": "",
         "owner": "neovim",
         "repo": "nvim-lspconfig",
-        "rev": "9ca394ec3a9305a6c30018ee6f731c9b23a4b25e",
-        "sha256": "0w1nkiqnbskz8cj02nm9idhsavilk0akvfh4nagk72xvxvmxggi9",
+        "rev": "096398a07c2dc08d785266f9f55ddcb462ba0749",
+        "sha256": "05gb0nd9iv06hr6zfa8yc2n4nd3p98mvcsdbyxm504bpfy3z8c81",
         "type": "tarball",
-        "url": "https://github.com/neovim/nvim-lspconfig/archive/9ca394ec3a9305a6c30018ee6f731c9b23a4b25e.tar.gz",
+        "url": "https://github.com/neovim/nvim-lspconfig/archive/096398a07c2dc08d785266f9f55ddcb462ba0749.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nvim-plenary": {
@@ -101,10 +101,10 @@
         "homepage": null,
         "owner": "nvim-lua",
         "repo": "plenary.nvim",
-        "rev": "e86dc9b11241ff69ece50c15a5cdd49d20d4c27c",
-        "sha256": "1yfiqkvk71i68hha2xdikfmch9qkn0di9gl14x4b9snvcf6l9plh",
+        "rev": "14dfb4071022b22e08384ee125a5607464b6d397",
+        "sha256": "06c3r97kki2g3jha45nrm6i8dljrqak38iy1248ml8ri3ldpj44z",
         "type": "tarball",
-        "url": "https://github.com/nvim-lua/plenary.nvim/archive/e86dc9b11241ff69ece50c15a5cdd49d20d4c27c.tar.gz",
+        "url": "https://github.com/nvim-lua/plenary.nvim/archive/14dfb4071022b22e08384ee125a5607464b6d397.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nvim-telescope": {
@@ -125,10 +125,10 @@
         "homepage": "",
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter",
-        "rev": "6b3f9087514af0b12a1abc92d5c9f0229e96cc39",
-        "sha256": "1f1nimi0illmh1ccac19l4mmnq0zcw4szzzkils35pkidl6rziwa",
+        "rev": "f448a78057290cca9c70c4065819da96103f3dee",
+        "sha256": "0yq2lkjch42s02wr93c4xv7sqksiklwspx5pg8d4cia7ghaadj8q",
         "type": "tarball",
-        "url": "https://github.com/nvim-treesitter/nvim-treesitter/archive/6b3f9087514af0b12a1abc92d5c9f0229e96cc39.tar.gz",
+        "url": "https://github.com/nvim-treesitter/nvim-treesitter/archive/f448a78057290cca9c70c4065819da96103f3dee.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nvim-treesitter-playground": {
@@ -269,10 +269,11 @@
         "homepage": "https://www.vim.org/scripts/script.php?script_id=2975",
         "owner": "tpope",
         "repo": "vim-fugitive",
-        "rev": "e2927fb4676b499931a3c27a2dc8a8a8bc52ab55",
-        "sha256": "0bqnq5ayws8dlg4zmp4ra0y9343dncg2v588311kxb3vc5m42vp2",
+        "rev": "46652a304f0b89f36d70cee954d77e467ec0f6de",
+        "sha256": "174qmalqmg8miq7ixc0c3w66qpc46c9rxvpw6sn8qalyifb0z7fj",
         "type": "tarball",
-        "url": "https://github.com/tpope/vim-fugitive/archive/e2927fb4676b499931a3c27a2dc8a8a8bc52ab55.tar.gz",
+        "url": "https://github.com/tpope/vim-fugitive/archive/46652a304f0b89f36d70cee954d77e467ec0f6de.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "vim-glsl": {
         "branch": "master",
@@ -282,6 +283,8 @@
         "repo": "vim-glsl",
         "rev": "28a6dfbcd96095226bee90985b7f12c5679dbbb6",
         "sha256": "051f0q5bkgp77pz0izh5mvqsmxy0rzlvriwq4j7qzslqk7i850p2",
+        "type": "tarball",
+        "url": "https://github.com/tikhomirov/vim-glsl/archive/28a6dfbcd96095226bee90985b7f12c5679dbbb6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "vim-misc": {
