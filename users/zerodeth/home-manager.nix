@@ -244,6 +244,7 @@ let sources = import ../../nix/sources.nix; in {
       customVim.vim-cue
       customVim.vim-fish
       customVim.vim-fugitive
+      customVim.vim-glsl
       customVim.vim-misc
       customVim.vim-pgsql
       customVim.vim-tla

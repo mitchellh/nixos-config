@@ -18,6 +18,11 @@ let sources = import ../../nix/sources.nix; in rec {
       src = sources.vim-fugitive;
     };
 
+    vim-glsl = vimUtils.buildVimPlugin {
+      name = "vim-glsl";
+      src = sources.vim-glsl;
+    };
+
     vim-misc = vimUtils.buildVimPlugin {
       name = "vim-misc";
       src = sources.vim-misc;

@@ -273,6 +273,15 @@
         "sha256": "0bqnq5ayws8dlg4zmp4ra0y9343dncg2v588311kxb3vc5m42vp2",
         "type": "tarball",
         "url": "https://github.com/tpope/vim-fugitive/archive/e2927fb4676b499931a3c27a2dc8a8a8bc52ab55.tar.gz",
+    },
+    "vim-glsl": {
+        "branch": "master",
+        "description": "Vim runtime files for OpenGL Shading Language",
+        "homepage": null,
+        "owner": "tikhomirov",
+        "repo": "vim-glsl",
+        "rev": "28a6dfbcd96095226bee90985b7f12c5679dbbb6",
+        "sha256": "051f0q5bkgp77pz0izh5mvqsmxy0rzlvriwq4j7qzslqk7i850p2",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "vim-misc": {
