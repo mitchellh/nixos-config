@@ -3,7 +3,9 @@ NIXADDR ?= unset
 NIXPORT ?= 22
 NIXUSER ?= mitchellh
 
-# Settings
+# The block device prefix to use.
+#   - sda for SATA/IDE
+#   - vda for virtio
 NIXBLOCKDEVICE ?= sda
 
 # Get the path to this Makefile and directory

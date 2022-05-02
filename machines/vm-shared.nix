@@ -1,4 +1,4 @@
-{ config, pkgs, currentSystem, ... }:
+{ config, pkgs, currentSystem, currentSystemName,... }:
 
 {
   # We require 5.14+ for VMware Fusion on M1.
@@ -58,7 +58,7 @@
       # display resolution. This is a known issue with VMware Fusion.
       sessionCommands = ''
         ${pkgs.xlibs.xset}/bin/xset r rate 200 40
-      '' + (if currentSystem == "aarch64-linux" then ''
+      '' + (if currentSystemName == "vm-aarch64" then ''
         ${pkgs.xorg.xrandr}/bin/xrandr -s '2880x1800'
       '' else "");
     };

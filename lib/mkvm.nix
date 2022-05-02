@@ -21,7 +21,10 @@ nixpkgs.lib.nixosSystem rec {
     }
   ];
 
+  # We expose some extra arguments so that our modules can parameterize
+  # better based on these values.
   extraArgs = {
+    currentSystemName = name;
     currentSystem = system;
   };
 }
