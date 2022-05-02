@@ -2,7 +2,10 @@
 
 {
   # We require 5.14+ for VMware Fusion on M1.
-  boot.kernelPackages = pkgs.linuxPackages_5_15;
+  boot.kernelPackages = if currentSystemName == "vm-aarch64" then
+    pkgs.linuxPackages_5_15
+  else
+    pkgs.linuxPackages_latest;
 
   # use unstable nix so we can access flakes
   nix = {

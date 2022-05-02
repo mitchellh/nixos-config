@@ -1,0 +1,12 @@
+diff -puNr prl-tools-build/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg.c prl-tools-build/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg.c
+--- prl-tools-build/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg.c
++++ prl-tools-build/kmods/prl_tg/Toolgate/Guest/Linux/prl_tg/prltg.c
+@@ -249,7 +249,7 @@ static ssize_t prl_tg_write(struct file
+ 	size_t nbytes, loff_t *ppos)
+ {
+ 	int ret = 0;
+-	struct tg_dev *dev = PDE_DATA(FILE_DENTRY(filp)->d_inode);
++	struct tg_dev *dev = pde_data(FILE_DENTRY(filp)->d_inode);
+ 	void *ureq = NULL;
+ 	TG_REQ_DESC sdesc;
+ 	TG_REQUEST src;
