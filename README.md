@@ -63,13 +63,18 @@ I also use this VM on a MacBook Pro (to be fair, it is maxed out on specs),
 and I have no issues whatsoever.
 
 **Does this work with Apple Silicon Macs?** Yes, using the VMware Fusion
-Public Preview (at the time of writing). There are some issues, but its
-entirely workable. I'll keep improving this since my primary machine will
-be an Apple Silicon machine soon.
+Public Preview (at the time of writing) or [UTM](https://getutm.app).
+There are some issues, but its entirely workable. I've been using an
+Apple Silicon Mac full time since Nov 2021 with this setup.
 
 ## Setup
 
 Video: https://www.youtube.com/watch?v=ubDMLoWz76U
+
+**Note:** This setup guide will cover VMware Fusion because that is the
+hypervisor I use day to day. The configurations in this repository also
+work with UTM (see `vm-aarch64-utm`) but I'm not using that full time so they
+may break from time to time.
 
 If you need an ISO for NixOS, you can build your own in the `iso` folder.
 For x86-64, I usually just download the official ISO, but I build the
@@ -79,6 +84,10 @@ building an ISO. You'll also need a `docker` running on your machine for buildin
 ```
 $ make iso/nixos.iso
 ```
+
+You can also download ISOs from [Hydra](https://hydra.nixos.org/project/nixos),
+including aarch64 ISOs. I've found that in qemu for example, these ISOs work
+while my Docker-built one doesn't, and I'm not sure why!
 
 Create a VMware Fusion VM with the following settings. My configurations
 are made for VMware Fusion exclusively currently and you will have issues
