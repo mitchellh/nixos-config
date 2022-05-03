@@ -1,11 +1,8 @@
-{ config, pkgs, currentSystem, currentSystemName,... }:
+{ config, pkgs, lib, currentSystem, currentSystemName,... }:
 
 {
-  # We require 5.14+ for VMware Fusion on M1.
-  boot.kernelPackages = if currentSystemName == "vm-aarch64" then
-    pkgs.linuxPackages_5_15
-  else
-    pkgs.linuxPackages_latest;
+  # Be careful updating this.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # use unstable nix so we can access flakes
   nix = {
@@ -92,7 +89,7 @@
     niv
     rxvt_unicode
     xclip
-
+  ] ++ lib.optionals (currentSystemName == "vm-aarch64") [
     # This is needed for the vmware user tools clipboard to work.
     # You can test if you don't need this by deleting this and seeing
     # if the clipboard sill works.
