@@ -7,6 +7,11 @@
     # it'll impact your entire system.
     nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
 
+    # Locks nixpkgs to an older version with an older Kernel that boots
+    # on VMware Fusion Tech Preview. This can be swapped to nixpkgs when
+    # the TP fixes the bug.
+    nixpkgs-old-kernel.url = "github:nixos/nixpkgs/bacbfd713b4781a4a82c1f390f8fe21ae3b8b95b";
+
     # We use the unstable nixpkgs repo for some packages.
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
@@ -42,7 +47,8 @@
     ];
   in {
     nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" rec {
-      inherit overlays nixpkgs home-manager;
+      inherit overlays home-manager;
+      nixpkgs = inputs.nixpkgs-old-kernel;
       system = "aarch64-linux";
       user   = "mitchellh";
     };
