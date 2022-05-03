@@ -125,6 +125,11 @@ configuration is used:
 $ export NIXNAME=vm-aarch64
 ```
 
+**Other Hypervisors:** If you are using Parallels, use `vm-aarch64-prl`.
+If you are using UTM, use `vm-aarch64-utm`. Note that the environments aren't
+_exactly_ equivalent between hypervisors but they're very close and they
+all work.
+
 Perform the initial bootstrap. This will install NixOS on the VM disk image
 but will not setup any other configurations yet. This prepares the VM for
 any NixOS customization:
