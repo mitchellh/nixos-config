@@ -10,8 +10,8 @@ font pango:Fira Code 8
 # Window visuals
 new_window pixel 2
 new_float pixel 2
-floating_minimum_size 400x300
-floating_maximum_size -1x-1
+floating_minimum_size 400 x 300
+floating_maximum_size -1 x -1
 focus_follows_mouse no
 
 # Reading colors from resources

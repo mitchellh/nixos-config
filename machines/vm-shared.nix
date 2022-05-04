@@ -49,7 +49,7 @@
 
     desktopManager = {
       xterm.enable = false;
-      wallpaper.mode = "scale";
+      wallpaper.mode = "fill";
     };
 
     displayManager = {
