@@ -9,7 +9,7 @@
 , glib
 , dbus-glib
 , zlib
-, kernel ? null
+, kernel
 , libsOnly ? false
 , fetchurl
 , undmg
@@ -17,23 +17,15 @@
 , autoPatchelfHook
 }:
 
-assert (!libsOnly) -> kernel != null;
-
-let
-  aarch64 = stdenv.hostPlatform.system == "aarch64-linux";
-  x86_64 = stdenv.hostPlatform.system == "x86_64-linux";
-  i686 = stdenv.hostPlatform.system == "i686-linux";
-in
 stdenv.mkDerivation rec {
-  version = "${prl_major}.1.2-51548";
-  prl_major = "17";
+  version = "17.1.3-51565";
   pname = "prl-tools";
 
   # We download the full distribution to extract prl-tools-lin.iso from
   # => ${dmg}/Parallels\ Desktop.app/Contents/Resources/Tools/prl-tools-lin.iso
   src = fetchurl {
-    url = "https://download.parallels.com/desktop/v${prl_major}/${version}/ParallelsDesktop-${version}.dmg";
-    sha256 = "sha256-OyfjFPiaEjFWi3/RxX+lgRoXn1aFH3mEC/jr/pcHsqw=";
+    url = "https://download.parallels.com/desktop/v${lib.versions.major version}/${version}/ParallelsDesktop-${version}.dmg";
+    sha256 = "sha256-9CNp2c4gA5/XwcKuth+H7kaavTqybpjI1x22yejOaW0=";
   };
 
   hardeningDisable = [ "pic" "format" ];
@@ -41,26 +33,26 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ p7zip undmg perl autoPatchelfHook ]
     ++ lib.optionals (!libsOnly) [ makeWrapper ] ++ kernel.moduleBuildDependencies;
 
-  buildInputs = with xorg; [ stdenv.cc.cc libXrandr libXext libX11 libXcomposite libXinerama ]
+  buildInputs = with xorg; [ libXrandr libXext libX11 libXcomposite libXinerama ]
     ++ lib.optionals (!libsOnly) [ libXi glib dbus-glib zlib ];
 
   runtimeDependencies = [ glib xorg.libXrandr ];
 
   inherit libsOnly;
 
-  unpackPhase = assert (aarch64 || x86_64 || i686); ''
+  unpackPhase = ''
     undmg "${src}"
     export sourceRoot=prl-tools-build
-    7z x "Parallels Desktop.app/Contents/Resources/Tools/prl-tools-lin${lib.optionalString aarch64 "-arm"}.iso" -o$sourceRoot
+    7z x "Parallels Desktop.app/Contents/Resources/Tools/prl-tools-lin${lib.optionalString stdenv.isAarch64 "-arm"}.iso" -o$sourceRoot
     if test -z "$libsOnly"; then
       ( cd $sourceRoot/kmods; tar -xaf prl_mod.tar.gz )
     fi
   '';
 
-  patches = if lib.versionAtLeast kernel.version "5.17" then [ ./prl-tools.patch ] else [ ];
+  patches = lib.optionals (lib.versionAtLeast kernel.version "5.18") [ ./prl-tools.patch ];
 
-  kernelVersion = if libsOnly then "" else lib.getVersion kernel.name;
-  kernelDir = if libsOnly then "" else "${kernel.dev}/lib/modules/${kernelVersion}";
+  kernelVersion = lib.optionalString (!libsOnly) kernel.modDirVersion;
+  kernelDir = lib.optionalString (!libsOnly) "${kernel.dev}/lib/modules/${kernelVersion}";
   scriptPath = lib.concatStringsSep ":" (lib.optionals (!libsOnly) [ "${util-linux}/bin" "${gawk}/bin" ]);
 
   buildPhase = ''
@@ -85,12 +77,12 @@ stdenv.mkDerivation rec {
         cp prl_fs/SharedFolders/Guest/Linux/prl_fs/prl_fs.ko $out/lib/modules/${kernelVersion}/extra
         cp prl_fs_freeze/Snapshot/Guest/Linux/prl_freeze/prl_fs_freeze.ko $out/lib/modules/${kernelVersion}/extra
         cp prl_tg/Toolgate/Guest/Linux/prl_tg/prl_tg.ko $out/lib/modules/${kernelVersion}/extra
-        ${lib.optionalString aarch64
+        ${lib.optionalString stdenv.isAarch64
         "cp prl_notifier/Installation/lnx/prl_notifier/prl_notifier.ko $out/lib/modules/${kernelVersion}/extra"}
       )
     fi
     ( # tools
-      cd tools/tools${if aarch64 then "-arm64" else if x86_64 then "64" else "32"}
+      cd tools/tools${if stdenv.isAarch64 then "-arm64" else if stdenv.isx86_64 then "64" else "32"}
       mkdir -p $out/lib
       if test -z "$libsOnly"; then
         # install binaries

@@ -8,11 +8,6 @@
     ./vm-shared.nix
   ];
 
-  # An earlier kernel is required for now since the parallels-guest
-  # patches don't work yet with 5.18. I have a link to a working patch
-  # but going to put that in a separate commit.
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_17;
-
   # The official parallels guest support does not work currently.
   # https://github.com/NixOS/nixpkgs/pull/153665
   disabledModules = [ "virtualisation/parallels-guest.nix" ];
