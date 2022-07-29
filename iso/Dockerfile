@@ -1,7 +1,7 @@
 # Thanks to https://github.com/TobiasBales/nixos-m1-arm-builder/ for
 # the original source that this is based on.
 
-FROM ubuntu:21.10
+FROM ubuntu:22.04
 
 # install dependencies
 RUN apt update -y
