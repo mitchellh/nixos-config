@@ -55,6 +55,9 @@ bindsym $mod+n exec kitty
 bindsym $mod+d split h
 bindsym $mod+Shift+d split v
 
+# temp, hacking on a tty
+bindsym $mod+Shift+n exec /home/mitchellh/bin/devtty
+
 # kill focused window
 bindsym $mod+w kill
 
