@@ -51,6 +51,7 @@ let sources = import ../../nix/sources.nix; in {
 
   xdg.configFile."i3/config".text = builtins.readFile ./i3;
   xdg.configFile."rofi/config.rasi".text = builtins.readFile ./rofi;
+  xdg.configFile."devtty/config".text = builtins.readFile ./devtty;
 
   # tree-sitter parsers
   xdg.configFile."nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
