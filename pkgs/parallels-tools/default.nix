@@ -49,7 +49,10 @@ stdenv.mkDerivation rec {
     fi
   '';
 
-  patches = lib.optionals (lib.versionAtLeast kernel.version "5.18") [ ./prl-tools.patch ];
+  patches = lib.concatMap
+    (version: lib.optionals (lib.versionAtLeast kernel.version version)
+      [ ./prl-tools-${version}.patch ])
+    [ "5.18" "5.19" ];
 
   kernelVersion = lib.optionalString (!libsOnly) kernel.modDirVersion;
   kernelDir = lib.optionalString (!libsOnly) "${kernel.dev}/lib/modules/${kernelVersion}";
