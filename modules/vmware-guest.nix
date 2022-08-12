@@ -40,6 +40,8 @@ in
     systemd.services.vmware =
       { description = "VMWare Guest Service";
         wantedBy = [ "multi-user.target" ];
+        after = [ "display-manager.service" ];
+        unitConfig.ConditionVirtualization = "vmware";
         serviceConfig.ExecStart = "${open-vm-tools}/bin/vmtoolsd";
       };
 
@@ -68,9 +70,8 @@ in
     environment.etc.vmware-tools.source = "${open-vm-tools}/etc/vmware-tools/*";
 
     services.xserver = mkIf (!cfg.headless) {
-      # TODO: these don't compile yet
-      #videoDrivers = mkOverride 50 [ "vmware" ];
-      #modules = [ xf86inputvmmouse ];
+      # TODO: does not build on aarch64
+      # modules = [ xf86inputvmmouse ];
 
       config = ''
           Section "InputClass"
