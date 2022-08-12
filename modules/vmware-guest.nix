@@ -50,8 +50,7 @@ in
       {
         description = "VMware vmblock fuse mount";
         documentation = [ "https://github.com/vmware/open-vm-tools/blob/master/open-vm-tools/vmblock-fuse/design.txt" ];
-        before = [ "vmware.service" ];
-        wants = [ "vmware.service" ];
+        unitConfig.ConditionVirtualization = "vmware";
         what = "${open-vm-tools}/bin/vmware-vmblock-fuse";
         where = "/run/vmblock-fuse";
         type = "fuse";
