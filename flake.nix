@@ -7,11 +7,6 @@
     # it'll impact your entire system.
     nixpkgs.url = "github:nixos/nixpkgs/release-22.05";
 
-    # Locks nixpkgs to an older version with an older Kernel that boots
-    # on VMware Fusion Tech Preview. This can be swapped to nixpkgs when
-    # the TP fixes the bug.
-    nixpkgs-old-kernel.url = "github:nixos/nixpkgs/bacbfd713b4781a4a82c1f390f8fe21ae3b8b95b";
-
     # We use the unstable nixpkgs repo for some packages.
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
@@ -46,9 +41,8 @@
       })
     ];
   in {
-    nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" rec {
-      inherit home-manager;
-      nixpkgs = inputs.nixpkgs-old-kernel;
+    nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" {
+      inherit nixpkgs home-manager;
       system = "aarch64-linux";
       user   = "mitchellh";
 
@@ -56,6 +50,7 @@
         # We need the latest version of mesa for VMware Fusion
         # TODO: drop after release following NixOS 22.05
         mesa = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.mesa;
+        open-vm-tools = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.open-vm-tools;
       })];
     };
 

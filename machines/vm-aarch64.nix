@@ -8,10 +8,6 @@
   # customizations to make this work on aarch64.
   disabledModules = [ "virtualisation/vmware-guest.nix" ];
 
-  # An earlier kernel is required for VMware Fusion due to booting issues.
-  # This will prob be fixed in the next update.
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_15;
-
   # Interface is this on M1
   networking.interfaces.ens160.useDHCP = true;
 
