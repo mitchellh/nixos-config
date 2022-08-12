@@ -8,10 +8,6 @@
   # customizations to make this work on aarch64.
   disabledModules = [ "virtualisation/vmware-guest.nix" ];
 
-  # An earlier kernel is required for VMware Fusion due to booting issues.
-  # This will prob be fixed in the next update.
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_5_15;
-
   # Interface is this on M1
   networking.interfaces.ens160.useDHCP = true;
 
@@ -23,16 +19,4 @@
   virtualisation.vmware.guest.enable = true;
 
   # Share our host filesystem
-  fileSystems."/host" = {
-    fsType = "fuse./run/current-system/sw/bin/vmhgfs-fuse";
-    device = ".host:/";
-    options = [
-      "umask=22"
-      "uid=1000"
-      "gid=1000"
-      "allow_other"
-      "auto_unmount"
-      "defaults"
-    ];
-  };
 }

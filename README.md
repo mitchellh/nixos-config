@@ -94,7 +94,7 @@ are made for VMware Fusion exclusively currently and you will have issues
 on other virtualization solutions without minor changes.
 
   * ISO: NixOS 21.11 or later.
-  * Disk: SATA 150 GB+
+  * Disk: NVMe 150 GB+
   * CPU/Memory: I give at least half my cores and half my RAM, as much as you can.
   * Graphics: Full acceleration, full resolution, maximum graphics RAM.
   * Network: Shared with my Mac.
@@ -108,6 +108,13 @@ $ sudo su
 $ passwd
 # change to root
 ```
+
+At this point, verify `/dev/nvme0n1` exists. This is the expected block device
+where the Makefile will install the OS. If you setup your VM to use NVMe,
+this should exist. If `/dev/sda` or `/dev/vda` exists instead, you didn't
+configure NVMe properly. Note, these other block device types work fine,
+but you'll probably have to modify the `bootstrap0` Makefile task to use
+the proper block device paths.
 
 Run `ifconfig` and get the IP address of the first device. It is probably
 `192.168.58.XXX`, but it can be anything. In a terminal with this repository
