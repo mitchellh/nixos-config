@@ -47,10 +47,16 @@
     ];
   in {
     nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" rec {
-      inherit overlays home-manager;
+      inherit home-manager;
       nixpkgs = inputs.nixpkgs-old-kernel;
       system = "aarch64-linux";
       user   = "mitchellh";
+
+      overlays = overlays ++ [(final: prev: {
+        # We need the latest version of mesa for VMware Fusion
+        # TODO: drop after release following NixOS 22.05
+        mesa = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.mesa;
+      })];
     };
 
     nixosConfigurations.vm-aarch64-prl = mkVM "vm-aarch64-prl" rec {
