@@ -50,6 +50,7 @@
         # We need the latest version of mesa for VMware Fusion
         # TODO: drop after release following NixOS 22.05
         mesa = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.mesa;
+        open-vm-tools = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.open-vm-tools;
       })];
     };
 
