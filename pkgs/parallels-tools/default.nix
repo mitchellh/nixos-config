@@ -18,14 +18,14 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = "17.1.4-51567";
+  version = "18.0.0-53049";
   pname = "prl-tools";
 
   # We download the full distribution to extract prl-tools-lin.iso from
   # => ${dmg}/Parallels\ Desktop.app/Contents/Resources/Tools/prl-tools-lin.iso
   src = fetchurl {
     url = "https://download.parallels.com/desktop/v${lib.versions.major version}/${version}/ParallelsDesktop-${version}.dmg";
-    sha256 = "sha256-gjLxQOTFuVghv1Bj+zfbNW97q1IN2rurSnPQi13gzRA=";
+    sha256 = "sha256-MGiqCvOsu/sKz6JHJFGP5bT12XYnm2kTMdOiflg9ses=";
   };
 
   hardeningDisable = [ "pic" "format" ];
@@ -48,11 +48,6 @@ stdenv.mkDerivation rec {
       ( cd $sourceRoot/kmods; tar -xaf prl_mod.tar.gz )
     fi
   '';
-
-  patches = lib.concatMap
-    (version: lib.optionals (lib.versionAtLeast kernel.version version)
-      [ ./prl-tools-${version}.patch ])
-    [ "5.18" "5.19" ];
 
   kernelVersion = lib.optionalString (!libsOnly) kernel.modDirVersion;
   kernelDir = lib.optionalString (!libsOnly) "${kernel.dev}/lib/modules/${kernelVersion}";
