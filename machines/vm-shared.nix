@@ -4,15 +4,21 @@
   # Be careful updating this.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # use unstable nix so we can access flakes
   nix = {
+    # use unstable nix so we can access flakes
     package = pkgs.nixUnstable;
     extraOptions = ''
       experimental-features = nix-command flakes
       keep-outputs = true
       keep-derivations = true
     '';
-   };
+
+    # public binary cache that I use for all my derivations. You can keep
+    # this, use your own, or toss it. Its typically safe to use a binary cache
+    # since the data inside is checksummed.
+    binaryCaches = ["https://mitchellh-nixos-config.cachix.org"];
+    binaryCachePublicKeys = ["mitchellh-nixos-config.cachix.org-1:bjEbXJyLrL1HZZHBbO4QALnI5faYZppzkU4D2s0G8RQ="];
+  };
 
   # We expect to run the VM on hidpi machines.
   hardware.video.hidpi.enable = true;
@@ -90,6 +96,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    cachix
     gnumake
     killall
     niv
