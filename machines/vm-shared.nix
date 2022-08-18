@@ -70,9 +70,7 @@
       # display resolution. This is a known issue with VMware Fusion.
       sessionCommands = ''
         ${pkgs.xorg.xset}/bin/xset r rate 200 40
-      '' + (if currentSystemName == "vm-aarch64" then ''
-        ${pkgs.xorg.xrandr}/bin/xrandr -s '2880x1800'
-      '' else "");
+      '';
     };
 
     windowManager = {
