@@ -23,7 +23,6 @@ let sources = import ../../nix/sources.nix; in {
     pkgs.tree
     pkgs.watch
     pkgs.zathura
-    pkgs._1password
 
     pkgs.go
     pkgs.gopls
