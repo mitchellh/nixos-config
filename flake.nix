@@ -19,7 +19,7 @@
 
     # Other packages
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    zig.url = "github:arqv/zig-overlay";
+    zig.url = "github:mitchellh/zig-overlay";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: let
@@ -28,10 +28,11 @@
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
       inputs.neovim-nightly-overlay.overlay
+      inputs.zig.overlays.default
 
       (final: prev: {
-        # Zig doesn't export an overlay so we do it here
-        zig-master = inputs.zig.packages.${prev.system}.master.latest;
+        # We need to pin to this version because master is currently broken
+        zig-master = final.zigpkgs.master-2022-08-19;
 
         # Go we always want the latest version
         go = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.go_1_19;
