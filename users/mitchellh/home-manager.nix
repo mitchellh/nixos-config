@@ -26,7 +26,7 @@ let sources = import ../../nix/sources.nix; in {
 
     pkgs.go
     pkgs.gopls
-    pkgs.zig-master
+    pkgs.zigpkgs.master
 
     pkgs.tlaplusToolbox
     pkgs.tetex
