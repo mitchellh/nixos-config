@@ -18,17 +18,17 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = "18.0.3-53079";
+  version = "18.1.0-53311";
   pname = "prl-tools";
 
   # We download the full distribution to extract prl-tools-lin.iso from
   # => ${dmg}/Parallels\ Desktop.app/Contents/Resources/Tools/prl-tools-lin.iso
   src = fetchurl {
     url = "https://download.parallels.com/desktop/v${lib.versions.major version}/${version}/ParallelsDesktop-${version}.dmg";
-    sha256 = "sha256-z9B2nhcTSZr3L30fa54zYi6WnonQ2wezHoneT2tQWAc=";
+    sha256 = "sha256-2ROPFIDoV2/sMVsVhcSyn0m1QVMCNb399WzKd/cozws=";
   };
 
-  patches = [./prl-tools-6.0.patch];
+  # patches = [./prl-tools-6.0.patch];
 
   hardeningDisable = [ "pic" "format" ];
 
