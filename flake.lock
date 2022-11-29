@@ -50,19 +50,20 @@
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
-        ]
+        ],
+        "utils": "utils"
       },
       "locked": {
-        "lastModified": 1656169755,
-        "narHash": "sha256-Nlnm4jeQWEGjYrE6hxi/7HYHjBSZ/E0RtjCYifnNsWk=",
+        "lastModified": 1669724862,
+        "narHash": "sha256-GwLonjmyhnTGQRNfKcUCgMSKYj49ZehjjJulaM/yH18=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "4a3d01fb53f52ac83194081272795aa4612c2381",
+        "rev": "e891b060e7d11bb8f7dedb86a41d804891a6f5a9",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
-        "ref": "release-22.05",
+        "ref": "release-22.11",
         "repo": "home-manager",
         "type": "github"
       }
@@ -115,16 +116,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1669677308,
-        "narHash": "sha256-n788Cx+W6J1CtQofJD/KUY1c2WcJx6GqyJ+++1y9B3k=",
+        "lastModified": 1669759762,
+        "narHash": "sha256-/VIfGdi5Qi6Bv1IpOj+cKG8DyYsDP1A+6ZLJxTJCG6E=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f214b8c9455e90b70bafd4ed9a58d448c243e8bb",
+        "rev": "d45d36401d8a83be73f86ba8d1e8f5b9333845c6",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "release-22.05",
+        "ref": "release-22.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -168,6 +169,21 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "zig": "zig"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     },
     "zig": {
