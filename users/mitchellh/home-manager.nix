@@ -16,6 +16,7 @@ let sources = import ../../nix/sources.nix; in {
   # not a huge list.
   home.packages = [
     pkgs.bat
+    pkgs.chromium
     pkgs.fd
     pkgs.firefox
     pkgs.fzf
