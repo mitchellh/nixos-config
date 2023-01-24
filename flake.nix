@@ -66,5 +66,20 @@
       system = "x86_64-linux";
       user   = "mitchellh";
     };
+
+    # Use this to prepare a new VMWare image.
+    #
+    # $ nix build .#vmwareImage -L
+    # $ open ./result/*.vmdk
+    #
+    packages.aarch64-linux = {
+      vmwareImage =
+        self.nixosConfigurations.vm-aarch64.config.system.build.vmwareImage;
+    };
+
+    packages.x86_64-linux = {
+      vmwareImage =
+        self.nixosConfigurations.vm-intel.config.system.build.vmwareImage;
+    };
   };
 }
