@@ -13,16 +13,24 @@ NIXNAME ?= vm-intel
 # reused a lot so we just store them up here.
 SSH_OPTIONS=-o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 
+# We need to do some OS switching below.
+UNAME := $(shell uname)
+
 switch:
-	sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake ".#${NIXNAME}"
-
-test:
-	sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --flake ".#$(NIXNAME)"
-
-# Builds and switches for macOS using nix-darwin
-darwin/switch:
+ifeq ($(UNAME), Darwin)
 	nix build ".#darwinConfigurations.${NIXNAME}.system"
 	./result/sw/bin/darwin-rebuild switch --flake "$$(pwd)#${NIXNAME}"
+else
+	sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake ".#${NIXNAME}"
+endif
+
+test:
+ifeq ($(UNAME), Darwin)
+	nix build ".#darwinConfigurations.${NIXNAME}.system"
+	./result/sw/bin/darwin-rebuild test --flake "$$(pwd)#${NIXNAME}"
+else
+	sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --flake ".#$(NIXNAME)"
+endif
 
 # This builds the given NixOS configuration and pushes the results to the
 # cache. This does not alter the current running system. This requires

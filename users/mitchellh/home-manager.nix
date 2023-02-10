@@ -2,12 +2,16 @@
 
 let
   sources = import ../../nix/sources.nix;
+  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.isLinux;
 
   # For our MANPAGER env var
   # https://github.com/sharkdp/bat/issues/1145
-  manpager = (pkgs.writeShellScriptBin "manpager" ''
+  manpager = (pkgs.writeShellScriptBin "manpager" (if isDarwin then ''
+    sh -c 'col -bx | bat -l man -p'
+    '' else ''
     cat "$1" | col -bx | bat --language man --style plain
-  '');
+  ''));
 in {
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
@@ -24,26 +28,25 @@ in {
   # not a huge list.
   home.packages = [
     pkgs.bat
-    pkgs.chromium
     pkgs.fd
-    pkgs.firefox
     pkgs.fzf
-    pkgs.git-crypt
     pkgs.htop
     pkgs.jq
     pkgs.ripgrep
-    pkgs.rofi
     pkgs.tree
     pkgs.watch
-    pkgs.zathura
 
-    pkgs.go
     pkgs.gopls
     pkgs.zigpkgs.master
+  ] ++ (lib.optionals isLinux [
+    pkgs.chromium
+    pkgs.firefox
+    pkgs.rofi
+    pkgs.zathura
 
     pkgs.tlaplusToolbox
     pkgs.tetex
-  ];
+  ]);
 
   #---------------------------------------------------------------------
   # Env vars and dotfiles
@@ -78,7 +81,7 @@ in {
   # Programs
   #---------------------------------------------------------------------
 
-  programs.gpg.enable = true;
+  programs.gpg.enable = !isDarwin;
 
   programs.bash = {
     enable = true;
@@ -223,7 +226,7 @@ in {
   };
 
   programs.i3status = {
-    enable = true;
+    enable = isLinux;
 
     general = {
       colors = true;
@@ -278,7 +281,7 @@ in {
   };
 
   services.gpg-agent = {
-    enable = true;
+    enable = isLinux;
     pinentryFlavor = "tty";
 
     # cache the keys forever so we don't get asked for a password
@@ -289,7 +292,7 @@ in {
   xresources.extraConfig = builtins.readFile ./Xresources;
 
   # Make cursor not tiny on HiDPI screens
-  home.pointerCursor = {
+  home.pointerCursor = lib.mkIf isLinux {
     name = "Vanilla-DMZ";
     package = pkgs.vanilla-dmz;
     size = 128;

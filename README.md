@@ -62,38 +62,28 @@ I've been doing this for almost  2 years now, and I've developed
 I also use this VM on a MacBook Pro (to be fair, it is maxed out on specs),
 and I have no issues whatsoever.
 
-**Does this work with Apple Silicon Macs?** Yes, using the VMware Fusion
-Public Preview (at the time of writing) or [UTM](https://getutm.app).
-There are some issues, but its entirely workable. I've been using an
+**Does this work with Apple Silicon Macs?** Yes, I use VMware Fusion
+but my configurations also work for Parallels and UTM. Folder syncing,
+clipboards, and graphics acceleration all work. I've been using an
 Apple Silicon Mac full time since Nov 2021 with this setup.
 
-## Setup
+## Setup (VM)
 
 Video: https://www.youtube.com/watch?v=ubDMLoWz76U
 
 **Note:** This setup guide will cover VMware Fusion because that is the
 hypervisor I use day to day. The configurations in this repository also
-work with UTM (see `vm-aarch64-utm`) but I'm not using that full time so they
-may break from time to time.
+work with UTM (see `vm-aarch64-utm`) and Parallels (see `vm-aarch64-prl`) but
+I'm not using that full time so they may break from time to time.
 
-If you need an ISO for NixOS, you can build your own in the `iso` folder.
-For x86-64, I usually just download the official ISO, but I build the
-ISO from scratch for aarch64. There is a make target `iso/nixos.iso` you can use for
-building an ISO. You'll also need a `docker` running on your machine for building an ISO.
-
-```
-$ make iso/nixos.iso
-```
-
-You can also download ISOs from [Hydra](https://hydra.nixos.org/project/nixos),
-including aarch64 ISOs. I've found that in qemu for example, these ISOs work
-while my Docker-built one doesn't, and I'm not sure why!
+You can also download NixOS ISOs from [Hydra](https://hydra.nixos.org/project/nixos),
+including aarch64 ISOs.
 
 Create a VMware Fusion VM with the following settings. My configurations
 are made for VMware Fusion exclusively currently and you will have issues
 on other virtualization solutions without minor changes.
 
-  * ISO: NixOS 21.11 or later.
+  * ISO: NixOS 22.11 or later.
   * Disk: NVMe 150 GB+
   * CPU/Memory: I give at least half my cores and half my RAM, as much as you can.
   * Graphics: Full acceleration, full resolution, maximum graphics RAM.
@@ -157,6 +147,31 @@ You should have a graphical functioning dev VM.
 At this point, I never use Mac terminals ever again. I clone this repository
 in my VM and I use the other Make tasks such as `make test`, `make switch`, etc.
 to make changes my VM.
+
+## Setup (macOS/Darwin)
+
+**THIS IS OPTIONAL AND UNRELATED TO THE VM WORK.** I recommend you ignore
+this unless you're interested in using Nix to manage your Mac too.
+
+I share some of my Nix configurations with my Mac host and use Nix
+to manage _some_ aspects of my macOS installation, too. This uses the
+[nix-darwin](https://github.com/LnL7/nix-darwin) project. I don't manage
+_everything_ with Nix, for example I don't manage apps, some of my system
+settings, Homebrew, etc. I plan to migrate some of those in time.
+
+To utilize the Mac setup, first install Nix using some Nix installer.
+There are two great installers right now:
+[nix-installer](https://github.com/DeterminateSystems/nix-installer)
+by Determinate Systems and [Flox](https://floxdev.com/). The point of both
+for my configs is just to get the `nix` CLI with flake support installed.
+
+Once installed, clone this repo and run `make`. If there are any errors,
+follow the error message (some folders may need permissions changed,
+some files may need to be deleted). That's it.
+
+**WARNING: Don't do this without reading the source.** This repository
+is and always has been _my_ configurations. If you blindly run this,
+your system may be changed in ways that you don't want. Read my source!
 
 ## FAQ
 
