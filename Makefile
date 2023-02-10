@@ -19,6 +19,11 @@ switch:
 test:
 	sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --flake ".#$(NIXNAME)"
 
+# Builds and switches for macOS using nix-darwin
+darwin/switch:
+	nix build ".#darwinConfigurations.${NIXNAME}.system"
+	./result/sw/bin/darwin-rebuild switch --flake "$$(pwd)#${NIXNAME}"
+
 # This builds the given NixOS configuration and pushes the results to the
 # cache. This does not alter the current running system. This requires
 # cachix authentication to be configured out of band.

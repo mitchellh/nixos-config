@@ -36,7 +36,7 @@
     zig.url = "github:mitchellh/zig-overlay";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: let
+  outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
     mkDarwin = import ./lib/mkdarwin.nix;
     mkVM = import ./lib/mkvm.nix;
 
@@ -76,7 +76,7 @@
     };
 
     darwinConfigurations.macbook-pro-m1 = mkDarwin "macbook-pro-m1" {
-      inherit nixpkgs home-manager overlays;
+      inherit darwin nixpkgs home-manager overlays;
       system = "aarch64-darwin";
       user   = "mitchellh";
     };
