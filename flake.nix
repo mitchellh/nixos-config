@@ -13,7 +13,14 @@
     home-manager = {
       url = "github:nix-community/home-manager/release-22.11";
 
-      # We want home-manager to use the same set of nixpkgs as our system.
+      # We want to use the same set of nixpkgs as our system.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+
+      # We want to use the same set of nixpkgs as our system.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -30,6 +37,7 @@
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: let
+    mkDarwin = import ./lib/mkdarwin.nix;
     mkVM = import ./lib/mkvm.nix;
 
     # Overlays is the list of overlays we want to apply from flake inputs.
@@ -64,6 +72,12 @@
     nixosConfigurations.vm-intel = mkVM "vm-intel" rec {
       inherit nixpkgs home-manager overlays;
       system = "x86_64-linux";
+      user   = "mitchellh";
+    };
+
+    darwinConfigurations.macbook-pro-m1 = mkDarwin "macbook-pro-m1" {
+      inherit nixpkgs home-manager overlays;
+      system = "aarch64-darwin";
       user   = "mitchellh";
     };
   };
