@@ -22,6 +22,11 @@
     };
   };
 
+  nixpkgs.config.permittedInsecurePackages = [
+    # Needed for k2pdfopt 2.53.
+    "mupdf-1.17.0"
+  ];
+
   # We expect to run the VM on hidpi machines.
   hardware.video.hidpi.enable = true;
 
