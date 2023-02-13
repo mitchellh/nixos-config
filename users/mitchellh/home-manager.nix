@@ -69,6 +69,9 @@ in {
   xdg.configFile."rofi/config.rasi".text = builtins.readFile ./rofi;
   xdg.configFile."devtty/config".text = builtins.readFile ./devtty;
 
+  # Rectangle.app. This has to be imported manually using the app.
+  xdg.configFile."rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+
   # tree-sitter parsers
   xdg.configFile."nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
   xdg.configFile."nvim/queries/proto/folds.scm".source =
