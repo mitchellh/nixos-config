@@ -90,6 +90,12 @@
   # out or delete all of this.
   services.tailscale.enable = true;
 
+  # Enable flatpak. We try not to use this (we prefer to use Nix!) but
+  # some software its useful to use this and we also use it for dev tools.
+  services.flatpak.enable = true;
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.mutableUsers = false;
 
