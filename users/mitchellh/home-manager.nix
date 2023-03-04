@@ -44,9 +44,6 @@ in {
     pkgs.k2pdfopt
     pkgs.rofi
     pkgs.zathura
-
-    pkgs.tlaplusToolbox
-    pkgs.tetex
   ]);
 
   #---------------------------------------------------------------------
@@ -141,12 +138,12 @@ in {
       gp = "git push";
       gs = "git status";
       gt = "git tag";
-
+    } // (if isLinux then {
       # Two decades of using a Mac has made this such a strong memory
       # that I'm just going to keep it consistent.
       pbcopy = "xclip";
       pbpaste = "xclip -o";
-    };
+    } else {});
 
     plugins = map (n: {
       name = n;
