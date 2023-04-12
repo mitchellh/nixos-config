@@ -341,10 +341,10 @@
         "homepage": null,
         "owner": "ziglang",
         "repo": "zig.vim",
-        "rev": "c33e1e312fc0f9523d09d7ddb845ea5d52db41d0",
-        "sha256": "17iwx87n8w2ksi9f8ravsa69ng7gzn0px0d5pd58n3lsdvhcsm59",
+        "rev": "a0d9adedafeb1a33a0159d16ddcdf194b7cea881",
+        "sha256": "0qcjwms102cpdbjamda3cbdwbqdk4zj5zrvr9dlj2lmwkdjqqfdz",
         "type": "tarball",
-        "url": "https://github.com/ziglang/zig.vim/archive/c33e1e312fc0f9523d09d7ddb845ea5d52db41d0.tar.gz",
+        "url": "https://github.com/ziglang/zig.vim/archive/a0d9adedafeb1a33a0159d16ddcdf194b7cea881.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
