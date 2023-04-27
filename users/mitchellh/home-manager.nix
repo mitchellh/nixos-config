@@ -38,7 +38,10 @@ in {
 
     pkgs.gopls
     pkgs.zigpkgs.master
-  ] ++ (lib.optionals isLinux [
+  ] ++ (lib.optionals isDarwin [
+    # This is automatically setup on Linux via services.tailscale
+    pkgs.tailscale
+  ]) ++ (lib.optionals isLinux [
     pkgs.chromium
     pkgs.firefox
     pkgs.k2pdfopt
