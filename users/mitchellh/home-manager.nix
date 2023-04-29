@@ -39,7 +39,8 @@ in {
     pkgs.gopls
     pkgs.zigpkgs.master
   ] ++ (lib.optionals isDarwin [
-    # This is automatically setup on Linux via services.tailscale
+    # This is automatically setup on Linux
+    pkgs.cachix
     pkgs.tailscale
   ]) ++ (lib.optionals isLinux [
     pkgs.chromium
