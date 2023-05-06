@@ -3,6 +3,11 @@ self: super:
 let sources = import ../../nix/sources.nix; in rec {
   # My vim config
   customVim = with self; {
+    vim-copilot = vimUtils.buildVimPlugin {
+      name = "vim-copilot";
+      src = sources.vim-copilot;
+    };
+
     vim-cue = vimUtils.buildVimPlugin {
       name = "vim-cue";
       src = sources.vim-cue;

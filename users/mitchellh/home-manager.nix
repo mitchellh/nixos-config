@@ -38,6 +38,9 @@ in {
 
     pkgs.gopls
     pkgs.zigpkgs.master
+
+    # Node is required for Copilot.vim
+    pkgs.nodejs
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
@@ -252,6 +255,7 @@ in {
     package = pkgs.neovim-nightly;
 
     plugins = with pkgs; [
+      customVim.vim-copilot
       customVim.vim-cue
       customVim.vim-fish
       customVim.vim-fugitive

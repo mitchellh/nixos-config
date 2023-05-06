@@ -215,6 +215,18 @@
         "url": "https://github.com/mitchellh/tree-sitter-proto/archive/42d82fa18f8afe59b5fc0b16c207ee4f84cb185f.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "vim-copilot": {
+        "branch": "release",
+        "description": "Neovim plugin for GitHub Copilot",
+        "homepage": null,
+        "owner": "github",
+        "repo": "copilot.vim",
+        "rev": "1358e8e45ecedc53daf971924a0541ddf6224faf",
+        "sha256": "171ypwb85ya8n63zykdnb8d4ni2jbn728x7r6ph1m67k06g0w4pb",
+        "type": "tarball",
+        "url": "https://github.com/github/copilot.vim/archive/1358e8e45ecedc53daf971924a0541ddf6224faf.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "vim-cue": {
         "branch": "master",
         "description": "cuelang/cue syntax highlighting plugin for vim, derived from google/vim-jsonnet",
