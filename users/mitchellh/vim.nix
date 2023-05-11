@@ -68,6 +68,11 @@ let sources = import ../../nix/sources.nix; in rec {
       };
     };
 
+    vim-devicons = vimUtils.buildVimPlugin {
+      name = "vim-devicons";
+      src = sources.vim-devicons;
+    };
+
     vim-nord = vimUtils.buildVimPlugin {
       name = "vim-nord";
       src = sources.vim-nord;

@@ -239,6 +239,18 @@
         "url": "https://github.com/jjo/vim-cue/archive/bd1a62303d096aa24fe4160a475645087f8770b3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "vim-devicons": {
+        "branch": "master",
+        "description": "Adds file type icons to Vim plugins such as: NERDTree, vim-airline, CtrlP, unite, Denite, lightline, vim-startify and many more",
+        "homepage": "",
+        "owner": "ryanoasis",
+        "repo": "vim-devicons",
+        "rev": "71f239af28b7214eebb60d4ea5bd040291fb7e33",
+        "sha256": "0kshppxgi63wn96a8h9zv7drwqcbljin5jhszh8q7pqw2xsd83gn",
+        "type": "tarball",
+        "url": "https://github.com/ryanoasis/vim-devicons/archive/71f239af28b7214eebb60d4ea5bd040291fb7e33.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "vim-dracula": {
         "branch": "master",
         "description": "🧛🏻‍♂️ Dark theme for Vim",
