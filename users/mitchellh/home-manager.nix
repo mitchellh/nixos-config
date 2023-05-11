@@ -41,6 +41,11 @@ in {
 
     # Node is required for Copilot.vim
     pkgs.nodejs
+
+    (pkgs.python3.withPackages (p: with p; [
+      ipython
+      jupyter
+    ]))
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
@@ -254,6 +259,16 @@ in {
     enable = true;
     package = pkgs.neovim-nightly;
 
+    withPython3 = true;
+    extraPython3Packages = (p: with p; [
+      # For nvim-magma
+      jupyter-client
+      cairosvg
+      plotly
+      #pnglatex
+      #kaleido
+    ]);
+
     plugins = with pkgs; [
       customVim.vim-copilot
       customVim.vim-cue
@@ -276,6 +291,7 @@ in {
       customVim.nvim-treesitter
       customVim.nvim-treesitter-playground
       customVim.nvim-treesitter-textobjects
+      customVim.nvim-magma
 
       vimPlugins.vim-airline
       vimPlugins.vim-airline-themes

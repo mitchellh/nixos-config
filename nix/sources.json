@@ -83,6 +83,18 @@
         "url": "https://github.com/neovim/nvim-lspconfig/archive/1c0e6d39aa93deebdee35d4945889641e764619e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nvim-magma": {
+        "branch": "main",
+        "description": "Interact with Jupyter from NeoVim.",
+        "homepage": null,
+        "owner": "dccsillag",
+        "repo": "magma-nvim",
+        "rev": "395b48e2e202d82fca76c15d2dcd8785c125d686",
+        "sha256": "0fn2r1z3lx1zh2dxm5bpqpqb959pcylviag4xndv4z3gyyli4khn",
+        "type": "tarball",
+        "url": "https://github.com/dccsillag/magma-nvim/archive/395b48e2e202d82fca76c15d2dcd8785c125d686.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nvim-plenary": {
         "branch": "master",
         "description": "plenary: full; complete; entire; absolute; unqualified. All the lua functions I don't want to write twice.",
