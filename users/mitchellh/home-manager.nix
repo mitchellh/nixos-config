@@ -53,7 +53,6 @@ in {
   ]) ++ (lib.optionals isLinux [
     pkgs.chromium
     pkgs.firefox
-    pkgs.k2pdfopt
     pkgs.rofi
     pkgs.zathura
   ]);
