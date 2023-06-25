@@ -377,10 +377,10 @@
         "homepage": null,
         "owner": "ziglang",
         "repo": "zig.vim",
-        "rev": "a9633f5f5905e448049933bfcdaab632447c4394",
-        "sha256": "1bi82sdq7x46f6z9xv24x3ahhsg7bxcm2wabjfw5wmlpp6m13csa",
+        "rev": "0c4f965468259ab6e47fd7c6b2127583a8860eb1",
+        "sha256": "052jmw1pzqydg4icsq2s7vn66wyn2ki4lzpln2fzxx9r9hbwfi8m",
         "type": "tarball",
-        "url": "https://github.com/ziglang/zig.vim/archive/a9633f5f5905e448049933bfcdaab632447c4394.tar.gz",
+        "url": "https://github.com/ziglang/zig.vim/archive/0c4f965468259ab6e47fd7c6b2127583a8860eb1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
