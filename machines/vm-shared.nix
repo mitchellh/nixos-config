@@ -89,7 +89,9 @@
 
   # Enable flatpak. We try not to use this (we prefer to use Nix!) but
   # some software its useful to use this and we also use it for dev tools.
-  services.flatpak.enable = true;
+  # Note: disabled for now since it causes some issues with zig env
+  #services.flatpak.enable = true;
+
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
