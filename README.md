@@ -172,10 +172,3 @@ some files may need to be deleted). That's it.
 **WARNING: Don't do this without reading the source.** This repository
 is and always has been _my_ configurations. If you blindly run this,
 your system may be changed in ways that you don't want. Read my source!
-
-## FAQ
-
-### Why do you still use `niv`?
-
-I am still transitioning into a fully flaked setup. During this transition
-(which is indefinite, I'm in no rush), I'm using both.
