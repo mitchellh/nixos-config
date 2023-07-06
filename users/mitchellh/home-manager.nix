@@ -135,12 +135,6 @@ in {
       "source ${sources.theme-bobthefish}/functions/fish_prompt.fish"
       "source ${sources.theme-bobthefish}/functions/fish_right_prompt.fish"
       "source ${sources.theme-bobthefish}/functions/fish_title.fish"
-    ] ++ (if isDarwin then [
-      # On Mac, we want to always set this to load the shell integration for the
-      # terminals we use. Kitty always sets this but other terminals also work
-      # with this just fine.
-      "set -g KITTY_INSTALLATION_DIR ${pkgs.kitty}/Applications/kitty.app/Contents/Resources/kitty"
-    ] else []) ++ [
       (builtins.readFile ./config.fish)
       "set -g SHELL ${pkgs.fish}/bin/fish"
     ]));
