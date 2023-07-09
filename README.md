@@ -51,13 +51,13 @@ Nix files.
 I'll sometimes do OAuth flows and stuff using FireFox in the VM. Most of the
 time, I use the host OS browser.
 
-**Do you have graphical performance issues?** Graphical applications can
-have framerate issues, particularly animation. I try to avoid doing any of
-this in the VM and only do terminal UIs. Terminal workflows have no performance
-issues ever.
+**Do you have graphical performance issues?** For the types of graphical
+applications I run (GUIs, browsers, etc.), not really. VMware (and other
+hypervisors) support 3D acceleration on macOS and I get really smooth
+rendering because of it.
 
 **This can't actually work! This only works on a powerful workstation!**
-I've been doing this for almost  2 years now, and I've developed
+I've been doing this since late 2020, and I've developed
 [a lot of very real software](https://www.hashicorp.com/). It works for me.
 I also use this VM on a MacBook Pro (to be fair, it is maxed out on specs),
 and I have no issues whatsoever.
@@ -66,6 +66,9 @@ and I have no issues whatsoever.
 but my configurations also work for Parallels and UTM. Folder syncing,
 clipboards, and graphics acceleration all work. I've been using an
 Apple Silicon Mac full time since Nov 2021 with this setup.
+
+**Does this work on Windows?** Yes, I've tested this setup with both
+Hyper-V and VMware Workstation Pro and it works great in either case.
 
 ## Setup (VM)
 
