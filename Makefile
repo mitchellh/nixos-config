@@ -50,9 +50,9 @@ cache:
 vm/bootstrap0:
 	ssh $(SSH_OPTIONS) -p$(NIXPORT) root@$(NIXADDR) " \
 		parted /dev/sda -- mklabel gpt; \
-		parted /dev/sda -- mkpart primary 512MiB -8GiB; \
-		parted /dev/sda -- mkpart primary linux-swap -8GiB 100\%; \
-		parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB; \
+		parted /dev/sda -- mkpart primary 512MB -8GB; \
+		parted /dev/sda -- mkpart primary linux-swap -8GB 100\%; \
+		parted /dev/sda -- mkpart ESP fat32 1MB 512MB; \
 		parted /dev/sda -- set 3 esp on; \
 		sleep 1; \
 		mkfs.ext4 -L nixos /dev/sda1; \
