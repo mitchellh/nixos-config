@@ -74,22 +74,26 @@ Video: https://www.youtube.com/watch?v=ubDMLoWz76U
 **Note:** This setup guide will cover VMware Fusion because that is the
 hypervisor I use day to day. The configurations in this repository also
 work with UTM (see `vm-aarch64-utm`) and Parallels (see `vm-aarch64-prl`) but
-I'm not using that full time so they may break from time to time.
+I'm not using that full time so they may break from time to time. I've also
+successfully set up this environment on Windows with VMware Workstation and
+Hyper-V.
 
-You can also download NixOS ISOs from [Hydra](https://hydra.nixos.org/project/nixos),
-including aarch64 ISOs.
+You can download the NixOS ISO from the
+[official NixOS download page](https://nixos.org/download.html#nixos-iso).
+There are ISOs for both `x86_64` and `aarch64` at the time of writing this.
 
 Create a VMware Fusion VM with the following settings. My configurations
 are made for VMware Fusion exclusively currently and you will have issues
 on other virtualization solutions without minor changes.
 
   * ISO: NixOS 22.11 or later.
-  * Disk: NVMe 150 GB+
+  * Disk: SATA 150 GB+
   * CPU/Memory: I give at least half my cores and half my RAM, as much as you can.
   * Graphics: Full acceleration, full resolution, maximum graphics RAM.
   * Network: Shared with my Mac.
-  * Remove sound card, remove video camera.
+  * Remove sound card, remove video camera, remove printer.
   * Profile: Disable almost all keybindings
+  * Boot Mode: UEFI
 
 Boot the VM, and using the graphical console, change the root password to "root":
 
@@ -99,12 +103,16 @@ $ passwd
 # change to root
 ```
 
-At this point, verify `/dev/nvme0n1` exists. This is the expected block device
-where the Makefile will install the OS. If you setup your VM to use NVMe,
-this should exist. If `/dev/sda` or `/dev/vda` exists instead, you didn't
-configure NVMe properly. Note, these other block device types work fine,
-but you'll probably have to modify the `bootstrap0` Makefile task to use
-the proper block device paths.
+At this point, verify `/dev/sda` exists. This is the expected block device
+where the Makefile will install the OS. If you setup your VM to use SATA,
+this should exist. If `/dev/nvme` or `/dev/vda` exists instead, you didn't
+configure the disk properly. Note, these other block device types work fine,
+but you'll have to modify the `bootstrap0` Makefile task to use the proper
+block device paths.
+
+Also at this point, I recommend making a snapshot in case anything goes wrong.
+I usually call this snapshot "prebootstrap0". This is entirely optional,
+but it'll make it super easy to go back and retry if things go wrong.
 
 Run `ifconfig` and get the IP address of the first device. It is probably
 `192.168.58.XXX`, but it can be anything. In a terminal with this repository
