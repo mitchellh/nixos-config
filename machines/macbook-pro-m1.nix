@@ -5,6 +5,13 @@
 
   # Keep in async with vm-shared.nix. (todo: pull this out into a file)
   nix = {
+    # We need to enable flakes
+    extraOptions = ''
+      experimental-features = nix-command flakes
+      keep-outputs = true
+      keep-derivations = true
+    '';
+
     # public binary cache that I use for all my derivations. You can keep
     # this, use your own, or toss it. Its typically safe to use a binary cache
     # since the data inside is checksummed.
