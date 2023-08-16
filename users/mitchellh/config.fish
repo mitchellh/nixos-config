@@ -66,6 +66,11 @@ if test -d "/opt/homebrew"
     set -q INFOPATH; or set INFOPATH ''; set -gx INFOPATH "/opt/homebrew/share/info" $INFOPATH;
 end
 
+# Hammerspoon
+if test -d "/Applications/Hammerspoon.app"
+    set -q PATH; or set PATH ''; set -gx PATH "/Applications/Hammerspoon.app/Contents/Frameworks/hs" $PATH;
+end
+
 #-------------------------------------------------------------------------------
 # Prompt
 #-------------------------------------------------------------------------------
