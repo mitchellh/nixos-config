@@ -13,6 +13,7 @@
       "cleanshot"
       "discord"
       "google-chrome"
+      "hammerspoon"
       "imageoptim"
       "istat-menus"
       "monodraw"
