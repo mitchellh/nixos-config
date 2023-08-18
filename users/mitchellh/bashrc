@@ -1,8 +1,3 @@
-# Ghostty setup
-if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
-    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
-fi
-
 #---------------------------------------------------------------------------
 # Prompt
 #---------------------------------------------------------------------------
@@ -43,3 +38,8 @@ parse_git_branch() {
 # Set default prompt if interactive
 test -n "$PS1" &&
 prompt_color
+
+# Ghostty setup
+if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
+    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
+fi
