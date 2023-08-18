@@ -27,6 +27,7 @@ in {
   # per-project flakes sourced with direnv and nix-shell, so this is
   # not a huge list.
   home.packages = [
+    pkgs.asciinema
     pkgs.bat
     pkgs.fd
     pkgs.fzf
@@ -41,11 +42,6 @@ in {
 
     # Node is required for Copilot.vim
     pkgs.nodejs
-
-    (pkgs.python3.withPackages (p: with p; [
-      ipython
-      jupyter
-    ]))
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
