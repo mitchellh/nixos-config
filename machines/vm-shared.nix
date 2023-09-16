@@ -1,6 +1,11 @@
 { config, pkgs, lib, currentSystem, currentSystemName,... }:
 
-{
+let
+  # Turn this to true to use gnome instead of i3. This is a bit
+  # of a hack, I just flip it on as I need to develop gnome stuff
+  # for now.
+  linuxGnome = false;
+in {
   # Be careful updating this.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -56,7 +61,12 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   # setup windowing environment
-  services.xserver = {
+  services.xserver = if linuxGnome then {
+    enable = true;
+    layout = "us";
+    desktopManager.gnome.enable = true;
+    displayManager.gdm.enable = true;
+  } else {
     enable = true;
     layout = "us";
     dpi = 220;
@@ -86,12 +96,6 @@
   # "sudo tailscale up". If you don't use tailscale, you should comment
   # out or delete all of this.
   services.tailscale.enable = true;
-
-  # Enable flatpak. We try not to use this (we prefer to use Nix!) but
-  # some software its useful to use this and we also use it for dev tools.
-  services.flatpak.enable = true;
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.mutableUsers = false;
