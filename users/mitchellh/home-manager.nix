@@ -51,6 +51,7 @@ in {
     pkgs.firefox
     pkgs.rofi
     pkgs.zathura
+    pkgs.xfce.xfce4-terminal
   ]);
 
   #---------------------------------------------------------------------
