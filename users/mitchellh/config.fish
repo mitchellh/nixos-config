@@ -71,6 +71,9 @@ if test -d "/Applications/Hammerspoon.app"
     set -q PATH; or set PATH ''; set -gx PATH "/Applications/Hammerspoon.app/Contents/Frameworks/hs" $PATH;
 end
 
+# Add ~/.local/bin
+set -q PATH; or set PATH ''; set -gx PATH  "$HOME/.local/bin" $PATH;
+
 #-------------------------------------------------------------------------------
 # Prompt
 #-------------------------------------------------------------------------------
@@ -131,6 +134,9 @@ contains $HOME/bin $fish_user_paths; or set -Ua fish_user_paths $HOME/bin
 if isatty
     set -x GPG_TTY (tty)
 end
+
+# Editor
+set -gx EDITOR nvim
 
 #-------------------------------------------------------------------------------
 # Functions
