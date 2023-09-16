@@ -9,11 +9,13 @@ mouse-hide-while-typing = true
 # Keybinds to match macOS since this is a VM
 keybind = super+c=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
-keybind = super+==increase_font_size:1
-keybind = super+-=decrease_font_size:1
-keybind = super+0=reset_font_size
+keybind = super+shift+c=copy_to_clipboard
+keybind = super+shift+v=paste_from_clipboard
+keybind = super+equal=increase_font_size:1
+keybind = super+minus=decrease_font_size:1
+keybind = super+zero=reset_font_size
 keybind = super+q=quit
-keybind = super+shift+,=reload_config
+keybind = super+shift+comma=reload_config
 keybind = super+k=clear_screen
 keybind = super+n=new_window
 keybind = super+w=close_surface
