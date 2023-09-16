@@ -69,21 +69,24 @@ in {
   home.file.".gdbinit".source = ./gdbinit;
   home.file.".inputrc".source = ./inputrc;
 
-  xdg.configFile."i3/config".text = builtins.readFile ./i3;
-  xdg.configFile."rofi/config.rasi".text = builtins.readFile ./rofi;
-  xdg.configFile."devtty/config".text = builtins.readFile ./devtty;
+  xdg.configFile = {
+    "i3/config".text = builtins.readFile ./i3;
+    "rofi/config.rasi".text = builtins.readFile ./rofi;
 
-  # Rectangle.app. This has to be imported manually using the app.
-  xdg.configFile."rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
-
-  # tree-sitter parsers
-  xdg.configFile."nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
-  xdg.configFile."nvim/queries/proto/folds.scm".source =
-    "${sources.tree-sitter-proto}/queries/folds.scm";
-  xdg.configFile."nvim/queries/proto/highlights.scm".source =
-    "${sources.tree-sitter-proto}/queries/highlights.scm";
-  xdg.configFile."nvim/queries/proto/textobjects.scm".source =
-    ./textobjects.scm;
+    # tree-sitter parsers
+    "nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
+    "nvim/queries/proto/folds.scm".source =
+      "${sources.tree-sitter-proto}/queries/folds.scm";
+    "nvim/queries/proto/highlights.scm".source =
+      "${sources.tree-sitter-proto}/queries/highlights.scm";
+    "nvim/queries/proto/textobjects.scm".source =
+      ./textobjects.scm;
+  } // (if isDarwin then {
+    # Rectangle.app. This has to be imported manually using the app.
+    "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+  } else {}) // (if isLinux then {
+    "ghostty/config".text = builtins.readFile ./ghostty.linux;
+  } else {});
 
   #---------------------------------------------------------------------
   # Programs

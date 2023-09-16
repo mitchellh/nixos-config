@@ -4,7 +4,7 @@ let
   # Turn this to true to use gnome instead of i3. This is a bit
   # of a hack, I just flip it on as I need to develop gnome stuff
   # for now.
-  linuxGnome = false;
+  linuxGnome = true;
 in {
   # Be careful updating this.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -107,6 +107,7 @@ in {
 
     fonts = [
       pkgs.fira-code
+      pkgs.jetbrains-mono
     ];
   };
 
