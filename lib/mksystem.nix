@@ -30,8 +30,9 @@ nixpkgs.lib.nixosSystem rec {
     # better based on these values.
     {
       config._module.args = {
-        currentSystemName = name;
         currentSystem = system;
+        currentSystemName = name;
+        currentSystemUser = user;
         inputs = inputs;
       };
     }

@@ -75,6 +75,12 @@
       user   = "mitchellh";
     };
 
+    nixosConfigurations.wsl = mkSystem "wsl" rec {
+      inherit overlays nixpkgs home-manager inputs;
+      system = "x86_64-linux";
+      user   = "mitchellh";
+    };
+
     darwinConfigurations.macbook-pro-m1 = mkDarwin "macbook-pro-m1" {
       inherit darwin nixpkgs home-manager overlays;
       system = "aarch64-darwin";
