@@ -258,18 +258,12 @@ in {
   };
 
   programs.neovim = {
-    enable = true;
+    # On WSL, fails to cross-compile with qemu. Disabled for now
+    # but we should look into fixing this.
+    enable = !isWSL;
     package = pkgs.neovim-nightly;
 
     withPython3 = true;
-    extraPython3Packages = (p: with p; [
-      # For nvim-magma
-      jupyter-client
-      cairosvg
-      plotly
-      #pnglatex
-      #kaleido
-    ]);
 
     plugins = with pkgs; [
       customVim.vim-copilot
@@ -293,7 +287,6 @@ in {
       customVim.nvim-treesitter
       customVim.nvim-treesitter-playground
       customVim.nvim-treesitter-textobjects
-      customVim.nvim-magma
 
       vimPlugins.vim-airline
       vimPlugins.vim-airline-themes
