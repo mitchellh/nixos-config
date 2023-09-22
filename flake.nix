@@ -38,7 +38,7 @@
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
     mkDarwin = import ./lib/mkdarwin.nix;
-    mkVM = import ./lib/mkvm.nix;
+    mkSystem = import ./lib/mksystem.nix;
 
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
@@ -46,8 +46,8 @@
       inputs.zig.overlays.default
     ];
   in {
-    nixosConfigurations.vm-aarch64 = mkVM "vm-aarch64" {
-      inherit nixpkgs home-manager;
+    nixosConfigurations.vm-aarch64 = mkSystem "vm-aarch64" {
+      inherit nixpkgs home-manager inputs;
       system = "aarch64-linux";
       user   = "mitchellh";
 
@@ -57,20 +57,20 @@
       })];
     };
 
-    nixosConfigurations.vm-aarch64-prl = mkVM "vm-aarch64-prl" rec {
-      inherit overlays nixpkgs home-manager;
+    nixosConfigurations.vm-aarch64-prl = mkSystem "vm-aarch64-prl" rec {
+      inherit overlays nixpkgs home-manager inputs;
       system = "aarch64-linux";
       user   = "mitchellh";
     };
 
-    nixosConfigurations.vm-aarch64-utm = mkVM "vm-aarch64-utm" rec {
-      inherit overlays nixpkgs home-manager;
+    nixosConfigurations.vm-aarch64-utm = mkSystem "vm-aarch64-utm" rec {
+      inherit overlays nixpkgs home-manager inputs;
       system = "aarch64-linux";
       user   = "mitchellh";
     };
 
-    nixosConfigurations.vm-intel = mkVM "vm-intel" rec {
-      inherit nixpkgs home-manager overlays;
+    nixosConfigurations.vm-intel = mkSystem "vm-intel" rec {
+      inherit overlays nixpkgs home-manager inputs;
       system = "x86_64-linux";
       user   = "mitchellh";
     };
