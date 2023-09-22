@@ -11,7 +11,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Build a custom WSL installer
-    nixos-wsl.url = github:nix-community/NixOS-WSL;
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager = {
@@ -47,7 +47,7 @@
     ];
   in {
     nixosConfigurations.vm-aarch64 = mkSystem "vm-aarch64" {
-      inherit nixpkgs home-manager inputs;
+      inherit nixpkgs home-manager;
       system = "aarch64-linux";
       user   = "mitchellh";
 
@@ -58,27 +58,28 @@
     };
 
     nixosConfigurations.vm-aarch64-prl = mkSystem "vm-aarch64-prl" rec {
-      inherit overlays nixpkgs home-manager inputs;
+      inherit overlays nixpkgs home-manager;
       system = "aarch64-linux";
       user   = "mitchellh";
     };
 
     nixosConfigurations.vm-aarch64-utm = mkSystem "vm-aarch64-utm" rec {
-      inherit overlays nixpkgs home-manager inputs;
+      inherit overlays nixpkgs home-manager;
       system = "aarch64-linux";
       user   = "mitchellh";
     };
 
     nixosConfigurations.vm-intel = mkSystem "vm-intel" rec {
-      inherit overlays nixpkgs home-manager inputs;
+      inherit overlays nixpkgs home-manager;
       system = "x86_64-linux";
       user   = "mitchellh";
     };
 
-    nixosConfigurations.wsl = mkSystem "wsl" rec {
-      inherit overlays nixpkgs home-manager inputs;
+    nixosConfigurations.wsl = mkSystem "wsl" {
+      inherit overlays nixpkgs home-manager;
       system = "x86_64-linux";
       user   = "mitchellh";
+      nixos-wsl = inputs.nixos-wsl;
     };
 
     darwinConfigurations.macbook-pro-m1 = mkDarwin "macbook-pro-m1" {

@@ -3,10 +3,10 @@
 name: {
   nixpkgs,
   home-manager,
+  nixos-wsl ? null,
   system,
   user,
   overlays,
-  inputs
 }:
 
 nixpkgs.lib.nixosSystem rec {
@@ -17,6 +17,9 @@ nixpkgs.lib.nixosSystem rec {
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
     { nixpkgs.overlays = overlays; }
+
+    # Bring in WSL if this is a WSL build
+    (if nixos-wsl != null then nixos-wsl.nixosModules.wsl else {})
 
     ../machines/${name}.nix
     ../users/${user}/nixos.nix
@@ -33,7 +36,6 @@ nixpkgs.lib.nixosSystem rec {
         currentSystem = system;
         currentSystemName = name;
         currentSystemUser = user;
-        inputs = inputs;
       };
     }
   ];

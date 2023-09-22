@@ -1,6 +1,6 @@
-{ pkgs, inputs, currentSystemUser, ... }: {
+{ pkgs, currentSystemUser, ... }: {
   imports = [
-    inputs.nixos-wsl.nixosModules.wsl
+    #pkgs.nixos-wsl.nixosModules.wsl
   ];
 
   wsl = {
