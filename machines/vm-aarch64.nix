@@ -1,5 +1,6 @@
 { config, pkgs, lib, ... }: {
   imports = [
+    ./hardware/vm-aarch64.nix
     ../modules/vmware-guest.nix
     ./vm-shared.nix
   ];

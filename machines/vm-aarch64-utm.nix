@@ -1,5 +1,6 @@
 { config, pkgs, modulesPath, ... }: {
   imports = [
+    ./hardware/vm-aarch64-utm.nix
     ./vm-shared.nix
   ];
 

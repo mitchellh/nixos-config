@@ -18,7 +18,6 @@ nixpkgs.lib.nixosSystem rec {
     # the overlays are available globally.
     { nixpkgs.overlays = overlays; }
 
-    ../hardware/${name}.nix
     ../machines/${name}.nix
     ../users/${user}/nixos.nix
     home-manager.nixosModules.home-manager {
