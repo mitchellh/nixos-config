@@ -10,17 +10,17 @@
     # We use the unstable nixpkgs repo for some packages.
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    # Build a custom WSL installer
+    nixos-wsl.url = github:nix-community/NixOS-WSL;
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-23.05";
-
-      # We want to use the same set of nixpkgs as our system.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     darwin = {
       url = "github:LnL7/nix-darwin";
-
-      # We want to use the same set of nixpkgs as our system.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
