@@ -258,9 +258,7 @@ in {
   };
 
   programs.neovim = {
-    # On WSL, fails to cross-compile with qemu. Disabled for now
-    # but we should look into fixing this.
-    enable = !isWSL;
+    enable = true;
     package = pkgs.neovim-nightly;
 
     withPython3 = true;
@@ -278,7 +276,6 @@ in {
       customVim.pigeon
       customVim.AfterColors
 
-      customVim.vim-devicons
       customVim.vim-nord
       customVim.nvim-comment
       customVim.nvim-lspconfig
@@ -296,7 +293,12 @@ in {
       vimPlugins.vim-markdown
       vimPlugins.vim-nix
       vimPlugins.typescript-vim
-    ];
+    ] ++ (lib.optionals (!isWSL) [
+      # This is causing a segfaulting while building our installer
+      # for WSL so just disable it for now. This is a pretty
+      # unimportant plugin anyway.
+      customVim.vim-devicons
+    ]);
 
     extraConfig = (import ./vim-config.nix) { inherit sources; };
   };
