@@ -1,3 +1,5 @@
+{ isWSL, ... }:
+
 { config, lib, pkgs, ... }:
 
 let
@@ -46,7 +48,7 @@ in {
     # This is automatically setup on Linux
     pkgs.cachix
     pkgs.tailscale
-  ]) ++ (lib.optionals isLinux [
+  ]) ++ (lib.optionals (isLinux && !isWSL) [
     pkgs.chromium
     pkgs.firefox
     pkgs.rofi
@@ -217,7 +219,7 @@ in {
   };
 
   programs.alacritty = {
-    enable = true;
+    enable = !isWSL;
 
     settings = {
       env.TERM = "xterm-256color";
@@ -234,12 +236,12 @@ in {
   };
 
   programs.kitty = {
-    enable = true;
+    enable = !isWSL;
     extraConfig = builtins.readFile ./kitty;
   };
 
   programs.i3status = {
-    enable = isLinux;
+    enable = isLinux && !isWSL;
 
     general = {
       colors = true;
@@ -318,7 +320,7 @@ in {
   xresources.extraConfig = builtins.readFile ./Xresources;
 
   # Make cursor not tiny on HiDPI screens
-  home.pointerCursor = lib.mkIf isLinux {
+  home.pointerCursor = lib.mkIf (isLinux && !isWSL) {
     name = "Vanilla-DMZ";
     package = pkgs.vanilla-dmz;
     size = 128;

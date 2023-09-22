@@ -9,7 +9,15 @@ name: {
   overlays,
 }:
 
-nixpkgs.lib.nixosSystem rec {
+let
+  # True if this is a WSL system.
+  isWSL = nixos-wsl != null;
+
+  # The config files for this system.
+  machineConfig = ../machines/${name}.nix;
+  userOSConfig = ../users/${user}/nixos.nix;
+  userHMConfig = ../users/${user}/home-manager.nix;
+in nixpkgs.lib.nixosSystem rec {
   inherit system;
 
   modules = [
@@ -21,12 +29,14 @@ nixpkgs.lib.nixosSystem rec {
     # Bring in WSL if this is a WSL build
     (if nixos-wsl != null then nixos-wsl.nixosModules.wsl else {})
 
-    ../machines/${name}.nix
-    ../users/${user}/nixos.nix
+    machineConfig
+    userOSConfig
     home-manager.nixosModules.home-manager {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.${user} = import ../users/${user}/home-manager.nix;
+      home-manager.users.${user} = import userHMConfig {
+        isWSL = isWSL;
+      };
     }
 
     # We expose some extra arguments so that our modules can parameterize
@@ -36,6 +46,7 @@ nixpkgs.lib.nixosSystem rec {
         currentSystem = system;
         currentSystemName = name;
         currentSystemUser = user;
+        isWSL = isWSL;
       };
     }
   ];

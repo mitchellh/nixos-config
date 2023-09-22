@@ -1,7 +1,5 @@
 { pkgs, currentSystemUser, ... }: {
-  imports = [
-    #pkgs.nixos-wsl.nixosModules.wsl
-  ];
+  imports = [];
 
   wsl = {
     enable = true;
