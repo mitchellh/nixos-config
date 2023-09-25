@@ -37,14 +37,15 @@
   };
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
-    mkDarwin = import ./lib/mkdarwin.nix;
-    mkSystem = import ./lib/mksystem.nix;
-
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
       inputs.neovim-nightly-overlay.overlay
       inputs.zig.overlays.default
     ];
+
+    mkSystem = import ./lib/mksystem.nix {
+      inherit overlays nixpkgs inputs;
+    };
   in {
     nixosConfigurations.vm-aarch64 = mkSystem "vm-aarch64" {
       inherit nixpkgs home-manager;
@@ -82,10 +83,10 @@
       nixos-wsl = inputs.nixos-wsl;
     };
 
-    darwinConfigurations.macbook-pro-m1 = mkDarwin "macbook-pro-m1" {
-      inherit darwin nixpkgs home-manager overlays;
+    darwinConfigurations.macbook-pro-m1 = mkSystem "macbook-pro-m1" {
       system = "aarch64-darwin";
       user   = "mitchellh";
+      darwin = true;
     };
   };
 }

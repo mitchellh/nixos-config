@@ -1,23 +1,28 @@
 # This function creates a NixOS system based on our VM setup for a
 # particular architecture.
-name: {
-  nixpkgs,
-  home-manager,
-  nixos-wsl ? null,
+{ nixpkgs, overlays, inputs }:
+
+name:
+{
   system,
   user,
-  overlays,
+  darwin ? false,
+  wsl ? false
 }:
 
 let
   # True if this is a WSL system.
-  isWSL = nixos-wsl != null;
+  isWSL = wsl;
 
   # The config files for this system.
   machineConfig = ../machines/${name}.nix;
-  userOSConfig = ../users/${user}/nixos.nix;
+  userOSConfig = ../users/${user}/${if darwin then "darwin" else "nixos" }.nix;
   userHMConfig = ../users/${user}/home-manager.nix;
-in nixpkgs.lib.nixosSystem rec {
+
+  # NixOS vs nix-darwin functionst
+  systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
+  home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
+in systemFunc rec {
   inherit system;
 
   modules = [
@@ -27,15 +32,16 @@ in nixpkgs.lib.nixosSystem rec {
     { nixpkgs.overlays = overlays; }
 
     # Bring in WSL if this is a WSL build
-    (if nixos-wsl != null then nixos-wsl.nixosModules.wsl else {})
+    (if isWSL then inputs.nixos-wsl.nixosModules.wsl else {})
 
     machineConfig
     userOSConfig
-    home-manager.nixosModules.home-manager {
+    home-manager.home-manager {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.users.${user} = import userHMConfig {
         isWSL = isWSL;
+        inputs = inputs;
       };
     }
 
@@ -47,6 +53,7 @@ in nixpkgs.lib.nixosSystem rec {
         currentSystemName = name;
         currentSystemUser = user;
         isWSL = isWSL;
+        inputs = inputs;
       };
     }
   ];
