@@ -1,4 +1,4 @@
-{ isWSL, ... }:
+{ isWSL, inputs, ... }:
 
 { config, lib, pkgs, ... }:
 

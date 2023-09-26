@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   # https://github.com/nix-community/home-manager/pull/2408
@@ -22,6 +22,6 @@
   };
 
   nixpkgs.overlays = import ../../lib/overlays.nix ++ [
-    (import ./vim.nix)
+    (import ./vim.nix { inherit inputs; })
   ];
 }
