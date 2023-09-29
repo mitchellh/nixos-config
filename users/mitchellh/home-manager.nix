@@ -33,6 +33,7 @@ in {
     pkgs.bat
     pkgs.fd
     pkgs.fzf
+    pkgs.gh
     pkgs.htop
     pkgs.jq
     pkgs.ripgrep
