@@ -29,11 +29,18 @@
     # own. We can always try to remove that anytime.
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+
+      # Only need unstable until the lpeg fix hits mainline, probably
+      # not very long... can safely switch back for 23.11.
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     # Other packages
     zig.url = "github:mitchellh/zig-overlay";
+
+    # Non-flakes
+    nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter";
+    nvim-treesitter.flake = false;
   };
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
