@@ -39,7 +39,7 @@
     zig.url = "github:mitchellh/zig-overlay";
 
     # Non-flakes
-    nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter";
+    nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.1";
     nvim-treesitter.flake = false;
   };
 
