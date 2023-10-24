@@ -437,6 +437,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nvim-treesitter": "nvim-treesitter",
+        "vim-copilot": "vim-copilot",
         "zig": "zig"
       }
     },
@@ -467,6 +468,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "vim-copilot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1698163246,
+        "narHash": "sha256-fbGsUU5RYC5FNLsuh5c/wf4zP7gTKZYpdJMnZuacJTA=",
+        "owner": "github",
+        "repo": "copilot.vim",
+        "rev": "c1d9ea495caa608c6652c952ff07ff2fa1afbe0d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "github",
+        "ref": "v1.11.1",
+        "repo": "copilot.vim",
         "type": "github"
       }
     },

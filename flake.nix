@@ -41,6 +41,8 @@
     # Non-flakes
     nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.1";
     nvim-treesitter.flake = false;
+    vim-copilot.url = "github:github/copilot.vim/v1.11.1";
+    vim-copilot.flake = false;
   };
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
