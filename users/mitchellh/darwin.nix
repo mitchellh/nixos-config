@@ -9,7 +9,6 @@
     enable = true;
     casks  = [
       "1password"
-      "alfred"
       "cleanshot"
       "discord"
       "google-chrome"
@@ -17,6 +16,7 @@
       "imageoptim"
       "istat-menus"
       "monodraw"
+      "raycast"
       "rectangle"
       "screenflow"
       "slack"
