@@ -53,6 +53,7 @@ in {
     pkgs.chromium
     pkgs.firefox
     pkgs.rofi
+    pkgs.valgrind
     pkgs.zathura
     pkgs.xfce.xfce4-terminal
   ]);
