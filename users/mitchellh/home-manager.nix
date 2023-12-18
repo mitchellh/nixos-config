@@ -295,6 +295,7 @@ in {
       vimPlugins.vim-markdown
       vimPlugins.vim-nix
       vimPlugins.typescript-vim
+      vimPlugins.nvim-treesitter-parsers.elixir
     ] ++ (lib.optionals (!isWSL) [
       # This is causing a segfaulting while building our installer
       # for WSL so just disable it for now. This is a pretty
