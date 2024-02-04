@@ -322,6 +322,23 @@
         "type": "github"
       }
     },
+    "nvim-conform": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1705875128,
+        "narHash": "sha256-n5Aes/ckpi5tJyIaDORUaFvZ45DF110PAb5BVeqKkOQ=",
+        "owner": "stevearc",
+        "repo": "conform.nvim",
+        "rev": "3d59cbd01a4b74124c5a6fb23b8cc63e5c2db3d5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stevearc",
+        "ref": "v5.2.1",
+        "repo": "conform.nvim",
+        "type": "github"
+      }
+    },
     "nvim-treesitter": {
       "flake": false,
       "locked": {
@@ -347,6 +364,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nvim-conform": "nvim-conform",
         "nvim-treesitter": "nvim-treesitter",
         "vim-copilot": "vim-copilot",
         "zig": "zig"

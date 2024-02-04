@@ -39,6 +39,8 @@
     zig.url = "github:mitchellh/zig-overlay";
 
     # Non-flakes
+    nvim-conform.url = "github:stevearc/conform.nvim/v5.2.1";
+    nvim-conform.flake = false;
     nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.1";
     nvim-treesitter.flake = false;
     vim-copilot.url = "github:github/copilot.vim/v1.11.1";

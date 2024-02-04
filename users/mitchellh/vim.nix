@@ -86,6 +86,11 @@ let sources = import ../../nix/sources.nix; in rec {
       buildPhase = ":";
     };
 
+    nvim-conform = vimUtils.buildVimPlugin {
+      name = "nvim-conform";
+      src = inputs.nvim-conform;
+    };
+
     nvim-magma = vimUtils.buildVimPlugin {
       name = "nvim-magma";
       src = sources.nvim-magma;

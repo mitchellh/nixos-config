@@ -73,5 +73,15 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+require("conform").setup({
+  formatters_by_ft = {
+    cpp = { "clang_format" },
+  },
+
+  format_on_save = {
+    lsp_fallback = true,
+  },
+})
+
 EOF
 ''
