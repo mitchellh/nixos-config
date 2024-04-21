@@ -41,7 +41,7 @@ in {
     pkgs.watch
 
     pkgs.gopls
-    pkgs.zigpkgs.master
+    pkgs.zigpkgs."0.12.0"
 
     # Node is required for Copilot.vim
     pkgs.nodejs
