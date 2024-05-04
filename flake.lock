@@ -322,6 +322,22 @@
         "type": "github"
       }
     },
+    "nvim-cinnamon": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1714107684,
+        "narHash": "sha256-cMP9WRZzevxaWgpILyDh1JwNukm3Jl3JKJYPT2HnFns=",
+        "owner": "declancm",
+        "repo": "cinnamon.nvim",
+        "rev": "a011e84b624cd7b609ea928237505d31b987748a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "declancm",
+        "repo": "cinnamon.nvim",
+        "type": "github"
+      }
+    },
     "nvim-conform": {
       "flake": false,
       "locked": {
@@ -364,6 +380,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nvim-cinnamon": "nvim-cinnamon",
         "nvim-conform": "nvim-conform",
         "nvim-treesitter": "nvim-treesitter",
         "vim-copilot": "vim-copilot",

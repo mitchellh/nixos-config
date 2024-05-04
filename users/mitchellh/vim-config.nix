@@ -83,5 +83,11 @@ require("conform").setup({
   },
 })
 
+---------------------------------------------------------------------
+-- Cinnamon
+
+require('cinnamon').setup()
+vim.opt.termsync = false
+
 EOF
 ''

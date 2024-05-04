@@ -279,6 +279,7 @@ in {
       customVim.AfterColors
 
       customVim.vim-nord
+      customVim.nvim-cinnamon
       customVim.nvim-comment
       customVim.nvim-conform
       customVim.nvim-lspconfig

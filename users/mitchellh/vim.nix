@@ -80,6 +80,11 @@ let sources = import ../../nix/sources.nix; in rec {
       src = sources.vim-nord;
     };
 
+    nvim-cinnamon = vimUtils.buildVimPlugin {
+      name = "nvim-cinnamon";
+      src = inputs.nvim-cinnamon;
+    };
+
     nvim-comment = vimUtils.buildVimPlugin {
       name = "nvim-comment";
       src = sources.nvim-comment;
