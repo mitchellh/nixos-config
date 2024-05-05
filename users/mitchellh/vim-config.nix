@@ -86,7 +86,13 @@ require("conform").setup({
 ---------------------------------------------------------------------
 -- Cinnamon
 
-require('cinnamon').setup()
+-- require('cinnamon').setup()
+-- require('cinnamon').setup {
+--  extra_keymaps = true,
+--  override_keymaps = true,
+--  scroll_limit = -1,
+--}
+
 vim.opt.termsync = false
 
 EOF
