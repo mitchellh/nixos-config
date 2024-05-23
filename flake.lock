@@ -420,16 +420,16 @@
     "vim-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1698163246,
-        "narHash": "sha256-fbGsUU5RYC5FNLsuh5c/wf4zP7gTKZYpdJMnZuacJTA=",
+        "lastModified": 1716003697,
+        "narHash": "sha256-JIpuvQbT0PXo1u1HAjVSnQpek7zAwgRKEOUnzzd7Luc=",
         "owner": "github",
         "repo": "copilot.vim",
-        "rev": "c1d9ea495caa608c6652c952ff07ff2fa1afbe0d",
+        "rev": "25feddf8e3aa79f0573c8f43ddb13c44c530cfa5",
         "type": "github"
       },
       "original": {
         "owner": "github",
-        "ref": "v1.11.1",
+        "ref": "v1.32.0",
         "repo": "copilot.vim",
         "type": "github"
       }
