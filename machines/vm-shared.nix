@@ -10,8 +10,7 @@ in {
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nix = {
-    # use unstable nix so we can access flakes
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.latest;
     extraOptions = ''
       experimental-features = nix-command flakes
       keep-outputs = true
@@ -73,12 +72,12 @@ in {
   # setup windowing environment
   services.xserver = if linuxGnome then {
     enable = true;
-    layout = "us";
+    xkb.layout = "us";
     desktopManager.gnome.enable = true;
     displayManager.gdm.enable = true;
   } else {
     enable = true;
-    layout = "us";
+    xkb.layout = "us";
     dpi = 220;
 
     desktopManager = {

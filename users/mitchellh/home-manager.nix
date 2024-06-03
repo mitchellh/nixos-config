@@ -261,7 +261,7 @@ in {
 
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim-nightly;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
 
     withPython3 = true;
 
@@ -310,7 +310,7 @@ in {
 
   services.gpg-agent = {
     enable = isLinux;
-    pinentryFlavor = "tty";
+    pinentryPackage = pkgs.pinentry-tty;
 
     # cache the keys forever so we don't get asked for a password
     defaultCacheTtl = 31536000;
