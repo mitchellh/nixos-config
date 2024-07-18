@@ -39,7 +39,7 @@ parse_git_branch() {
 test -n "$PS1" &&
 prompt_color
 
-# Ghostty setup
-if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
-    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
-fi
+# Ghostty setup. For testing.
+# if [ -n "$GHOSTTY_RESOURCES_DIR" ]; then
+#     builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
+# fi
