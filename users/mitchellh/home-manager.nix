@@ -200,6 +200,10 @@ in {
     goPrivate = [ "github.com/mitchellh" "github.com/hashicorp" "rfc822.mx" ];
   };
 
+  programs.jujutsu = {
+    enable = true;
+  };
+
   programs.tmux = {
     enable = true;
     terminal = "xterm-256color";
