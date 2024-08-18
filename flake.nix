@@ -36,6 +36,7 @@
     };
 
     # Other packages
+    jujutsu.url = "github:martinvonz/jj";
     zig.url = "github:mitchellh/zig-overlay";
 
     # Non-flakes
@@ -52,6 +53,7 @@
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
+      inputs.jujutsu.overlays.default
       inputs.zig.overlays.default
     ];
 
