@@ -71,8 +71,12 @@ in {
     MANPAGER = "${manpager}/bin/manpager";
   };
 
-  home.file.".gdbinit".source = ./gdbinit;
-  home.file.".inputrc".source = ./inputrc;
+  home.file = {
+    ".gdbinit".source = ./gdbinit;
+    ".inputrc".source = ./inputrc;
+  } // (if isDarwin then {
+    "Library/Application Support/jj/config.toml".source = ./jujutsu.toml;
+  } else {});
 
   xdg.configFile = {
     "i3/config".text = builtins.readFile ./i3;
@@ -91,6 +95,7 @@ in {
     "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
   } else {}) // (if isLinux then {
     "ghostty/config".text = builtins.readFile ./ghostty.linux;
+    "jj/config.toml".source = ./jujutsu.toml;
   } else {});
 
   #---------------------------------------------------------------------
@@ -154,8 +159,9 @@ in {
       gs = "git status";
       gt = "git tag";
 
-      js = "jj st";
       jf = "jj git fetch";
+      jn = "jj new";
+      js = "jj st";
     } // (if isLinux then {
       # Two decades of using a Mac has made this such a strong memory
       # that I'm just going to keep it consistent.
@@ -176,7 +182,7 @@ in {
   programs.git = {
     enable = true;
     userName = "Mitchell Hashimoto";
-    userEmail = "mitchell.hashimoto@gmail.com";
+    userEmail = "m@mitchellh.com";
     signing = {
       key = "523D5DC389D273BC";
       signByDefault = true;
@@ -205,6 +211,9 @@ in {
 
   programs.jujutsu = {
     enable = true;
+
+    # I don't use "settings" because the path is wrong on macOS at
+    # the time of writing this.
   };
 
   programs.tmux = {

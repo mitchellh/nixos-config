@@ -1,0 +1,13 @@
+[user]
+email = "m@mitchellh.com"
+name = "Mitchell Hashimoto"
+
+[aliases]
+b = ["branch"]
+n = ["new"]
+
+[template-aliases]
+"format_timestamp(timestamp)" = "timestamp.ago()"
+
+[ui]
+default-command = "log"
