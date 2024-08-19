@@ -2,6 +2,10 @@
 email = "m@mitchellh.com"
 name = "Mitchell Hashimoto"
 
+[signing]
+sign-all = true
+backend = "gpg"
+
 [aliases]
 b = ["branch"]
 n = ["new"]
