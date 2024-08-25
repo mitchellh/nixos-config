@@ -296,9 +296,11 @@ in {
       customVim.vim-nord
       customVim.nvim-comment
       customVim.nvim-conform
+      customVim.nvim-dressing
       customVim.nvim-gitsigns
       customVim.nvim-lualine
       customVim.nvim-lspconfig
+      customVim.nvim-nui
       customVim.nvim-plenary # required for telescope
       customVim.nvim-telescope
       customVim.nvim-treesitter
@@ -314,7 +316,7 @@ in {
       # This is causing a segfaulting while building our installer
       # for WSL so just disable it for now. This is a pretty
       # unimportant plugin anyway.
-      customVim.vim-devicons
+      customVim.nvim-web-devicons
     ]);
 
     extraConfig = (import ./vim-config.nix) { inherit sources; };
