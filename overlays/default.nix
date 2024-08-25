@@ -8,5 +8,5 @@ final: prev: {
   terraform-bin = final.callPackage ../pkgs/terraform-bin.nix {};
 
   # Fix 1password not working properly on Linux arm64.
-  _1password = final.callPackage ../pkgs/1password.nix {};
+  #_1password = final.callPackage ../pkgs/1password.nix {};
 }

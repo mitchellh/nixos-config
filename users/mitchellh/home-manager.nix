@@ -29,6 +29,7 @@ in {
   # per-project flakes sourced with direnv and nix-shell, so this is
   # not a huge list.
   home.packages = [
+    pkgs._1password
     pkgs.asciinema
     pkgs.bat
     pkgs.fd
