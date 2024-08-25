@@ -40,8 +40,14 @@
     zig.url = "github:mitchellh/zig-overlay";
 
     # Non-flakes
-    nvim-conform.url = "github:stevearc/conform.nvim/v5.2.1";
+    nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
     nvim-conform.flake = false;
+    nvim-lspconfig.url = "github:neovim/nvim-lspconfig";
+    nvim-lspconfig.flake = false;
+    nvim-plenary.url = "github:nvim-lua/plenary.nvim";
+    nvim-plenary.flake = false;
+    nvim-telescope.url = "github:nvim-telescope/telescope.nvim/0.1.8";
+    nvim-telescope.flake = false;
     nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.2";
     nvim-treesitter.flake = false;
     vim-copilot.url = "github:github/copilot.vim/v1.39.0";

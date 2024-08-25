@@ -420,17 +420,66 @@
     "nvim-conform": {
       "flake": false,
       "locked": {
-        "lastModified": 1705875128,
-        "narHash": "sha256-n5Aes/ckpi5tJyIaDORUaFvZ45DF110PAb5BVeqKkOQ=",
+        "lastModified": 1723784512,
+        "narHash": "sha256-THl44vHBvgdaYXAUl6g1ccR2mYTBBVizgnqT2MbRngw=",
         "owner": "stevearc",
         "repo": "conform.nvim",
-        "rev": "3d59cbd01a4b74124c5a6fb23b8cc63e5c2db3d5",
+        "rev": "8b5e13c1af3211f5bb5e091992aba8629312e514",
         "type": "github"
       },
       "original": {
         "owner": "stevearc",
-        "ref": "v5.2.1",
+        "ref": "v7.1.0",
         "repo": "conform.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-lspconfig": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724394001,
+        "narHash": "sha256-HqXMMxf4/wy+X9wT7CPpRMm+JLLfxQQnjtEJglhMSm8=",
+        "owner": "neovim",
+        "repo": "nvim-lspconfig",
+        "rev": "911167921d49cd5c1c9b2436031d0da3945e787f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "neovim",
+        "repo": "nvim-lspconfig",
+        "type": "github"
+      }
+    },
+    "nvim-plenary": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724044857,
+        "narHash": "sha256-6Gm+4zZ80quI5iAW6qPAWTq9h1csPWkZFZ9KnFgYRM0=",
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
+        "rev": "ec289423a1693aeae6cd0d503bac2856af74edaa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-lua",
+        "repo": "plenary.nvim",
+        "type": "github"
+      }
+    },
+    "nvim-telescope": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1716532947,
+        "narHash": "sha256-e1ulhc4IIvUgpjKQrSqPY4WpXuez6wlxL6Min9U0o5Q=",
+        "owner": "nvim-telescope",
+        "repo": "telescope.nvim",
+        "rev": "a0bbec21143c7bc5f8bb02e0005fa0b982edc026",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-telescope",
+        "ref": "0.1.8",
+        "repo": "telescope.nvim",
         "type": "github"
       }
     },
@@ -461,6 +510,9 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nvim-conform": "nvim-conform",
+        "nvim-lspconfig": "nvim-lspconfig",
+        "nvim-plenary": "nvim-plenary",
+        "nvim-telescope": "nvim-telescope",
         "nvim-treesitter": "nvim-treesitter",
         "vim-copilot": "vim-copilot",
         "zig": "zig"
