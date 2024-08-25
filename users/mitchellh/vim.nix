@@ -20,11 +20,6 @@ let sources = import ../../nix/sources.nix; in rec {
       src = sources.vim-fish;
     };
 
-    vim-fugitive = vimUtils.buildVimPlugin {
-      name = "vim-fugitive";
-      src = sources.vim-fugitive;
-    };
-
     vim-glsl = vimUtils.buildVimPlugin {
       name = "vim-glsl";
       src = sources.vim-glsl;

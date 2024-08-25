@@ -437,16 +437,16 @@
     "nvim-treesitter": {
       "flake": false,
       "locked": {
-        "lastModified": 1691831669,
-        "narHash": "sha256-1Iuvq0hVQ7LyBYOkJ5d07NkwbGcR1K61ZZmAAA7ABGs=",
+        "lastModified": 1705679158,
+        "narHash": "sha256-zAyiitJIgOCZTB0CmgNt0MHENM70SOHLIoWrVwOJKFg=",
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter",
-        "rev": "63260da18bf273c76b8e2ea0db84eb901cab49ce",
+        "rev": "f197a15b0d1e8d555263af20add51450e5aaa1f0",
         "type": "github"
       },
       "original": {
         "owner": "nvim-treesitter",
-        "ref": "v0.9.1",
+        "ref": "v0.9.2",
         "repo": "nvim-treesitter",
         "type": "github"
       }
@@ -535,16 +535,16 @@
     "vim-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1716003697,
-        "narHash": "sha256-JIpuvQbT0PXo1u1HAjVSnQpek7zAwgRKEOUnzzd7Luc=",
+        "lastModified": 1723774046,
+        "narHash": "sha256-Ccuu5bfvgo82YRNSwuzbbY62rCcBV1VEOZX7WJZMaXc=",
         "owner": "github",
         "repo": "copilot.vim",
-        "rev": "25feddf8e3aa79f0573c8f43ddb13c44c530cfa5",
+        "rev": "a9fa7946d7307ceb138bfe2706ba75febf6450da",
         "type": "github"
       },
       "original": {
         "owner": "github",
-        "ref": "v1.32.0",
+        "ref": "v1.39.0",
         "repo": "copilot.vim",
         "type": "github"
       }

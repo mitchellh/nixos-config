@@ -285,7 +285,6 @@ in {
       customVim.vim-copilot
       customVim.vim-cue
       customVim.vim-fish
-      customVim.vim-fugitive
       customVim.vim-glsl
       customVim.vim-misc
       customVim.vim-pgsql
@@ -295,7 +294,6 @@ in {
       customVim.AfterColors
 
       customVim.vim-nord
-      customVim.nvim-cinnamon
       customVim.nvim-comment
       customVim.nvim-conform
       customVim.nvim-lspconfig
@@ -309,7 +307,6 @@ in {
       vimPlugins.vim-airline-themes
       vimPlugins.vim-eunuch
       vimPlugins.vim-gitgutter
-
       vimPlugins.vim-markdown
       vimPlugins.vim-nix
       vimPlugins.typescript-vim

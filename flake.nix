@@ -42,9 +42,9 @@
     # Non-flakes
     nvim-conform.url = "github:stevearc/conform.nvim/v5.2.1";
     nvim-conform.flake = false;
-    nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.1";
+    nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.2";
     nvim-treesitter.flake = false;
-    vim-copilot.url = "github:github/copilot.vim/v1.32.0";
+    vim-copilot.url = "github:github/copilot.vim/v1.39.0";
     vim-copilot.flake = false;
   };
 
