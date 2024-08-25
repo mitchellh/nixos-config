@@ -86,6 +86,11 @@ let sources = import ../../nix/sources.nix; in rec {
       src = inputs.nvim-conform;
     };
 
+    nvim-gitsigns = vimUtils.buildVimPlugin {
+      name = "nvim-gitsigns";
+      src = inputs.nvim-gitsigns;
+    };
+
     nvim-plenary = vimUtils.buildVimPlugin {
       name = "nvim-plenary";
       src = inputs.nvim-plenary;

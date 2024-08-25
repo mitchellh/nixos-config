@@ -42,6 +42,8 @@
     # Non-flakes
     nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
     nvim-conform.flake = false;
+    nvim-gitsigns.url = "github:lewis6991/gitsigns.nvim/v0.9.0";
+    nvim-gitsigns.flake = false;
     nvim-lspconfig.url = "github:neovim/nvim-lspconfig";
     nvim-lspconfig.flake = false;
     nvim-plenary.url = "github:nvim-lua/plenary.nvim";

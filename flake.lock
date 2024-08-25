@@ -434,6 +434,23 @@
         "type": "github"
       }
     },
+    "nvim-gitsigns": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1718276179,
+        "narHash": "sha256-AbnjBqKLhOGMGBXBnu9zbL3PG7rKmAoYtxY17kzFEIA=",
+        "owner": "lewis6991",
+        "repo": "gitsigns.nvim",
+        "rev": "0b04035bb7b3c83e999b9676e2fb46fd0aa9f910",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lewis6991",
+        "ref": "v0.9.0",
+        "repo": "gitsigns.nvim",
+        "type": "github"
+      }
+    },
     "nvim-lspconfig": {
       "flake": false,
       "locked": {
@@ -510,6 +527,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nvim-conform": "nvim-conform",
+        "nvim-gitsigns": "nvim-gitsigns",
         "nvim-lspconfig": "nvim-lspconfig",
         "nvim-plenary": "nvim-plenary",
         "nvim-telescope": "nvim-telescope",
