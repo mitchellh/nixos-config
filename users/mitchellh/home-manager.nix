@@ -297,6 +297,7 @@ in {
       customVim.nvim-comment
       customVim.nvim-conform
       customVim.nvim-gitsigns
+      customVim.nvim-lualine
       customVim.nvim-lspconfig
       customVim.nvim-plenary # required for telescope
       customVim.nvim-telescope
@@ -304,8 +305,6 @@ in {
       customVim.nvim-treesitter-playground
       customVim.nvim-treesitter-textobjects
 
-      vimPlugins.vim-airline
-      vimPlugins.vim-airline-themes
       vimPlugins.vim-eunuch
       vimPlugins.vim-markdown
       vimPlugins.vim-nix

@@ -46,6 +46,8 @@
     nvim-gitsigns.flake = false;
     nvim-lspconfig.url = "github:neovim/nvim-lspconfig";
     nvim-lspconfig.flake = false;
+    nvim-lualine.url ="github:nvim-lualine/lualine.nvim";
+    nvim-lualine.flake = false;
     nvim-plenary.url = "github:nvim-lua/plenary.nvim";
     nvim-plenary.flake = false;
     nvim-telescope.url = "github:nvim-telescope/telescope.nvim/0.1.8";
@@ -54,6 +56,8 @@
     nvim-treesitter.flake = false;
     vim-copilot.url = "github:github/copilot.vim/v1.39.0";
     vim-copilot.flake = false;
+    vim-misc.url = "github:mitchellh/vim-misc";
+    vim-misc.flake = false;
   };
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let

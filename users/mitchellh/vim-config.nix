@@ -89,6 +89,11 @@ require("conform").setup({
 require('gitsigns').setup()
 
 ---------------------------------------------------------------------
+-- Lualine
+
+require('lualine').setup()
+
+---------------------------------------------------------------------
 -- Cinnamon
 
 -- require('cinnamon').setup()

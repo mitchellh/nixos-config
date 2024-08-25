@@ -467,6 +467,22 @@
         "type": "github"
       }
     },
+    "nvim-lualine": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1723473562,
+        "narHash": "sha256-gCm7m96PkZyrgjmt7Efc+NMZKStAq1zr7JRCYOgGDuE=",
+        "owner": "nvim-lualine",
+        "repo": "lualine.nvim",
+        "rev": "b431d228b7bbcdaea818bdc3e25b8cdbe861f056",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-lualine",
+        "repo": "lualine.nvim",
+        "type": "github"
+      }
+    },
     "nvim-plenary": {
       "flake": false,
       "locked": {
@@ -529,10 +545,12 @@
         "nvim-conform": "nvim-conform",
         "nvim-gitsigns": "nvim-gitsigns",
         "nvim-lspconfig": "nvim-lspconfig",
+        "nvim-lualine": "nvim-lualine",
         "nvim-plenary": "nvim-plenary",
         "nvim-telescope": "nvim-telescope",
         "nvim-treesitter": "nvim-treesitter",
         "vim-copilot": "vim-copilot",
+        "vim-misc": "vim-misc",
         "zig": "zig"
       }
     },
@@ -616,6 +634,22 @@
         "owner": "github",
         "ref": "v1.39.0",
         "repo": "copilot.vim",
+        "type": "github"
+      }
+    },
+    "vim-misc": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724607677,
+        "narHash": "sha256-XLgxBcRy5w0jYTUh66md24FD91YOy398eulo+jHXB0s=",
+        "owner": "mitchellh",
+        "repo": "vim-misc",
+        "rev": "5c7d6fd5cb250c4dec6d86ae582e84cc066129be",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mitchellh",
+        "repo": "vim-misc",
         "type": "github"
       }
     },
