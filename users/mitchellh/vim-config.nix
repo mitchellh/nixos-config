@@ -91,7 +91,13 @@ require('gitsigns').setup()
 ---------------------------------------------------------------------
 -- Lualine
 
-require('lualine').setup()
+require('lualine').setup({
+  sections = {
+    lualine_c = {
+      { 'filename', path = 1 },
+    },
+  },
+})
 
 ---------------------------------------------------------------------
 -- Cinnamon
