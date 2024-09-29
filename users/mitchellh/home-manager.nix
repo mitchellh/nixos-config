@@ -223,6 +223,7 @@ in {
     terminal = "xterm-256color";
     shortcut = "l";
     secureSocket = false;
+    mouse = true;
 
     extraConfig = ''
       set -ga terminal-overrides ",*256col*:Tc"
