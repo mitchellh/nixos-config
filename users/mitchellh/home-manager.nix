@@ -32,6 +32,7 @@ in {
     pkgs._1password
     pkgs.asciinema
     pkgs.bat
+    pkgs.eza
     pkgs.fd
     pkgs.fzf
     pkgs.gh
