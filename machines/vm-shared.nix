@@ -60,7 +60,8 @@ in {
   i18n = {
     defaultLocale = "en_US.UTF-8";
     inputMethod = {
-      enabled = "fcitx5";
+      enable = true;
+      type = "fcitx5";
       fcitx5.addons = with pkgs; [
         fcitx5-mozc
         fcitx5-gtk
@@ -127,7 +128,6 @@ in {
     gnumake
     killall
     niv
-    rxvt_unicode
     xclip
 
     # For hypervisors that support auto-resizing, this script forces it.
