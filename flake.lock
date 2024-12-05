@@ -705,11 +705,11 @@
     "vim-misc": {
       "flake": false,
       "locked": {
-        "lastModified": 1724607677,
-        "narHash": "sha256-XLgxBcRy5w0jYTUh66md24FD91YOy398eulo+jHXB0s=",
+        "lastModified": 1733436556,
+        "narHash": "sha256-Y51mnZn5n5sf92jGHiv1bPAax4iPupMKHOUuhVf5qX0=",
         "owner": "mitchellh",
         "repo": "vim-misc",
-        "rev": "5c7d6fd5cb250c4dec6d86ae582e84cc066129be",
+        "rev": "8a086ed5fc2db211aee4c798b36097e0057642c8",
         "type": "github"
       },
       "original": {
