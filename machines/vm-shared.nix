@@ -55,6 +55,9 @@ in {
 
   # Virtualization settings
   virtualisation.docker.enable = true;
+  virtualisation.lxd = {
+    enable = true;
+  };
 
   # Select internationalisation properties.
   i18n = {
