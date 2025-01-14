@@ -3,8 +3,9 @@
 let
   # The desktop environment we want. Set to one of:
   # - gnome
+  # - kde
   # - i3
-  desktop = "gnome";
+  desktop = "kde";
 in {
   imports = [
     ./desktop/${desktop}.nix
