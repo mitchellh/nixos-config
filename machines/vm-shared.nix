@@ -1,11 +1,15 @@
 { config, pkgs, lib, currentSystem, currentSystemName,... }:
 
 let
-  # Turn this to true to use gnome instead of i3. This is a bit
-  # of a hack, I just flip it on as I need to develop gnome stuff
-  # for now.
-  linuxGnome = true;
+  # The desktop environment we want. Set to one of:
+  # - gnome
+  # - i3
+  desktop = "gnome";
 in {
+  imports = [
+    ./desktop/${desktop}.nix
+  ];
+
   # Be careful updating this.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -70,38 +74,6 @@ in {
         fcitx5-gtk
         fcitx5-chinese-addons
       ];
-    };
-  };
-
-  # setup windowing environment
-  services.xserver = if linuxGnome then {
-    enable = true;
-    xkb.layout = "us";
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.enable = true;
-  } else {
-    enable = true;
-    xkb.layout = "us";
-    dpi = 220;
-
-    desktopManager = {
-      xterm.enable = false;
-      wallpaper.mode = "fill";
-    };
-
-    displayManager = {
-      defaultSession = "none+i3";
-      lightdm.enable = true;
-
-      # AARCH64: For now, on Apple Silicon, we must manually set the
-      # display resolution. This is a known issue with VMware Fusion.
-      sessionCommands = ''
-        ${pkgs.xorg.xset}/bin/xset r rate 200 40
-      '';
-    };
-
-    windowManager = {
-      i3.enable = true;
     };
   };
 
