@@ -5,7 +5,7 @@ let
   # - gnome
   # - kde
   # - i3
-  desktop = "kde";
+  desktop = "gnome";
 in {
   imports = [
     ./desktop/${desktop}.nix
