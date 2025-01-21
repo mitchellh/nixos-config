@@ -1,14 +1,9 @@
 { config, pkgs, lib, currentSystem, currentSystemName,... }:
 
-let
-  # The desktop environment we want. Set to one of:
-  # - gnome
-  # - kde
-  # - i3
-  desktop = "gnome";
-in {
+{
   imports = [
-    ./desktop/${desktop}.nix
+    ../modules/specialization/plasma.nix
+    ../modules/specialization/i3.nix
   ];
 
   # Be careful updating this.
@@ -117,6 +112,14 @@ in {
     # if the clipboard sill works.
     gtkmm3
   ];
+
+  # Our default non-specialised desktop environment.
+  services.xserver = lib.mkIf (config.specialisation != {}) {
+    enable = true;
+    xkb.layout = "us";
+    desktopManager.gnome.enable = true;
+    displayManager.gdm.enable = true;
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

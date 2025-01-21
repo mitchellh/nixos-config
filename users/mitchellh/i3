@@ -51,7 +51,7 @@ floating_modifier $mod
 bindsym $mod+o exec rofi -show run
 
 # start a terminal
-bindsym $mod+n exec kitty
+bindsym $mod+n exec ghostty --gtk-single-instance=true
 bindsym $mod+d split h
 bindsym $mod+Shift+d split v
 
