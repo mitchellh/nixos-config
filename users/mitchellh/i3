@@ -42,6 +42,12 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # No background
 exec --no-startup-id xsetroot -solid $back
 
+# Keyboard layout settings
+exec --no-startup-id setxkbmap -layout us -variant intl
+
+# Input methods
+exec --no-startup-id fcitx5 -d
+
 #----------------------------------------------------------------------
 # Keybindings
 #----------------------------------------------------------------------
