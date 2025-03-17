@@ -72,6 +72,9 @@ in {
     EDITOR = "nvim";
     PAGER = "less -FirSwX";
     MANPAGER = "${manpager}/bin/manpager";
+
+    # See: https://github.com/NixOS/nixpkgs/issues/390751
+    DISPLAY = "nixpkgs-390751";
   };
 
   home.file = {
