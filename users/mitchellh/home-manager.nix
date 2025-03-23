@@ -72,10 +72,10 @@ in {
     EDITOR = "nvim";
     PAGER = "less -FirSwX";
     MANPAGER = "${manpager}/bin/manpager";
-
+  } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
     DISPLAY = "nixpkgs-390751";
-  };
+  } else {});
 
   home.file = {
     ".gdbinit".source = ./gdbinit;
