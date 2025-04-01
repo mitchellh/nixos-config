@@ -329,6 +329,10 @@ in {
     extraConfig = (import ./vim-config.nix) { inherit sources; };
   };
 
+  programs.nushell = {
+    enable = true;
+  };
+
   services.gpg-agent = {
     enable = isLinux;
     pinentryPackage = pkgs.pinentry-tty;
