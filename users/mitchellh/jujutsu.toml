@@ -3,8 +3,8 @@ email = "m@mitchellh.com"
 name = "Mitchell Hashimoto"
 
 [signing]
-sign-all = true
 backend = "gpg"
+behavior = "own"
 
 [aliases]
 b = ["branch"]
