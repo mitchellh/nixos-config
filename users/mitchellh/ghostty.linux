@@ -1,3 +1,4 @@
+command = bash -l -c nu
 font-size = 12
 font-family = JetBrains Mono
 background-opacity = 0.95
