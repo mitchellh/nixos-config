@@ -1,5 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "terminal_background": "p:grey",
   "palette": {
     "grey": "#454758",
     "lavender": "#AE8FE7",
