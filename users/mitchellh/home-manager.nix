@@ -310,15 +310,14 @@ in {
       customVim.nvim-nui
       customVim.nvim-plenary # required for telescope
       customVim.nvim-telescope
-      customVim.nvim-treesitter
-      customVim.nvim-treesitter-playground
-      customVim.nvim-treesitter-textobjects
 
       vimPlugins.vim-eunuch
       vimPlugins.vim-markdown
       vimPlugins.vim-nix
       vimPlugins.typescript-vim
       vimPlugins.nvim-treesitter-parsers.elixir
+      vimPlugins.nvim-treesitter
+      vimPlugins.nvim-treesitter.withAllGrammars
     ] ++ (lib.optionals (!isWSL) [
       # This is causing a segfaulting while building our installer
       # for WSL so just disable it for now. This is a pretty
