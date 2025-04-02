@@ -329,8 +329,31 @@ in {
     extraConfig = (import ./vim-config.nix) { inherit sources; };
   };
 
+  programs.atuin = {
+    enable = true;
+    enableFishIntegration = true;
+    enableNushellIntegration = true;
+    settings = {
+      show_tabs = false;
+      style = "compact";
+    };
+  };
+
   programs.nushell = {
     enable = true;
+    configFile.source = ./config.nu;
+  };
+
+  programs.starship = {
+    enable = true;
+    enableNushellIntegration = true;
+    settings = {
+      add_newline = false;
+      format = lib.concatStrings [
+        "$directory"
+        "$character"
+      ];
+    };
   };
 
   services.gpg-agent = {
