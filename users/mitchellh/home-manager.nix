@@ -343,16 +343,10 @@ in {
     configFile.source = ./config.nu;
   };
 
-  programs.starship = {
+  programs.oh-my-posh = {
     enable = true;
     enableNushellIntegration = true;
-    settings = {
-      add_newline = false;
-      format = lib.concatStrings [
-        "$directory"
-        "$character"
-      ];
-    };
+    settings = builtins.fromJSON (builtins.readFile ./omp.json);
   };
 
   services.gpg-agent = {
