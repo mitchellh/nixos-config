@@ -7,6 +7,27 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
 
+  shellAliases = {
+    ga = "git add";
+    gc = "git commit";
+    gco = "git checkout";
+    gcp = "git cherry-pick";
+    gdiff = "git diff";
+    gl = "git prettylog";
+    gp = "git push";
+    gs = "git status";
+    gt = "git tag";
+
+    jf = "jj git fetch";
+    jn = "jj new";
+    js = "jj st";
+  } // (if isLinux then {
+    # Two decades of using a Mac has made this such a strong memory
+    # that I'm just going to keep it consistent.
+    pbcopy = "xclip";
+    pbpaste = "xclip -o";
+  } else {});
+
   # For our MANPAGER env var
   # https://github.com/sharkdp/bat/issues/1145
   manpager = (pkgs.writeShellScriptBin "manpager" (if isDarwin then ''
@@ -115,18 +136,7 @@ in {
     shellOptions = [];
     historyControl = [ "ignoredups" "ignorespace" ];
     initExtra = builtins.readFile ./bashrc;
-
-    shellAliases = {
-      ga = "git add";
-      gc = "git commit";
-      gco = "git checkout";
-      gcp = "git cherry-pick";
-      gdiff = "git diff";
-      gl = "git prettylog";
-      gp = "git push";
-      gs = "git status";
-      gt = "git tag";
-    };
+    shellAliases = shellAliases;
   };
 
   programs.direnv= {
@@ -146,6 +156,7 @@ in {
 
   programs.fish = {
     enable = true;
+    shellAliases = shellAliases;
     interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" ([
       "source ${sources.theme-bobthefish}/functions/fish_prompt.fish"
       "source ${sources.theme-bobthefish}/functions/fish_right_prompt.fish"
@@ -153,27 +164,6 @@ in {
       (builtins.readFile ./config.fish)
       "set -g SHELL ${pkgs.fish}/bin/fish"
     ]));
-
-    shellAliases = {
-      ga = "git add";
-      gc = "git commit";
-      gco = "git checkout";
-      gcp = "git cherry-pick";
-      gdiff = "git diff";
-      gl = "git prettylog";
-      gp = "git push";
-      gs = "git status";
-      gt = "git tag";
-
-      jf = "jj git fetch";
-      jn = "jj new";
-      js = "jj st";
-    } // (if isLinux then {
-      # Two decades of using a Mac has made this such a strong memory
-      # that I'm just going to keep it consistent.
-      pbcopy = "xclip";
-      pbpaste = "xclip -o";
-    } else {});
 
     plugins = map (n: {
       name = n;
@@ -341,6 +331,7 @@ in {
   programs.nushell = {
     enable = true;
     configFile.source = ./config.nu;
+    shellAliases = shellAliases;
   };
 
   programs.oh-my-posh = {
