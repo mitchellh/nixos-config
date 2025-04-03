@@ -292,6 +292,7 @@ in {
 
       customVim.vim-nord
       customVim.nvim-comment
+      customVim.nvim-copilot-chat
       customVim.nvim-conform
       customVim.nvim-dressing
       customVim.nvim-gitsigns

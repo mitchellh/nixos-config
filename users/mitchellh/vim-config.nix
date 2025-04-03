@@ -111,5 +111,12 @@ require('lualine').setup({
 
 vim.opt.termsync = false
 
+---------------------------------------------------------------------
+-- Copilot Chat
+
+require("CopilotChat").setup {
+  -- See Configuration section for options
+}
+
 EOF
 ''
