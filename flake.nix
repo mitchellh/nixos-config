@@ -61,6 +61,8 @@
     nvim-plenary.flake = false;
     nvim-telescope.url = "github:nvim-telescope/telescope.nvim/0.1.8";
     nvim-telescope.flake = false;
+    nvim-treesitter-context.url = "github:nvim-treesitter/nvim-treesitter-context";
+    nvim-treesitter-context.flake = false;
     nvim-web-devicons.url = "github:nvim-tree/nvim-web-devicons";
     nvim-web-devicons.flake = false;
     vim-copilot.url = "github:github/copilot.vim/v1.41.0";

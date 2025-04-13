@@ -301,6 +301,7 @@ in {
       customVim.nvim-nui
       customVim.nvim-plenary # required for telescope
       customVim.nvim-telescope
+      customVim.nvim-treesitter-context
 
       vimPlugins.vim-eunuch
       vimPlugins.vim-markdown

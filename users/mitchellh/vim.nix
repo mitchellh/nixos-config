@@ -118,14 +118,9 @@ let sources = import ../../nix/sources.nix; in rec {
       buildPhase = ":";
     };
 
-    nvim-treesitter = vimUtils.buildVimPlugin {
-      name = "nvim-treesitter";
-      src = inputs.nvim-treesitter;
-    };
-
-    nvim-treesitter-playground = vimUtils.buildVimPlugin {
-      name = "nvim-treesitter-playground";
-      src = sources.nvim-treesitter-playground;
+    nvim-treesitter-context = vimUtils.buildVimPlugin {
+      name = "nvim-treesitter-context";
+      src = inputs.nvim-treesitter-context;
     };
 
     nvim-lspconfig = vimUtils.buildVimPlugin {

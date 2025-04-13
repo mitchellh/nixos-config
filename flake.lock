@@ -660,6 +660,22 @@
         "type": "github"
       }
     },
+    "nvim-treesitter-context": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743773493,
+        "narHash": "sha256-4nvtD4Tz20o3bjWIJdt0grEvq3UQ+iqM+Fs0RNS3qRM=",
+        "owner": "nvim-treesitter",
+        "repo": "nvim-treesitter-context",
+        "rev": "439789a9a8df9639ecd749bb3286b77117024a6f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-treesitter",
+        "repo": "nvim-treesitter-context",
+        "type": "github"
+      }
+    },
     "nvim-web-devicons": {
       "flake": false,
       "locked": {
@@ -696,6 +712,7 @@
         "nvim-nui": "nvim-nui",
         "nvim-plenary": "nvim-plenary",
         "nvim-telescope": "nvim-telescope",
+        "nvim-treesitter-context": "nvim-treesitter-context",
         "nvim-web-devicons": "nvim-web-devicons",
         "vim-copilot": "vim-copilot",
         "vim-misc": "vim-misc",
@@ -809,11 +826,11 @@
     "vim-misc": {
       "flake": false,
       "locked": {
-        "lastModified": 1733436556,
-        "narHash": "sha256-Y51mnZn5n5sf92jGHiv1bPAax4iPupMKHOUuhVf5qX0=",
+        "lastModified": 1744576085,
+        "narHash": "sha256-wrz7LMGE2uRaSYGzRb1FXAUO9YHi2aRuTY2ii9fU18I=",
         "owner": "mitchellh",
         "repo": "vim-misc",
-        "rev": "8a086ed5fc2db211aee4c798b36097e0057642c8",
+        "rev": "fddb7ee3a856b298fe33fb6ef0c8c67f79b801d9",
         "type": "github"
       },
       "original": {
