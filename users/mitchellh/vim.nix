@@ -76,9 +76,9 @@ let sources = import ../../nix/sources.nix; in rec {
       buildPhase = ":";
     };
 
-    nvim-copilot-chat = vimUtils.buildVimPlugin {
-      name = "nvim-copilot-chat";
-      src = inputs.nvim-copilot-chat;
+    nvim-codecompanion = vimUtils.buildVimPlugin {
+      name = "nvim-codecompanion";
+      src = inputs.nvim-codecompanion;
     };
 
     nvim-conform = vimUtils.buildVimPlugin {

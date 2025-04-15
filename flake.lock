@@ -513,6 +513,22 @@
         "type": "github"
       }
     },
+    "nvim-codecompanion": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1744574649,
+        "narHash": "sha256-RNcEkOF96sUvdubWRhOUCeREBPM3dtIbwBSBUhbcx2Y=",
+        "owner": "olimorris",
+        "repo": "codecompanion.nvim",
+        "rev": "d71d8b96c0b1ec8c047fb938552035864d530bb1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "olimorris",
+        "repo": "codecompanion.nvim",
+        "type": "github"
+      }
+    },
     "nvim-conform": {
       "flake": false,
       "locked": {
@@ -527,22 +543,6 @@
         "owner": "stevearc",
         "ref": "v7.1.0",
         "repo": "conform.nvim",
-        "type": "github"
-      }
-    },
-    "nvim-copilot-chat": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1743526782,
-        "narHash": "sha256-UEZ+kO1I5eO7wNf10wWuyE7UHqJRChzzx9n06/exZfo=",
-        "owner": "CopilotC-Nvim",
-        "repo": "CopilotChat.nvim",
-        "rev": "23162ada224e858d0d60bbbf2a35f9b6c98427ce",
-        "type": "github"
-      },
-      "original": {
-        "owner": "CopilotC-Nvim",
-        "repo": "CopilotChat.nvim",
         "type": "github"
       }
     },
@@ -630,11 +630,11 @@
     "nvim-plenary": {
       "flake": false,
       "locked": {
-        "lastModified": 1724044857,
-        "narHash": "sha256-6Gm+4zZ80quI5iAW6qPAWTq9h1csPWkZFZ9KnFgYRM0=",
+        "lastModified": 1739311008,
+        "narHash": "sha256-8FV5RjF7QbDmQOQynpK7uRKONKbPRYbOPugf9ZxNvUs=",
         "owner": "nvim-lua",
         "repo": "plenary.nvim",
-        "rev": "ec289423a1693aeae6cd0d503bac2856af74edaa",
+        "rev": "857c5ac632080dba10aae49dba902ce3abf91b35",
         "type": "github"
       },
       "original": {
@@ -703,8 +703,8 @@
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-old-ibus": "nixpkgs-old-ibus",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nvim-codecompanion": "nvim-codecompanion",
         "nvim-conform": "nvim-conform",
-        "nvim-copilot-chat": "nvim-copilot-chat",
         "nvim-dressing": "nvim-dressing",
         "nvim-gitsigns": "nvim-gitsigns",
         "nvim-lspconfig": "nvim-lspconfig",

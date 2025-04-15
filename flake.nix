@@ -43,8 +43,8 @@
     zig.url = "github:mitchellh/zig-overlay";
 
     # Non-flakes
-    nvim-copilot-chat.url = "github:CopilotC-Nvim/CopilotChat.nvim";
-    nvim-copilot-chat.flake = false;
+    nvim-codecompanion.url = "github:olimorris/codecompanion.nvim";
+    nvim-codecompanion.flake = false;
     nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
     nvim-conform.flake = false;
     nvim-dressing.url = "github:stevearc/dressing.nvim";
