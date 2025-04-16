@@ -146,6 +146,13 @@ require("codecompanion").setup({
   strategies = {
     chat = {
       adapter = "gemini",
+      keymaps = {
+        completion = {
+          modes = { i = "<C-/>" },
+          callback = "keymaps.completion",
+          description = "Completion Menu",
+        },
+      },
     },
     inline = {
       adapter = "gemini",
