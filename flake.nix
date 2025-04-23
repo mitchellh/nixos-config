@@ -59,6 +59,8 @@
     nvim-nui.flake = false;
     nvim-plenary.url = "github:nvim-lua/plenary.nvim";
     nvim-plenary.flake = false;
+    nvim-render-markdown.url = "github:MeanderingProgrammer/render-markdown.nvim";
+    nvim-render-markdown.flake = false;
     nvim-telescope.url = "github:nvim-telescope/telescope.nvim/0.1.8";
     nvim-telescope.flake = false;
     nvim-treesitter-context.url = "github:nvim-treesitter/nvim-treesitter-context";

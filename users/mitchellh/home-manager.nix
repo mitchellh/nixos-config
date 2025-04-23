@@ -300,6 +300,7 @@ in {
       customVim.nvim-lspconfig
       customVim.nvim-nui
       customVim.nvim-plenary # required for telescope
+      customVim.nvim-render-markdown
       customVim.nvim-telescope
       customVim.nvim-treesitter-context
 

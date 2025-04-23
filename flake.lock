@@ -643,6 +643,22 @@
         "type": "github"
       }
     },
+    "nvim-render-markdown": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1745385935,
+        "narHash": "sha256-+KQ8KNj4hOXlk/VSKcAhuXg+Oa1oOF58rvEcx8YXUhM=",
+        "owner": "MeanderingProgrammer",
+        "repo": "render-markdown.nvim",
+        "rev": "642222acbab66d56727ac0f38d9432649a479ed4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MeanderingProgrammer",
+        "repo": "render-markdown.nvim",
+        "type": "github"
+      }
+    },
     "nvim-telescope": {
       "flake": false,
       "locked": {
@@ -711,6 +727,7 @@
         "nvim-lualine": "nvim-lualine",
         "nvim-nui": "nvim-nui",
         "nvim-plenary": "nvim-plenary",
+        "nvim-render-markdown": "nvim-render-markdown",
         "nvim-telescope": "nvim-telescope",
         "nvim-treesitter-context": "nvim-treesitter-context",
         "nvim-web-devicons": "nvim-web-devicons",

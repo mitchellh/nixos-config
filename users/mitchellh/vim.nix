@@ -112,6 +112,11 @@ let sources = import ../../nix/sources.nix; in rec {
       buildPhase = ":";
     };
 
+    nvim-render-markdown = vimUtils.buildVimPlugin {
+      name = "nvim-render-markdown";
+      src = inputs.nvim-render-markdown;
+    };
+
     nvim-telescope = vimUtils.buildVimPlugin {
       name = "nvim-telescope";
       src = inputs.nvim-telescope;

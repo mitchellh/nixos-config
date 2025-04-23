@@ -178,5 +178,15 @@ vim.keymap.set(
   { noremap = true, silent = true }
 )
 
+---------------------------------------------------------------------
+-- Render Markdown
+
+vim.keymap.set(
+  { "n" },
+  "<leader>md",
+  "<cmd>RenderMarkdown toggle<cr>",
+  { noremap = true, silent = true }
+)
+
 EOF
 ''
