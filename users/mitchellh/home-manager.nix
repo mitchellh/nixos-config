@@ -103,12 +103,11 @@ in {
   home.file = {
     ".gdbinit".source = ./gdbinit;
     ".inputrc".source = ./inputrc;
-  } // (if isDarwin then {
-    "Library/Application Support/jj/config.toml".source = ./jujutsu.toml;
-  } else {});
+  };
 
   xdg.configFile = {
     "i3/config".text = builtins.readFile ./i3;
+    "jj/config.toml".source = ./jujutsu.toml;
     "rofi/config.rasi".text = builtins.readFile ./rofi;
 
     # tree-sitter parsers
@@ -124,7 +123,6 @@ in {
     "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
   } else {}) // (if isLinux then {
     "ghostty/config".text = builtins.readFile ./ghostty.linux;
-    "jj/config.toml".source = ./jujutsu.toml;
   } else {});
 
   #---------------------------------------------------------------------
