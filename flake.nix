@@ -45,11 +45,11 @@
     # Non-flakes
     nvim-codecompanion.url = "github:olimorris/codecompanion.nvim";
     nvim-codecompanion.flake = false;
-    nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
+    nvim-conform.url = "github:stevearc/conform.nvim/v9.0.0";
     nvim-conform.flake = false;
     nvim-dressing.url = "github:stevearc/dressing.nvim";
     nvim-dressing.flake = false;
-    nvim-gitsigns.url = "github:lewis6991/gitsigns.nvim/v0.9.0";
+    nvim-gitsigns.url = "github:lewis6991/gitsigns.nvim/v1.0.2";
     nvim-gitsigns.flake = false;
     nvim-lspconfig.url = "github:neovim/nvim-lspconfig";
     nvim-lspconfig.flake = false;
@@ -67,7 +67,7 @@
     nvim-treesitter-context.flake = false;
     nvim-web-devicons.url = "github:nvim-tree/nvim-web-devicons";
     nvim-web-devicons.flake = false;
-    vim-copilot.url = "github:github/copilot.vim/v1.41.0";
+    vim-copilot.url = "github:github/copilot.vim/v1.48.0";
     vim-copilot.flake = false;
     vim-misc.url = "github:mitchellh/vim-misc";
     vim-misc.flake = false;

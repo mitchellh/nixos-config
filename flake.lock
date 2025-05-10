@@ -532,16 +532,16 @@
     "nvim-conform": {
       "flake": false,
       "locked": {
-        "lastModified": 1723784512,
-        "narHash": "sha256-THl44vHBvgdaYXAUl6g1ccR2mYTBBVizgnqT2MbRngw=",
+        "lastModified": 1739657764,
+        "narHash": "sha256-H9JLiRtixDKDN50SH6gkqgjlhLzHMAaOT1pc69ZFdco=",
         "owner": "stevearc",
         "repo": "conform.nvim",
-        "rev": "8b5e13c1af3211f5bb5e091992aba8629312e514",
+        "rev": "a6f5bdb78caa305496357d17e962bbc4c0b392e2",
         "type": "github"
       },
       "original": {
         "owner": "stevearc",
-        "ref": "v7.1.0",
+        "ref": "v9.0.0",
         "repo": "conform.nvim",
         "type": "github"
       }
@@ -565,16 +565,16 @@
     "nvim-gitsigns": {
       "flake": false,
       "locked": {
-        "lastModified": 1718276179,
-        "narHash": "sha256-AbnjBqKLhOGMGBXBnu9zbL3PG7rKmAoYtxY17kzFEIA=",
+        "lastModified": 1742140868,
+        "narHash": "sha256-qWusbKY+3d1dkW5oLYDyfSLdt1qFlJdDeXgFWqQ4hUI=",
         "owner": "lewis6991",
         "repo": "gitsigns.nvim",
-        "rev": "0b04035bb7b3c83e999b9676e2fb46fd0aa9f910",
+        "rev": "7010000889bfb6c26065e0b0f7f1e6aa9163edd9",
         "type": "github"
       },
       "original": {
         "owner": "lewis6991",
-        "ref": "v0.9.0",
+        "ref": "v1.0.2",
         "repo": "gitsigns.nvim",
         "type": "github"
       }
@@ -826,16 +826,16 @@
     "vim-copilot": {
       "flake": false,
       "locked": {
-        "lastModified": 1728401940,
-        "narHash": "sha256-9264TNocFvtC2znvgfjpwLWBTGfg1U5Fr0dZkkyCYpQ=",
+        "lastModified": 1746466057,
+        "narHash": "sha256-dWkmdjcpZyd45QTErkUQb1cgbyCYhxfXJUdYz2PO04E=",
         "owner": "github",
         "repo": "copilot.vim",
-        "rev": "87038123804796ca7af20d1b71c3428d858a9124",
+        "rev": "18f485d892b56b311fd752039d6977333ebc2a0f",
         "type": "github"
       },
       "original": {
         "owner": "github",
-        "ref": "v1.41.0",
+        "ref": "v1.48.0",
         "repo": "copilot.vim",
         "type": "github"
       }
