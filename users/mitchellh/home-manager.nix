@@ -18,8 +18,10 @@ let
     gs = "git status";
     gt = "git tag";
 
+    jd = "jj desc";
     jf = "jj git fetch";
     jn = "jj new";
+    jp = "jj git push";
     js = "jj st";
   } // (if isLinux then {
     # Two decades of using a Mac has made this such a strong memory
