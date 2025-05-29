@@ -28,6 +28,7 @@ let sources = import ../../nix/sources.nix; in rec {
     vim-misc = vimUtils.buildVimPlugin {
       name = "vim-misc";
       src = inputs.vim-misc;
+      doCheck = false;
     };
 
     vim-pgsql = vimUtils.buildVimPlugin {
@@ -79,6 +80,7 @@ let sources = import ../../nix/sources.nix; in rec {
     nvim-codecompanion = vimUtils.buildVimPlugin {
       name = "nvim-codecompanion";
       src = inputs.nvim-codecompanion;
+      doCheck = false;
     };
 
     nvim-conform = vimUtils.buildVimPlugin {
@@ -110,6 +112,7 @@ let sources = import ../../nix/sources.nix; in rec {
       name = "nvim-plenary";
       src = inputs.nvim-plenary;
       buildPhase = ":";
+      doCheck = false;
     };
 
     nvim-render-markdown = vimUtils.buildVimPlugin {
@@ -121,16 +124,19 @@ let sources = import ../../nix/sources.nix; in rec {
       name = "nvim-telescope";
       src = inputs.nvim-telescope;
       buildPhase = ":";
+      doCheck = false;
     };
 
     nvim-treesitter-context = vimUtils.buildVimPlugin {
       name = "nvim-treesitter-context";
       src = inputs.nvim-treesitter-context;
+      doCheck = false;
     };
 
     nvim-lspconfig = vimUtils.buildVimPlugin {
       name = "nvim-lspconfig";
       src = inputs.nvim-lspconfig;
+      doCheck = false;
 
       # We have to do this because the build phase runs tests which require
       # git and I don't know how to get git into here.
