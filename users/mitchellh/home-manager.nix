@@ -337,6 +337,12 @@ in {
     enable = true;
     configFile.source = ./config.nu;
     shellAliases = shellAliases;
+
+    # This is appended at the end of the config file and we need to do
+    # this to override OMP's transient prompt command.
+    extraConfig = ''
+      $env.TRANSIENT_PROMPT_COMMAND = null
+    '';
   };
 
   programs.oh-my-posh = {
