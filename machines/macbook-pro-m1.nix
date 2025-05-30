@@ -5,6 +5,9 @@
   # This makes it work with the Determinate Nix installer
   ids.gids.nixbld = 30000;
 
+  # We use proprietary software on this machine
+  nixpkgs.config.allowUnfree = true;
+
   # Keep in async with vm-shared.nix. (todo: pull this out into a file)
   nix = {
     # We need to enable flakes

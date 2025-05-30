@@ -84,6 +84,7 @@
         gh = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.gh;
 
         # Want the latest version of these
+        claude-code = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.claude-code;
         nushell = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.nushell;
 
         ibus = ibus_stable;

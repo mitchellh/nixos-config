@@ -55,6 +55,7 @@ in {
     pkgs._1password-cli
     pkgs.asciinema
     pkgs.bat
+    pkgs.claude-code
     pkgs.eza
     pkgs.fd
     pkgs.fzf
