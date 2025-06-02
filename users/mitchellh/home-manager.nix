@@ -55,7 +55,6 @@ in {
     pkgs._1password-cli
     pkgs.asciinema
     pkgs.bat
-    pkgs.claude-code
     pkgs.eza
     pkgs.fd
     pkgs.fzf
@@ -69,6 +68,9 @@ in {
 
     pkgs.gopls
     pkgs.zigpkgs."0.14.0"
+
+    pkgs.claude-code
+    pkgs.codex
 
     # Node is required for Copilot.vim
     pkgs.nodejs
