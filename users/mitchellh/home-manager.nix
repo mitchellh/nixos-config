@@ -99,6 +99,7 @@ in {
     PAGER = "less -FirSwX";
     MANPAGER = "${manpager}/bin/manpager";
 
+    AMP_API_KEY = "op://Private/Amp_API/credential";
     OPENAI_API_KEY = "op://Private/OpenAPI_Personal/credential";
   } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
