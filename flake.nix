@@ -13,6 +13,11 @@
     # We use the unstable nixpkgs repo for some packages.
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    # Master nixpkgs is used for really bleeding edge packages. Warning
+    # that this is extremely unstable and shouldn't be relied on. Its
+    # mostly for testing.
+    nixpkgs-master.url = "github:nixos/nixpkgs";
+
     # Build a custom WSL installer
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";

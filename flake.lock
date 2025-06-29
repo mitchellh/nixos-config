@@ -433,6 +433,21 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/5487e69da40cbd611ab2cadee0b4637225f7cfae.tar.gz"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1751206404,
+        "narHash": "sha256-KxSWq2HWDwvLfZ+F9+Ye3yPNRD8CMcRaudVAF0YKTFQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "04cea3ab305ad539625d9c36d41bc3d4b67a9af2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-old-ibus": {
       "locked": {
         "lastModified": 1716715802,
@@ -717,6 +732,7 @@
         "nix-snapd": "nix-snapd",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-old-ibus": "nixpkgs-old-ibus",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nvim-codecompanion": "nvim-codecompanion",
