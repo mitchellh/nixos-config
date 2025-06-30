@@ -27,7 +27,10 @@
     nix-snapd.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      # We need to use nightly home-manager because it contains this
+      # fix we need for nushell nightly:
+      # https://github.com/nix-community/home-manager/commit/a69ebd97025969679de9f930958accbe39b4c705
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

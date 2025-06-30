@@ -42,6 +42,9 @@ in {
   # to use the old state version.
   home.stateVersion = "18.09";
 
+  # Disabled for now since we mismatch our versions. See flake.nix for details.
+  home.enableNixpkgsReleaseCheck = false;
+
   xdg.enable = true;
 
   #---------------------------------------------------------------------
