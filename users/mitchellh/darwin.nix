@@ -9,8 +9,10 @@
     enable = true;
     casks  = [
       "1password"
+      "claude"
       "cleanshot"
       "discord"
+      "fantastical"
       "google-chrome"
       "hammerspoon"
       "imageoptim"
