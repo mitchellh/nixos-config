@@ -22,6 +22,10 @@
       "slack"
       "spotify"
     ];
+
+    brews = [
+      "gnupg"
+    ];
   };
 
   # The user should already exist, but we need to set this up so Nix knows
