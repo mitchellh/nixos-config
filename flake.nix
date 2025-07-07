@@ -87,19 +87,29 @@
       inputs.jujutsu.overlays.default
       inputs.zig.overlays.default
 
-      (final: prev: rec {
-        # gh CLI on stable has bugs.
-        gh = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.gh;
+      (final: prev:
+        let
+          # We need to create a new nixpkgs instance from the unstable input
+          # so that we can apply configuration to it, such as allowing unfree
+          # packages.
+          nixpkgs-unstable-configured = import inputs.nixpkgs-unstable {
+            system = prev.system;
+            config.allowUnfree = true;
+          };
+        in
+        rec {
+          # gh CLI on stable has bugs.
+          gh = nixpkgs-unstable-configured.gh;
 
-        # Want the latest version of these
-        claude-code = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.claude-code;
-        nushell = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.nushell;
+          # Want the latest version of these
+          claude-code = nixpkgs-unstable-configured.claude-code;
+          nushell = nixpkgs-unstable-configured.nushell;
 
-        ibus = ibus_stable;
-        ibus_stable = inputs.nixpkgs.legacyPackages.${prev.system}.ibus;
-        ibus_1_5_29 = inputs.nixpkgs-old-ibus.legacyPackages.${prev.system}.ibus;
-        ibus_1_5_31 = inputs.nixpkgs-unstable.legacyPackages.${prev.system}.ibus;
-      })
+          ibus = ibus_stable;
+          ibus_stable = inputs.nixpkgs.legacyPackages.${prev.system}.ibus;
+          ibus_1_5_29 = inputs.nixpkgs-old-ibus.legacyPackages.${prev.system}.ibus;
+          ibus_1_5_31 = nixpkgs-unstable-configured.ibus;
+        })
     ];
 
     mkSystem = import ./lib/mksystem.nix {
