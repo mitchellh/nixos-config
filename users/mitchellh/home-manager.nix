@@ -58,6 +58,7 @@ in {
     pkgs._1password-cli
     pkgs.asciinema
     pkgs.bat
+    pkgs.chezmoi
     pkgs.eza
     pkgs.fd
     pkgs.fzf
@@ -116,17 +117,7 @@ in {
 
   xdg.configFile = {
     "i3/config".text = builtins.readFile ./i3;
-    "jj/config.toml".source = ./jujutsu.toml;
     "rofi/config.rasi".text = builtins.readFile ./rofi;
-
-    # tree-sitter parsers
-    "nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
-    "nvim/queries/proto/folds.scm".source =
-      "${sources.tree-sitter-proto}/queries/folds.scm";
-    "nvim/queries/proto/highlights.scm".source =
-      "${sources.tree-sitter-proto}/queries/highlights.scm";
-    "nvim/queries/proto/textobjects.scm".source =
-      ./textobjects.scm;
   } // (if isDarwin then {
     # Rectangle.app. This has to be imported manually using the app.
     "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
@@ -284,78 +275,18 @@ in {
   programs.neovim = {
     enable = true;
     package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
-
-    withPython3 = true;
-
-    plugins = with pkgs; [
-      customVim.vim-copilot
-      customVim.vim-cue
-      customVim.vim-fish
-      customVim.vim-glsl
-      customVim.vim-misc
-      customVim.vim-pgsql
-      customVim.vim-tla
-      customVim.vim-zig
-      customVim.pigeon
-      customVim.AfterColors
-
-      customVim.vim-nord
-      customVim.nvim-codecompanion
-      customVim.nvim-comment
-      customVim.nvim-conform
-      customVim.nvim-dressing
-      customVim.nvim-gitsigns
-      customVim.nvim-lualine
-      customVim.nvim-lspconfig
-      customVim.nvim-nui
-      customVim.nvim-plenary # required for telescope
-      customVim.nvim-render-markdown
-      customVim.nvim-telescope
-      customVim.nvim-treesitter-context
-
-      vimPlugins.vim-eunuch
-      vimPlugins.vim-markdown
-      vimPlugins.vim-nix
-      vimPlugins.typescript-vim
-      vimPlugins.nvim-treesitter-parsers.elixir
-      vimPlugins.nvim-treesitter
-      vimPlugins.nvim-treesitter.withAllGrammars
-    ] ++ (lib.optionals (!isWSL) [
-      # This is causing a segfaulting while building our installer
-      # for WSL so just disable it for now. This is a pretty
-      # unimportant plugin anyway.
-      customVim.nvim-web-devicons
-    ]);
-
-    extraConfig = (import ./vim-config.nix) { inherit sources; };
   };
 
   programs.atuin = {
     enable = true;
-    enableFishIntegration = true;
-    enableNushellIntegration = true;
-    settings = {
-      show_tabs = false;
-      style = "compact";
-    };
   };
 
   programs.nushell = {
     enable = true;
-    configFile.source = ./config.nu;
-    shellAliases = shellAliases;
-
-    # This is appended at the end of the config file and we need to do
-    # this to override OMP's transient prompt command.
-    extraConfig = ''
-      $env.TRANSIENT_PROMPT_COMMAND = null
-    '';
   };
 
   programs.oh-my-posh = {
     enable = true;
-    enableNushellIntegration = true;
-    settings = builtins.fromJSON (builtins.readFile ./omp.json);
   };
 
   services.gpg-agent = {
