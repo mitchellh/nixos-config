@@ -161,16 +161,16 @@ in {
     enable = true;
     shellAliases = shellAliases;
     interactiveShellInit = lib.strings.concatStrings (lib.strings.intersperse "\n" ([
-      "source ${sources.theme-bobthefish}/functions/fish_prompt.fish"
-      "source ${sources.theme-bobthefish}/functions/fish_right_prompt.fish"
-      "source ${sources.theme-bobthefish}/functions/fish_title.fish"
+      "source ${inputs.theme-bobthefish}/functions/fish_prompt.fish"
+      "source ${inputs.theme-bobthefish}/functions/fish_right_prompt.fish"
+      "source ${inputs.theme-bobthefish}/functions/fish_title.fish"
       (builtins.readFile ./config.fish)
       "set -g SHELL ${pkgs.fish}/bin/fish"
     ]));
 
     plugins = map (n: {
       name = n;
-      src  = sources.${n};
+      src  = inputs.${n};
     }) [
       "fish-fzf"
       "fish-foreign-env"
@@ -213,27 +213,6 @@ in {
 
     # I don't use "settings" because the path is wrong on macOS at
     # the time of writing this.
-  };
-
-  programs.tmux = {
-    enable = true;
-    terminal = "xterm-256color";
-    shortcut = "l";
-    secureSocket = false;
-    mouse = true;
-
-    extraConfig = ''
-      set -ga terminal-overrides ",*256col*:Tc"
-
-      set -g @dracula-show-battery false
-      set -g @dracula-show-network false
-      set -g @dracula-show-weather false
-
-      bind -n C-k send-keys "clear"\; send-keys "Enter"
-
-      run-shell ${sources.tmux-pain-control}/pain_control.tmux
-      run-shell ${sources.tmux-dracula}/dracula.tmux
-    '';
   };
 
   programs.alacritty = {

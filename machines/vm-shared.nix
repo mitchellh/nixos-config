@@ -100,7 +100,6 @@
     cachix
     gnumake
     killall
-    niv
     xclip
 
     # For hypervisors that support auto-resizing, this script forces it.

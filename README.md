@@ -217,10 +217,3 @@ $ wsl -s nixos
 
 After the `wsl -d` command, you should be dropped into the Nix environment.
 _Voila!_
-
-## FAQ
-
-### Why do you still use `niv`?
-
-I am still transitioning into a fully flaked setup. During this transition
-(which is indefinite, I'm in no rush), I'm using both.
