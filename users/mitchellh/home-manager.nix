@@ -45,6 +45,9 @@ in {
   # Disabled for now since we mismatch our versions. See flake.nix for details.
   home.enableNixpkgsReleaseCheck = false;
 
+  # We manage our own Nushell config via Chezmoi
+  home.shell.enableNushellIntegration = false;
+
   xdg.enable = true;
 
   #---------------------------------------------------------------------
