@@ -70,6 +70,7 @@ in {
     pkgs.jq
     pkgs.ripgrep
     pkgs.sentry-cli
+    pkgs.starship
     pkgs.tree
     pkgs.watch
 
