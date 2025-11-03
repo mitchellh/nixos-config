@@ -181,18 +181,13 @@ in {
 
   programs.git = {
     enable = true;
-    userName = "Mitchell Hashimoto";
-    userEmail = "m@mitchellh.com";
     signing = {
       key = "523D5DC389D273BC";
       signByDefault = true;
     };
-    aliases = {
-      cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 -r git branch -d";
-      prettylog = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(r) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
-      root = "rev-parse --show-toplevel";
-    };
-    extraConfig = {
+    settings = {
+      user.name = "Mitchell Hashimoto";
+      user.email = "m@mitchellh.com";
       branch.autosetuprebase = "always";
       color.ui = true;
       core.askPass = ""; # needs to be empty to use terminal for ask pass
@@ -200,13 +195,20 @@ in {
       github.user = "mitchellh";
       push.default = "tracking";
       init.defaultBranch = "main";
+      aliases = {
+        cleanup = "!git branch --merged | grep  -v '\\*\\|master\\|develop' | xargs -n 1 -r git branch -d";
+        prettylog = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(r) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative";
+        root = "rev-parse --show-toplevel";
+      };
     };
   };
 
   programs.go = {
     enable = true;
-    goPath = "code/go";
-    goPrivate = [ "github.com/mitchellh" "github.com/hashicorp" "rfc822.mx" ];
+    env = { 
+      GOPATH = "Documents/go";
+      GOPRIVATE = [ "github.com/mitchellh" ];
+    };
   };
 
   programs.jujutsu = {
