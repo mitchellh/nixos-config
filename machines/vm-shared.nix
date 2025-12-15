@@ -56,9 +56,6 @@
 
   # Virtualization settings
   virtualisation.docker.enable = true;
-  virtualisation.lxd = {
-    enable = true;
-  };
 
   # Select internationalisation properties.
   i18n = {
@@ -67,7 +64,7 @@
       enable = true;
       type = "fcitx5";
       fcitx5.addons = with pkgs; [
-        fcitx5-chinese-addons
+        qt6Packages.fcitx5-chinese-addons
         fcitx5-gtk
         fcitx5-hangul
         fcitx5-mozc
@@ -118,8 +115,12 @@
   services.xserver = lib.mkIf (config.specialisation != {}) {
     enable = true;
     xkb.layout = "us";
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.enable = true;
+  };
+  services.desktopManager = lib.mkIf (config.specialisation != {}) {
+    gnome.enable = true;
+  };
+  services.displayManager = lib.mkIf (config.specialisation != {}) {
+    gdm.enable = true;
   };
 
   # Some programs need SUID wrappers, can be configured further or are

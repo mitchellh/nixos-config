@@ -4,9 +4,9 @@
     services.xserver = {
       enable = true;
       xkb.layout = "us";
-      desktopManager.gnome.enable = true;
-      displayManager.gdm.enable = true;
     };
+    services.desktopManager.gnome.enable = true;
+    services.displayManager.gdm.enable = true;
 
     i18n.inputMethod = lib.mkForce {
       enable = true;
