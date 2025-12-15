@@ -88,6 +88,7 @@ in {
     pkgs.tailscale
   ]) ++ (lib.optionals (isLinux && !isWSL) [
     pkgs.chromium
+    pkgs.clang
     pkgs.firefox
     pkgs.rofi
     pkgs.valgrind
