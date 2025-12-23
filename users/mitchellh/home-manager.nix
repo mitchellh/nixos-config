@@ -263,6 +263,10 @@ in {
     package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
   };
 
+  programs.npm = {
+    enable = isLinux;
+  };
+
   programs.atuin = {
     enable = true;
   };
