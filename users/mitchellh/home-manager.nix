@@ -75,7 +75,7 @@ in {
     pkgs.watch
 
     pkgs.gopls
-    pkgs.zigpkgs."0.14.0"
+    pkgs.zigpkgs."0.15.2"
 
     pkgs.claude-code
     pkgs.codex
