@@ -41,6 +41,12 @@ VMWARE_FUSION_APP="/Applications/VMware Fusion.app"
 VMWARE_FUSION_LIB="$VMWARE_FUSION_APP/Contents/Library"
 export PATH="$VMWARE_FUSION_LIB:$PATH"
 
+VM_CPU_COUNT=7
+VM_RAM_GB=32
+VM_VRAM_GB=8
+VM_DISK_GB=200
+
+
 # Services script location varies by version
 if [ -x "$VMWARE_FUSION_LIB/services/services.sh" ]; then
     VMWARE_SERVICES_SCRIPT="$VMWARE_FUSION_LIB/services/services.sh"
@@ -285,9 +291,10 @@ sound.autoDetect = "TRUE"
 sound.virtualDev = "hdaudio"
 sound.fileName = "-1"
 sound.present = "TRUE"
-numvcpus = "7"
-cpuid.coresPerSocket = "7"
-memsize = "32656"
+numvcpus = "${VM_CPU_COUNT}"
+cpuid.coresPerSocket = "${VM_CPU_COUNT}"
+# must be experssed as MB, so we need to convert from GB
+memsize = "$((VM_RAM_GB * 1024))"
 sata0.present = "TRUE"
 nvme0.present = "TRUE"
 nvme0:0.fileName = "Virtual Disk.vmdk"
@@ -327,10 +334,10 @@ sharedFolder1.expiration = "never"
 sharedFolder.maxNum = "2"
 floppy0.present = "FALSE"
 mks.enable3d = "TRUE"
-svga.graphicsMemoryKB = "4194304"
+svga.graphicsMemoryKB = "$((VM_VRAM_GB * 1024 * 1024))"
 gui.fitGuestUsingNativeDisplayResolution = "TRUE"
 vmxstats.filename = "${vm_name}.scoreboard"
-svga.vramSize = "268435456"
+svga.vramSize = "$((256 * 1024 * 1024))"
 EOF
 
     touch "$vm_dir/${vm_name}.nvram"
@@ -339,9 +346,9 @@ EOF
 
     echo "Creating virtual disk..."
     if [ -f "$VMWARE_FUSION_LIB/vmware-vdiskmanager" ]; then
-        "$VMWARE_FUSION_LIB/vmware-vdiskmanager" -c -s 200GB -a nvme -t 0 "$vm_dir/Virtual Disk.vmdk"
+        "$VMWARE_FUSION_LIB/vmware-vdiskmanager" -c -s "${VM_DISK_GB}GB" -a nvme -t 0 "$vm_dir/Virtual Disk.vmdk"
     elif command -v vmware-vdiskmanager >/dev/null 2>&1; then
-        vmware-vdiskmanager -c -s 200GB -a nvme -t 0 "$vm_dir/Virtual Disk.vmdk"
+        vmware-vdiskmanager -c -s "${VM_DISK_GB}GB" -a nvme -t 0 "$vm_dir/Virtual Disk.vmdk"
     else
         die "vmware-vdiskmanager not found."
     fi
@@ -351,7 +358,7 @@ EOF
     echo ""
     echo "VM created: $vm_name"
     echo "  Location: $vm_dir"
-    echo "  CPU: 7 cores | RAM: 32GB | Disk: 200GB NVMe"
+    echo "  CPU: $VM_CPU_COUNT cores | RAM: ${VM_RAM_GB}GB | VRAM: ${VM_VRAM_GB}GB | Disk: ${VM_DISK_GB}GB"
     echo "  Network: NAT (vmnet8) | Static IP: $NIXADDR"
 
     vmrun start "$vmx_file"
@@ -406,7 +413,7 @@ vm_prepare_sops_age_key() {
 vm_collect_secrets() {
     touch "$NIX_CONFIG_DIR/machines/secrets.yaml"
     git -C "$NIX_CONFIG_DIR" add -f machines/secrets.yaml
-    nix --extra-experimental-features 'nix-command flakes' run "$NIX_CONFIG_DIR#collect-secrets"
+    (cd "$NIX_CONFIG_DIR" && nix --extra-experimental-features 'nix-command flakes' run "$NIX_CONFIG_DIR#collect-secrets")
     git -C "$NIX_CONFIG_DIR" reset -q -- machines/secrets.yaml
 }
 

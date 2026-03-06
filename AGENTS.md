@@ -211,7 +211,6 @@ export PATH := /Applications/VMware Fusion.app/Contents/Library:$(PATH)
 | `git-repo-manager` | - | Declarative git repo management |
 | `sops-nix` | - | Secrets management |
 | `sopsidy` | - | Secrets management (companion to sops-nix) |
-| `difi-src` | non-flake | Terminal git diff reviewer (built from source) |
 | `agent-of-empires-src` | non-flake | Terminal session manager for AI agents (built from source) |
 | `uniclip-src` | non-flake | Clipboard sharing tool (built from source with custom patch) |
 
@@ -437,15 +436,10 @@ sudo nixos-rebuild switch --flake .#vm-aarch64 --specialisation gnome-ibus
 ## Desktop Environment (Linux VM)
 
 - **Primary:** Niri (scrollable-tiling Wayland compositor) or Mango
-- **Alternative:** GNOME with ibus (via specialization)
 - **Shell:** Noctalia (with user templates, Emacs theme integration, nvim matugen template)
 - **Display Manager:** greetd with tuigreet
 - **Terminal:** Ghostty, foot
-- **App Launcher:** fuzzel
-- **Notifications:** mako
-- **Screen Locker:** swaylock
 - **Screenshots:** grim + slurp
-- **Wallpaper:** waypaper + swaybg
 
 ## Development Tooling
 

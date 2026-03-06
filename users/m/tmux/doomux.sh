@@ -60,7 +60,6 @@ case "$menu" in
     ;;
   git)
     tmux display-menu -T "tmux git" -x R -y P \
-      "Difi" d "run-shell 'sh $self act-difi'" \
       "Tig" t "run-shell 'sh $self act-tig'" \
       "Magit (emacsclient -nw)" g "run-shell 'sh $self act-magit'" 
     ;;
@@ -126,9 +125,6 @@ case "$menu" in
     ;;
   act-yazi)
     spawn_tool yazi
-    ;;
-  act-difi)
-    spawn_tool difi
     ;;
   act-tig)
     spawn_tool tig

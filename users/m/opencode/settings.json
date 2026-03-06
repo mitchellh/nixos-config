@@ -19,7 +19,8 @@
     "@plannotator/opencode@0.6.3",
     "@ramtinj95/opencode-tokenscope@1.5.2",
     "@slkiser/opencode-quota@1.1.2",
-    "@tarquinen/opencode-smart-title@0.1.7"
+    "@tarquinen/opencode-smart-title@0.1.7",
+    "opencode-beads@0.5.5"
   ],
   "mcp": {},
   "provider": {

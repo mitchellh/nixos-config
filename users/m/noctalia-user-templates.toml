@@ -7,3 +7,8 @@ post_hook = 'noctalia-theme-reload'
 input_path = "~/.config/nvim/lua/matugen-template.lua"
 output_path = "~/.config/nvim/lua/matugen.lua"
 post_hook = 'pkill -SIGUSR1 nvim'
+
+[templates.wezterm-colors]
+input_path = "~/.config/noctalia/wezterm-colors-template.lua"
+output_path = "~/.local/share/noctalia/wezterm-colors.lua"
+post_hook = 'wezterm cli reload-configuration'

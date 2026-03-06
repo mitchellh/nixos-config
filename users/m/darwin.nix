@@ -6,17 +6,10 @@ let
     src = inputs.aw-import-screentime-src;
     patches = [ ../../patches/aw-import-screentime.patch ];
   };
-  awAutomationScriptsRoot = "/Users/USER/.config/activitywatch/scripts";
+  homeDir = "/Users/m";
+  awAutomationScriptsRoot = "${homeDir}/.config/activitywatch/scripts";
   vmStaticIp = "192.168.130.3";
-  openWebUiStateDir = "/Users/m/.local/state/open-webui";
-  openWebUiPackage =
-    (import inputs.nixpkgs-unstable {
-      system = pkgs.stdenv.hostPlatform.system;
-      config = {
-        allowUnfree = true;
-        allowBroken = true;
-      };
-    }).open-webui;
+  openWebUiStateDir = "${homeDir}/.local/state/open-webui";
 in
 {
   imports = [ ./opencode/modules/darwin.nix ];
@@ -60,7 +53,7 @@ in
   # The user should already exist, but we need to set this up so Nix knows
   # what our home directory is (https://github.com/LnL7/nix-darwin/issues/423).
   users.users.m = {
-    home = "/Users/m";
+    home = homeDir;
     shell = pkgs.zsh;
   };
 
@@ -129,7 +122,7 @@ in
 
 
   # Uniclip: encrypted clipboard sharing between macOS and NixOS VM.
-  # Server listens on localhost only; an SSH reverse tunnel carries traffic to the VM.
+  # Server binds to VM network interface; VM connects directly (no SSH tunnel).
   launchd.user.agents.uniclip = {
     serviceConfig = {
       ProgramArguments = [
@@ -137,14 +130,14 @@ in
         ''
           set -euo pipefail
           /bin/wait4path /nix/store
-          export PATH=${pkgs.rbw}/bin:$PATH
+          export PATH=${pkgs.rbw}/bin:/opt/homebrew/bin:$PATH
           UNICLIP_PASSWORD="$(${pkgs.rbw}/bin/rbw get uniclip-password)"
           if [ -z "$UNICLIP_PASSWORD" ]; then
             echo "uniclip: empty password from rbw" >&2
             exit 1
           fi
           export UNICLIP_PASSWORD
-          exec ${pkgs.uniclip}/bin/uniclip --secure --bind 127.0.0.1 -p 53701
+          exec ${pkgs.uniclip}/bin/uniclip --secure --bind 192.168.130.1 -p 53701
         ''
       ];
       RunAtLoad = true;
@@ -161,6 +154,7 @@ in
         ''
           /bin/wait4path /nix/store
           mkdir -p "${openWebUiStateDir}"/{static,data,hf_home,transformers_home}
+          export PATH=${pkgs.uv}/bin:$PATH
           export STATIC_DIR="${openWebUiStateDir}/static"
           export DATA_DIR="${openWebUiStateDir}/data"
           export HF_HOME="${openWebUiStateDir}/hf_home"
@@ -170,7 +164,7 @@ in
           export DO_NOT_TRACK=True
           export ANONYMIZED_TELEMETRY=False
           cd "${openWebUiStateDir}"
-          exec ${openWebUiPackage}/bin/open-webui serve --host 127.0.0.1 --port 8080
+          exec ${pkgs.uv}/bin/uvx --python 3.11 open-webui@latest serve --host 127.0.0.1 --port 8080
         ''
       ];
       RunAtLoad = true;
@@ -203,9 +197,8 @@ in
     };
   };
 
-  # SSH reverse tunnel: forwards the uniclip port into the VM so the VM client
-  # can reach the macOS server at 127.0.0.1:53701 on either end.
-  launchd.user.agents.uniclip-tunnel = {
+  # Expose ActivityWatch server inside the VM on localhost:5600.
+  launchd.user.agents.activitywatch-tunnel = {
     serviceConfig = {
       ProgramArguments = [
         "/bin/bash" "-c"
@@ -215,15 +208,15 @@ in
             /usr/bin/ssh -N \
               -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
               -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=accept-new \
-              -R 53701:127.0.0.1:53701 m@${vmStaticIp}
+              -R 5600:127.0.0.1:5600 m@${vmStaticIp}
             sleep 5
           done
         ''
       ];
       RunAtLoad = true;
       KeepAlive = true;
-      StandardOutPath = "/tmp/uniclip-tunnel.log";
-      StandardErrorPath = "/tmp/uniclip-tunnel.log";
+      StandardOutPath = "/tmp/activitywatch-tunnel.log";
+      StandardErrorPath = "/tmp/activitywatch-tunnel.log";
     };
   };
 

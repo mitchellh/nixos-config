@@ -5,10 +5,7 @@
     # Pin our primary nixpkgs repository. This is the main nixpkgs repository
     # we'll use for our configurations. Be very careful changing this because
     # it'll impact your entire system.
-    nixpkgs.url = "github:nixos/nixpkgs/c217913993d6c6f6805c3b1a3bda5e639adfde6d";
-
-    # Used to get ibus 1.5.29 which has some quirks we want to test.
-    nixpkgs-old-ibus.url = "github:nixos/nixpkgs/e2dd4e18cc1c7314e24154331bae07df76eb582f";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
     # We use the unstable nixpkgs repo for some packages.
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -27,7 +24,7 @@
     nix-snapd.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -42,23 +39,41 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    ghostty.url = "github:ghostty-org/ghostty";
-
     # Niri - scrollable-tiling Wayland compositor
     niri.url = "github:sodiboo/niri-flake";
+    niri-scratchpad.url = "github:argosnothing/niri-scratchpad-rs";
+    # niri-deep = {
+    #   url = "/home/m/Projects/niri-deep";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     # LLM agents for Nix
     llm-agents.url = "github:numtide/llm-agents.nix";
+
+    # Python/uv packaging toolchain (used for APM and other uv-based Python tools)
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pyproject-build-systems = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # LazyVim Nix (declarative Neovim + LazyVim)
     lazyvim.url = "github:pfassina/lazyvim-nix";
 
     # Non-flake sources for packages we build ourselves
-    difi-src = { url = "github:oug-t/difi"; flake = false; };
-    agent-of-empires-src = { url = "github:njbrake/agent-of-empires"; flake = false; };
+    agent-of-empires-src.url = "github:njbrake/agent-of-empires";
     uniclip-src = { url = "github:quackduck/uniclip"; flake = false; };
     tmux-menus-src = { url = "github:jaclu/tmux-menus"; flake = false; };
-    beads-viewer-src = { url = "github:Dicklesworthstone/beads_viewer"; flake = false; };
     aw-import-screentime-src = { url = "github:ActivityWatch/aw-import-screentime/8d6bf4a84bac840c8af577652ee70514ef3e6bc1"; flake = false; };
 
     # Mango window control for Wayland
@@ -109,29 +124,52 @@
     overlays = [
       inputs.rust-overlay.overlays.default
       inputs.niri.overlays.niri
+      # inputs.niri-deep.overlays.default
       inputs.llm-agents.overlays.default
       inputs.git-repo-manager.overlays.git-repo-manager
 
       # Build non-flake packages from source
       (final: prev: {
-        difi = final.buildGoModule {
-          pname = "difi";
-          version = "0-unstable-2026-02-17";
-          src = inputs.difi-src;
-          vendorHash = "sha256-bV5y8zKculYULkFl9J95qebLOzdTT/LuYycqMmHKZ+g=";
-          meta.description = "Terminal-based Git diff reviewer";
-        };
+        agent-of-empires = inputs.agent-of-empires-src.packages.${prev.system}.default;
 
-        agent-of-empires = final.rustPlatform.buildRustPackage {
-          pname = "agent-of-empires";
-          version = "0.11.2";
-          src = inputs.agent-of-empires-src;
-          cargoHash = "sha256-gE5FhOrBTfrn/2j7lHLrEzgYwJ6pEd5kRFY9qwgUxDY=";
-          doCheck = false; # git tests need a working git in the sandbox
-          nativeBuildInputs = with final; [ pkg-config cmake perl ];
-          buildInputs = with final; [ openssl ];
-          meta.description = "Terminal session manager for AI coding agents";
-        };
+        apm =
+          let
+            src = final.fetchFromGitHub {
+              owner = "microsoft";
+              repo = "apm";
+              rev = "v0.7.3";
+              hash = "sha256-B2gAGZpziIf5L7Unc+ojJlCKk8O7qWUnTYmtNFLsxKk=";
+            };
+            workspace = inputs.uv2nix.lib.workspace.loadWorkspace { workspaceRoot = src; };
+            overlay = workspace.mkPyprojectOverlay { sourcePreference = "wheel"; };
+            # Fix upstream bug: get_auto_integrate / set_auto_integrate are called
+            # in cli.py but missing from config.py (v0.7.3).
+            pyprojectOverrides = _final: prev: {
+              apm-cli = prev.apm-cli.overrideAttrs (old: {
+                postInstall = (old.postInstall or "") + ''
+                  cfg=$(find $out -path "*/apm_cli/config.py" | head -1)
+                  cat >> "$cfg" << 'PYEOF'
+
+
+def get_auto_integrate():
+    return get_config().get("auto_integrate", True)
+
+
+def set_auto_integrate(value: bool):
+    update_config({"auto_integrate": value})
+PYEOF
+                '';
+              });
+            };
+            pythonSet = (final.callPackage inputs.pyproject-nix.build.packages {
+              python = final.python3;
+            }).overrideScope (final.lib.composeManyExtensions [
+              inputs.pyproject-build-systems.overlays.default
+              overlay
+              pyprojectOverrides
+            ]);
+          in
+          pythonSet.mkVirtualEnv "apm" workspace.deps.default;
 
         uniclip = final.buildGoModule {
           pname = "uniclip";
@@ -151,15 +189,6 @@
           '';
         });
 
-        bv = final.buildGoModule {
-          pname = "bv";
-          version = "0-unstable-2026-02-18";
-          src = inputs.beads-viewer-src;
-          vendorHash = null; # uses vendored dependencies
-          subPackages = [ "cmd/bv" ];
-          meta.description = "Graph-aware TUI for the Beads issue tracker";
-        };
-
         tmuxPlugins = prev.tmuxPlugins // {
           "tmux-menus" = final.tmuxPlugins.mkTmuxPlugin {
             pluginName = "tmux-menus";
@@ -168,6 +197,51 @@
             rtpFilePath = "menus.tmux";
           };
         };
+
+        dotagents = final.stdenv.mkDerivation (finalAttrs: {
+          pname = "dotagents";
+          version = "0.15.0";
+
+          src = final.fetchFromGitHub {
+            owner = "getsentry";
+            repo = "dotagents";
+            rev = finalAttrs.version;
+            hash = "sha256-uqS2hh61urEtZ+ZLzyzdNChNA8kNNMemZUrV510uCfk=";
+          };
+
+          pnpmDeps = final.pnpm.fetchDeps {
+            inherit (finalAttrs) pname version src;
+            fetcherVersion = 1; # pnpm-lock.yaml lockfileVersion 9.0
+            hash = "sha256-E2YJ2bw9OB3T1//2rtHx0dqgoYFKo4Cj59x13QdJj4s=";
+          };
+
+          nativeBuildInputs = [ final.pnpm.configHook final.nodejs_22 final.makeWrapper ];
+
+          buildPhase = ''
+            runHook preBuild
+            pnpm build
+            runHook postBuild
+          '';
+
+          installPhase = ''
+            runHook preInstall
+            pnpm install --frozen-lockfile --prod
+            mkdir -p $out/lib/node_modules/@sentry/dotagents
+            cp -r dist package.json node_modules $out/lib/node_modules/@sentry/dotagents/
+            mkdir -p $out/bin
+            makeWrapper ${final.nodejs_22}/bin/node $out/bin/dotagents \
+              --add-flags "$out/lib/node_modules/@sentry/dotagents/dist/cli/index.js"
+            runHook postInstall
+          '';
+
+          meta = with final.lib; {
+            description = "Package manager for AI agent skill dependencies";
+            homepage = "https://github.com/getsentry/dotagents";
+            license = licenses.mit;
+            mainProgram = "dotagents";
+            platforms = platforms.all;
+          };
+        });
 
         opencode-dev =
           let
@@ -198,15 +272,12 @@
           };
         in rec {
         # gh CLI on stable has bugs.
-        gh = pkgs-unstable.gh;
+        # gh = pkgs-unstable.gh;
 
         # Want the latest version of these
-        claude-code = pkgs-unstable.claude-code;
+        # claude-code = pkgs-unstable.claude-code;
+        wezterm = pkgs-unstable.wezterm;
 
-        ibus = ibus_stable;
-        ibus_stable = inputs.nixpkgs.legacyPackages.${prev.system}.ibus;
-        ibus_1_5_29 = inputs.nixpkgs-old-ibus.legacyPackages.${prev.system}.ibus;
-        ibus_1_5_31 = pkgs-unstable.ibus;
       })
     ];
 

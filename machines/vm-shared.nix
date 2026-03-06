@@ -125,8 +125,8 @@
     killall
     wl-clipboard  # Wayland clipboard
 
-    # Ghostty terminal
-    inputs.ghostty.packages.${currentSystem}.default
+    # WezTerm terminal
+    pkgs.wezterm
   ] ++ lib.optionals (currentSystemName == "vm-aarch64") [
     # This is needed for the vmware user tools clipboard to work.
     # You can test if you don't need this by deleting this and seeing

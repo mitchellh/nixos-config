@@ -7,17 +7,48 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
   opencodeAwesome = import ./opencode/awesome.nix { inherit pkgs lib; };
+  niriDeepDevBinary = "/home/m/Projects/yeet-and-yoink/target/release/yny";
+  niriDeepZellijBreak = if isLinux then let
+    rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+      targets = [ "wasm32-wasip1" ];
+    };
+    rustPlatform = pkgs.makeRustPlatform {
+      cargo = rustToolchain;
+      rustc = rustToolchain;
+    };
+  in rustPlatform.buildRustPackage {
+    pname = "yeet-and-yoink-zellij-break";
+    version = "0.1.0";
+    src = lib.cleanSourceWith {
+      src = /home/m/Projects/yeet-and-yoink/plugins/zellij-break;
+      filter = path: type:
+        let
+          baseName = builtins.baseNameOf path;
+        in
+          baseName != "target" && baseName != ".git";
+    };
+    cargoLock.lockFile = /home/m/Projects/yeet-and-yoink/plugins/zellij-break/Cargo.lock;
+    buildPhase = ''
+      runHook preBuild
+      cargo build --frozen --release --target wasm32-wasip1
+      runHook postBuild
+    '';
+    doCheck = false;
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      if [ -f target/wasm32-wasip1/release/yeet-and-yoink-zellij-break.wasm ]; then
+        install -m0644 target/wasm32-wasip1/release/yeet-and-yoink-zellij-break.wasm $out/yeet-and-yoink-zellij-break.wasm
+      else
+        echo "yeet-and-yoink-zellij-break.wasm not found after build" >&2
+        exit 1
+      fi
+      runHook postInstall
+    '';
+  } else null;
+  niriDeepZellijBreakPlugin = if isLinux then "${niriDeepZellijBreak}/yeet-and-yoink-zellij-break.wasm" else "";
 
   shellAliases = {
-          ".." = "cd ..";
-         "..." = "cd ../..";
-        "...." = "cd ../../..";
-       "....." = "cd ../../../..";
-      "......" = "cd ../../../../..";
-     "......." = "cd ../../../../../..";
-    "........" = "cd ../../../../../../..";
-
-    
     g  = "git";
     gs = "git status";
     ga = "git add";
@@ -33,11 +64,11 @@ let
     lah = "eza -alh --color=auto --group-directories-first --icons";
     la = "eza -la";
     ll = "eza -lh --color=auto --group-directories-first --icons"; 
-    magit = "emacsclient -c -a '' -e '(magit-status)'";
+    magit = "emacsclient -a \"\" -nw -e -q '(progn (magit-status))'";
     "nix-gc" = "nix-collect-garbage -d";
     "nix-update-flakes" = "nix flake update";
 
-    cc = "claude";
+    # cc = "claude";
     oc = "opencode";
     ocd = "opencode-dev";
     openspec-in-progress = "openspec list --json | jq -r '.changes[] | select(.status == \"in-progress\").name'";
@@ -53,8 +84,8 @@ let
     open = "xdg-open";
     noctalia-diff = "nix shell nixpkgs#jq nixpkgs#colordiff -c bash -c \"colordiff -u --nobanner <(jq -S . ~/.config/noctalia/settings.json) <(noctalia-shell ipc call state all | jq -S .settings)\"";
     nix-config = "nvim /nix-config";
-    niks = "sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --impure --flake '/nixos-config#vm-aarch64'";
-    nikt = "sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --impure --flake '/nixos-config#vm-aarch64'";
+    niks = "sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --impure --flake 'path:/nixos-config#vm-aarch64'";
+    nikt = "sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --impure --flake 'path:/nixos-config#vm-aarch64'";
   } else (if isDarwin then {
     nix-config = "nvim ~/.config/nix-config";
     niks = "cd ~/.config/nix && NIXPKGS_ALLOW_UNFREE=1 nix build --impure --extra-experimental-features 'nix-command flakes' '.#darwinConfigurations.macbook-pro-m1.system' --max-jobs 8 --cores 0 && sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild switch --impure --flake '.#macbook-pro-m1'";
@@ -90,6 +121,15 @@ in {
   # per-project flakes sourced with direnv and nix-shell, so this is
   # not a huge list.
   home.packages = [
+    pkgs.zellij
+    pkgs.kitty
+    pkgs.ghostty
+    pkgs.alacritty
+    pkgs.uniclip  # Clipboard sharing (macOS <-> VM via SSH tunnel)
+    pkgs.nerd-fonts.symbols-only  # icon font for Doom Emacs (+icons) and terminal apps
+    pkgs.emacs-all-the-icons-fonts  # all-the-icons font family for Emacs
+
+    # CLI tools
     pkgs.bat
     pkgs.eza
     pkgs.fd
@@ -104,30 +144,53 @@ in {
     pkgs.ripgrep
     pkgs.tree
     pkgs.watch
-    pkgs.nerd-fonts.symbols-only  # icon font for Doom Emacs (+icons) and terminal apps
-    pkgs.emacs-all-the-icons-fonts  # all-the-icons font family for Emacs
-
-    # CLI tools
     pkgs.yazi          # terminal file manager
     pkgs.btop          # system monitor
     pkgs.gnumake       # make
     pkgs.just          # command runner
     pkgs.tmux          # terminal multiplexer
     pkgs.tig           # git TUI
-    pkgs.difi          # terminal git diff reviewer
-    pkgs.agent-of-empires  # terminal session manager for AI agents
     pkgs.dust          # disk usage analyzer (du alternative)
     pkgs.zoxide
 
-    # llm-agents.nix — AI coding agents
+    # dev tools
+    pkgs.go
+    pkgs.gopls
+
+    # Rust toolchain (via rust-overlay)
+    (pkgs.rust-bin.stable.latest.default.override {
+      extensions = [ "rust-src" "rust-analyzer" ];
+      targets = [ "wasm32-wasip1" ];
+
+    })
+
+    # Python + uv (hiPrio so it wins over python3 bundled in pkgs.apm)
+    (lib.hiPrio pkgs.python314)
+    pkgs.uv
+
+    # Node.js with npx (included) + fnm for version management
+    pkgs.nodejs_22
+    pkgs.fnm
+
+    # ai tools - coding agents
+    pkgs.agent-of-empires  # terminal session manager for AI agents
     pkgs.llm-agents.amp
-    # pkgs.llm-agents.code
-    pkgs.llm-agents.copilot-cli
-    pkgs.llm-agents.crush
-    pkgs.llm-agents.cursor-agent
-    # pkgs.llm-agents.droid
+    pkgs.llm-agents.ccusage-amp
     pkgs.llm-agents.eca
-    pkgs.llm-agents.forge
+    pkgs.llm-agents.claude-code
+    pkgs.llm-agents.ccusage
+    pkgs.llm-agents.copilot-cli
+    pkgs.llm-agents.pi
+    pkgs.llm-agents.ccusage-pi
+    pkgs.llm-agents.qwen-code
+    pkgs.llm-agents.ccusage-opencode
+    # pkgs.llm-agents.crush
+    # pkgs.llm-agents.cursor-agent
+    # pkgs.llm-agents.ccusage-codex
+    # pkgs.llm-agents.forge
+    # pkgs.llm-agents.qoder-cli
+    # pkgs.llm-agents.code
+    # pkgs.llm-agents.droid
     # pkgs.llm-agents.gemini-cli
     # pkgs.llm-agents.goose-cli
     # pkgs.llm-agents.jules
@@ -135,79 +198,55 @@ in {
     # pkgs.llm-agents.letta-code
     # pkgs.llm-agents.mistral-vibe
     # pkgs.llm-agents.nanocoder
-    # pkgs.llm-agents.pi
-    pkgs.llm-agents.qoder-cli
-    pkgs.llm-agents.qwen-code
 
-    # llm-agents.nix — Claude Code ecosystem
+    # ai tools - Claude Code ecosystem
     # pkgs.llm-agents.auto-claude
-    pkgs.llm-agents.catnip
-    pkgs.llm-agents.ccstatusline
-    pkgs.llm-agents.claude-code-router
-    pkgs.llm-agents.claude-plugins
-    pkgs.llm-agents.claudebox
-    pkgs.llm-agents.sandbox-runtime
-    pkgs.llm-agents.skills-installer
+    # pkgs.llm-agents.catnip
+    # pkgs.llm-agents.ccstatusline
+    # pkgs.llm-agents.claude-code-router
+    # pkgs.llm-agents.claude-plugins
+    # pkgs.llm-agents.claudebox
+    # pkgs.llm-agents.sandbox-runtime
+    # pkgs.llm-agents.skills-installer
 
-    # llm-agents.nix — ACP ecosystem
+    # ai tools — ACP ecosystem
     # pkgs.llm-agents.claude-code-acp
     # pkgs.llm-agents.codex-acp
 
-    # llm-agents.nix — usage analytics
-    pkgs.llm-agents.ccusage
-    pkgs.llm-agents.ccusage-amp
-    pkgs.llm-agents.ccusage-codex
-    pkgs.llm-agents.ccusage-opencode
-    pkgs.llm-agents.ccusage-pi
+    # ai tools — usage analytics
 
-    # llm-agents.nix — workflow & project management
-    pkgs.llm-agents.agent-deck
-    pkgs.llm-agents.backlog-md
-    pkgs.llm-agents.beads # bd — Beads CLI
-    pkgs.bv               # beads_viewer — graph-aware TUI for Beads issue tracker
-    pkgs.llm-agents.beads-rust
+    # ai tools — workflow & project management
+    pkgs.llm-agents.beads  # bd — Beads CLI
+    pkgs.llm-agents.beads-rust  # br - Beads CLI but faster (Rust), bv dependency  
+    pkgs.llm-agents.beads-viewer  # bv — graph-aware TUI for Beads issue tracker
+    pkgs.llm-agents.openspec
+    pkgs.llm-agents.workmux
+    # pkgs.llm-agents.agent-deck
+    # pkgs.llm-agents.backlog-md
     # pkgs.llm-agents.cc-sdd
     # pkgs.llm-agents.chainlink
-    pkgs.llm-agents.openspec
-    pkgs.llm-agents.spec-kit
-    pkgs.llm-agents.vibe-kanban
-    pkgs.llm-agents.workmux
+    # pkgs.llm-agents.spec-kit
+    # pkgs.llm-agents.vibe-kanban
 
-    # llm-agents.nix — code review
-    pkgs.llm-agents.coderabbit-cli
-    pkgs.llm-agents.tuicr
+    # ai tools — code review
+    # pkgs.llm-agents.coderabbit-cli
+    # pkgs.llm-agents.tuicr
+
+    # ai tools - .agents & AGENTS.md management
+    pkgs.dotagents
+    pkgs.apm
 
     # llm-agents.nix — utilities
-    pkgs.llm-agents.ck
     pkgs.llm-agents.copilot-language-server
-    pkgs.llm-agents.happy-coder
     pkgs.llm-agents.openskills
+    # pkgs.llm-agents.handy
     # pkgs.llm-agents.agent-browser
     # pkgs.llm-agents.coding-agent-search
-    # pkgs.llm-agents.handy
+    # pkgs.llm-agents.ck
     # pkgs.llm-agents.localgpt
     # pkgs.llm-agents.mcporter
     # pkgs.llm-agents.openclaw
     # pkgs.llm-agents.qmd
-
-    pkgs.go
-    pkgs.gopls
-
-    # Rust toolchain (via rust-overlay)
-    (pkgs.rust-bin.stable.latest.default.override {
-      extensions = [ "rust-src" "rust-analyzer" ];
-    })
-
-    # Python + uv
-    pkgs.python312
-    pkgs.uv
-
-    # Node.js with npx (included) + fnm for version management
-    pkgs.nodejs_22
-    pkgs.fnm
-
-    # Clipboard sharing (macOS <-> VM via SSH tunnel)
-    pkgs.uniclip
 
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
@@ -221,15 +260,6 @@ in {
     # Wrapper scripts: inject secrets from rbw per-process (not global env)
     # gh is provided by programs.gh (with gitCredentialHelper); auth via shell function below
     # Claude Code uses native apiKeyHelper instead (see home.file below)
-    (pkgs.writeShellScriptBin "codex" ''
-      OPENAI_API_KEY=$(${pkgs.rbw}/bin/rbw get "openai-api-key") \
-        exec ${pkgs.codex}/bin/codex "$@"
-    '')
-    (pkgs.writeShellScriptBin "sentry-cli" ''
-      SENTRY_AUTH_TOKEN=$(${pkgs.rbw}/bin/rbw get "sentry-auth-token") \
-        exec ${pkgs.sentry-cli}/bin/sentry-cli "$@"
-    '')
-
     # Called by Noctalia hooks/user-templates on wallpaper/dark-mode changes
     (pkgs.writeShellScriptBin "noctalia-theme-reload" ''
       # Reload Noctalia theme in running Emacs daemon
@@ -238,7 +268,6 @@ in {
         2>/dev/null || true
     '')
 
-    pkgs.claude-code
     pkgs.chromium
     pkgs.clang
     (pkgs.librewolf.override {
@@ -246,12 +275,12 @@ in {
     })
     pkgs.pywalfox-native
     pkgs.activitywatch # automated time tracker (Linux only; Darwin via homebrew cask)
-    pkgs.fuzzel       # app launcher for Wayland
     pkgs.valgrind
     pkgs.foot         # lightweight Wayland terminal
     pkgs.grim         # screenshots
     pkgs.slurp        # region selection
 
+    # inputs.niri-scratchpad.packages.${pkgs.system}.default # external scratchpad daemon/cli
     # Wayland utilities
     inputs.mangowc.packages.${pkgs.system}.default  # window control
     pkgs.wlr-which-key                              # which-key for wlroots
@@ -288,6 +317,7 @@ in {
     EDITOR = "nvim";
     PAGER = "less -FirSwX";
     MANPAGER = "${manpager}/bin/manpager";
+    NIRI_DEEP_ZELLIJ_BREAK_PLUGIN = niriDeepZellijBreakPlugin;
 
   } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
@@ -301,14 +331,13 @@ in {
     # not gonna manage plists, but keep them here to remember
     # "Library/Preferences/com.MrKai77.Loop.plist".source = ./com.MrKai77.Loop.plist;
     # "Library/Preferences/com.brnbw.Leader-Key.plist".source = ./com.brnbw.Leader-Key.plist;
-    # "Library/Preferences/com.knollsoft.Rectangle.plist".source = ./com.knollsoft.Rectangle.plist;
     # not ready yet to freeze it
     # "Library/Application Support/Leader Key/config.json".source = ./leader-key-config.json;
   } else {}) // (if isLinux then {
     # Claude Code apiKeyHelper: fetches token from rbw on demand (auto-refreshes every 5min)
-    ".claude/settings.json".text = builtins.toJSON {
-      apiKeyHelper = "${pkgs.rbw}/bin/rbw get claude-oauth-token";
-    };
+    # ".claude/settings.json".text = builtins.toJSON {
+    #   apiKeyHelper = "${pkgs.rbw}/bin/rbw get claude-oauth-token";
+    # };
   } else {});
 
 
@@ -325,7 +354,7 @@ in {
       executable = true;
     };
   } // (if isDarwin then {
-    "ghostty/config".text = builtins.readFile ./ghostty.darwin.cfg;
+    "wezterm/wezterm.lua".text = builtins.readFile ./wezterm.darwin.lua;
     "activitywatch/scripts" = {
       source = ./activitywatch;
       recursive = true;
@@ -338,10 +367,8 @@ in {
       source = ./kanata/config-macbook-iso;
       recursive = true;
     };
-    "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
-    # "karabiner/karabiner.json".source = ./kanata/karabiner.json; # keeping it in kanata/ since i dont use it directly with karabiner, but via kanata
   } else {}) // (if isLinux then {
-    "ghostty/config".text = builtins.readFile ./ghostty.vm.cfg;
+    "wezterm/wezterm.lua".text = builtins.readFile ./wezterm.vm.lua;
     # Prevent home-manager from managing rbw config as a read-only store symlink;
     # the rbw-config systemd service writes the real config with sops email.
     "rbw/config.json".enable = lib.mkForce false;
@@ -352,8 +379,7 @@ in {
     # Noctalia user templates and theme template inputs
     "noctalia/user-templates.toml".source = ./noctalia-user-templates.toml;
     "noctalia/emacs-template.el".source = ./doom/themes/noctalia-template.el;
-
-    # Neovim matugen template (input for Noctalia user template → nvim base16 theme)
+    "noctalia/wezterm-colors-template.lua".source = ./wezterm-colors-template.lua;
     "nvim/lua/matugen-template.lua".source = ./lazyvim/lua/matugen-template.lua;
   } else {});
 
@@ -397,6 +423,34 @@ in {
     '';
   };
 
+  programs.zellij = {
+    enable = true;
+    settings = {
+      on_force_close = "quit";
+    };
+    settings.load_plugins = [
+      "file:${niriDeepZellijBreakPlugin}"
+    ];
+  };
+
+  programs.kitty = lib.mkIf (isLinux && !isWSL) {
+    enable = true; # required for the default Hyprland config
+    # set confirm_os_window_close 0
+    settings = {
+      confirm_os_window_close = 0;
+      allow_remote_control = "socket-only";
+      listen_on = "unix:@kitty-{kitty_pid}";
+
+    };
+    keybindings = {
+      "ctrl+d" = "launch --location=hsplit --cwd=current";
+      "ctrl+shift+d" = "launch --location=vsplit --cwd=current";
+    };
+  };
+  wayland.windowManager.hyprland = lib.mkIf (isLinux && !isWSL) {
+    enable = true; # enable Hyprland
+  };
+
   # Niri Wayland compositor configuration (Linux only)
   programs.niri.settings = lib.mkIf (isLinux && !isWSL) {
     hotkey-overlay = {
@@ -432,6 +486,7 @@ in {
     outputs."Virtual-1".scale = 2.0;
 
     layout = {
+      always-center-single-column = true;
       gaps = 16;
       center-focused-column = "never";
       preset-column-widths = [
@@ -449,22 +504,46 @@ in {
 
     spawn-at-startup = [
       { command = [ "mako" ]; }
+      # { command = [ "niri-scratchpad" "daemon" ]; }
     ];
+
+    workspaces = {
+      "stash" = { };
+    };
 
     environment = {
       NIXOS_OZONE_WL = "1";
+      NIRI_DEEP_ZELLIJ_BREAK_PLUGIN = niriDeepZellijBreakPlugin;
     };
 
     binds = {
       # Launch
-      "Mod+T" = {
-        action.spawn = "ghostty";
-        repeat = false;
-      };
-      "Mod+S" = {
-        action.spawn = "librewolf";
-        repeat = false;
-      };
+      "Mod+T".action.spawn = [
+        niriDeepDevBinary "focus-or-cycle"
+        "--app-id" "org.wezfurlong.wezterm"
+        "--spawn" "wezterm"
+      ];
+      "Mod+Shift+T".action.spawn = "wezterm"; # explicit new instance
+
+      "Mod+S".action.spawn = [
+        niriDeepDevBinary "focus-or-cycle"
+        "--app-id" "librewolf"
+        "--spawn" "librewolf"
+      ];
+      "Mod+Shift+S".action.spawn = "librewolf"; # explicit new instance
+
+      # Summon/toggle media app from any monitor/workspace.
+      "Mod+P".action.spawn = [
+        niriDeepDevBinary "focus-or-cycle"
+        "--app-id" "spotify"
+        "--spawn" "spotify"
+        "--summon"
+      ];
+
+      # Scratchpads via niri-scratchpad registers.
+      # "Mod+Grave".action.spawn = [ "niri-scratchpad" "create" "1" "--as-float" ];
+      # "Mod+Shift+Grave".action.spawn = [ "niri-scratchpad" "create" "2" "--as-float" ];
+
       "Mod+Space".action.spawn = "wlr-which-key";
       "Mod+Q".action.close-window = {};
       # Layout
@@ -486,18 +565,18 @@ in {
       # Session
       # "Mod+Shift+E".action.quit = {};
 
-      # Focus
-      "Mod+N".action.focus-column-left = {};
-      "Mod+E".action.focus-window-or-workspace-down = {};
-      "Mod+I".action.focus-window-or-workspace-up = {};
-      "Mod+O".action.focus-column-right = {};
+      # Focus (deep: navigates within app splits first, then niri columns)
+      "Mod+N".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "west" ];
+      "Mod+E".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "south" ];
+      "Mod+I".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "north" ];
+      "Mod+O".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "east" ];
 
-      # Move
+      # Move (deep: tears app buffers into new windows at boundaries)
       "Mod+H".action.consume-or-expel-window-left = {};
-      "Mod+L".action.move-column-left = {};
-      "Mod+U".action.move-window-down-or-to-workspace-down = {};
-      "Mod+Y".action.move-window-up-or-to-workspace-up = {};
-      "Mod+Semicolon".action.move-column-right = {};
+      "Mod+L".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "west" ];
+      "Mod+U".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "south" ];
+      "Mod+Y".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "north" ];
+      "Mod+Semicolon".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "east" ];
       "Mod+Return".action.consume-or-expel-window-right = {};
 
       # Workspaces
@@ -523,6 +602,33 @@ in {
 
     };
   };
+
+  # niri-deep (Linux only)
+  # programs.niri-deep = lib.mkIf (isLinux && !isWSL) {
+  #   enable = true;
+  #   # Mirrors runtime defaults in /home/m/Projects/niri-deep/src/config.rs.
+  #   config = {
+  #     strategy = {
+  #       move = "allow-composed";
+  #       resize = "allow-composed";
+  #     };
+
+  #     wezterm = {
+  #       focus.internal = true;
+  #       resize.internal = true;
+  #     };
+
+  #     emacs = {
+  #       move.tearout = true;
+  #       resize.internal = true;
+  #     };
+
+  #     terminal.wezterm = {
+  #       enable = true;
+  #       mux.backend = "wezterm";
+  #     };
+  #   };
+  # };
 
   # Wayprompt password prompt for Wayland sessions (Linux only)
   programs.wayprompt = lib.mkIf (isLinux && !isWSL) {
@@ -557,6 +663,7 @@ in {
       # fnm (Node version manager)
       eval "$(fnm env --use-on-cd)"
       bindkey -v
+      source ${./zsh-manydot.sh}
 
       # Doom-like leader key in zsh vi normal mode when running inside tmux.
       tmux-leader-menu() {
@@ -583,6 +690,9 @@ in {
       # Ad-hoc API key injection (usage: with-openai some-command --flag)
       with-openai() { OPENAI_API_KEY=$(rbw get openai-api-key) "$@"; }
       with-amp() { AMP_API_KEY=$(rbw get amp-api-key) "$@"; }
+      copilot() { COPILOT_GITHUB_TOKEN=$(rbw get github-token) command copilot "$@"; }
+      claude() { CLAUDE_CODE_OAUTH_TOKEN=$(rbw get claude-oauth-token) command claude "$@"; }
+      codex() { OPENAI_API_KEY=$(rbw get openai-api-key) command codex "$@"; }
     '' else "");
   };
 
@@ -889,10 +999,42 @@ in {
     run mkdir -p "$HOME/.local/share/noctalia/emacs-themes"
   '');
 
-  # Uniclip clipboard client: connects to macOS server via SSH reverse tunnel
+  # ActivityWatch on Linux VM: watchers only, forwarding to macOS server
+  # exposed locally via reverse SSH tunnel on 127.0.0.1:5600.
+  systemd.user.services.activitywatch-watcher-afk = lib.mkIf (isLinux && !isWSL) {
+    Unit = {
+      Description = "ActivityWatch AFK watcher (remote macOS server)";
+      After = [ "graphical-session.target" "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.activitywatch}/bin/aw-watcher-afk --host 127.0.0.1 --port 5600";
+      Restart = "always";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.activitywatch-watcher-window = lib.mkIf (isLinux && !isWSL) {
+    Unit = {
+      Description = "ActivityWatch window watcher (remote macOS server)";
+      After = [ "graphical-session.target" "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecStart = "${pkgs.activitywatch}/bin/aw-watcher-window --host 127.0.0.1 --port 5600";
+      Restart = "always";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  # Uniclip clipboard client: connects directly to macOS server at static IP
   systemd.user.services.uniclip = lib.mkIf (isLinux && !isWSL) {
     Unit = {
-      Description = "Uniclip clipboard client (connects to macOS server via SSH tunnel)";
+      Description = "Uniclip clipboard client (direct connection to macOS server)";
       After = [ "graphical-session.target" ];
     };
     Service = {
@@ -919,7 +1061,7 @@ in {
           exit 1
         fi
         export UNICLIP_PASSWORD
-        exec ${pkgs.uniclip}/bin/uniclip --secure 127.0.0.1:53701
+        exec ${pkgs.uniclip}/bin/uniclip --secure 192.168.130.1:53701
       ''}";
       Restart = "on-failure";
       RestartSec = 5;
