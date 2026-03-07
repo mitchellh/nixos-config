@@ -117,6 +117,12 @@
       inputs.nixpkgs.follows = "";
     };
 
+    # Gastown - multi-agent orchestration system for Claude Code
+    gastown = {
+      url = "github:steveyegge/gastown";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { self, nixpkgs, home-manager, lazyvim, darwin, ... }@inputs: let
@@ -131,6 +137,9 @@
       # Build non-flake packages from source
       (final: prev: {
         agent-of-empires = inputs.agent-of-empires-src.packages.${prev.system}.default;
+        gastown = inputs.gastown.packages.${prev.system}.gt.overrideAttrs (old: {
+          vendorHash = "sha256-fZucwy6omCXV5/ebOzcqOgJ4SfouCHasmstEX2na5SQ=";
+        });
 
         apm =
           let

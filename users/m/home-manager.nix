@@ -55,7 +55,6 @@ let
     gc = "git commit";
     gl = "git prettylog";
     gp = "git push";
-    gt = "git tag";
     gco = "git checkout";
     gcp = "git cherry-pick";
     gdiff = "git diff";
@@ -174,6 +173,7 @@ in {
 
     # ai tools - coding agents
     pkgs.agent-of-empires  # terminal session manager for AI agents
+    pkgs.gastown  # gt - Gas Town multi-agent orchestration system
     pkgs.llm-agents.amp
     pkgs.llm-agents.ccusage-amp
     pkgs.llm-agents.eca
