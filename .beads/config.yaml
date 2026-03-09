@@ -14,13 +14,13 @@
 # no-db: false
 
 # Disable daemon for RPC communication (forces direct database access)
-# no-daemon: false
+no-daemon: true
 
 # Disable auto-flush of database to JSONL after mutations
-# no-auto-flush: false
+no-auto-flush: true
 
 # Disable auto-import from JSONL when it's newer than database
-# no-auto-import: false
+no-auto-import: false
 
 # Enable JSON output by default
 # json: false
@@ -32,17 +32,17 @@
 # db: ""
 
 # Auto-start daemon if not running (can also use BEADS_AUTO_START_DAEMON)
-# auto-start-daemon: true
+auto-start-daemon: false
 
 # Debounce interval for auto-flush (can also use BEADS_FLUSH_DEBOUNCE)
-# flush-debounce: "5s"
+flush-debounce: "5s"
 
 # Git branch for beads commits (bd sync will commit to this branch)
 # IMPORTANT: Set this for team projects so all clones use the same sync branch.
 # This setting persists across clones (unlike database config which is gitignored).
 # Can also use BEADS_SYNC_BRANCH env var for local override.
 # If not set, bd sync will require you to run 'bd config set sync.branch <branch>'.
-# sync-branch: "beads-sync"
+sync-branch: "beads-sync"
 
 # Multi-repo configuration (experimental - bd-307)
 # Allows hydrating from multiple repositories and routing writes to the correct JSONL

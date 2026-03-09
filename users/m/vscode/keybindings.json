@@ -181,14 +181,6 @@
 		"command": "workbench.action.showPreviousWindowTab"
 	},
 	{
-		"key": "ctrl+o",
-		"command": "workbench.action.focusNextGroup"
-	},
-	{
-		"key": "ctrl+n",
-		"command": "workbench.action.focusPreviousGroup"
-	},
-	{
 		"key": "ctrl+cmd+;",
 		"command": "editor.action.showDefinitionPreviewHover"
 	},

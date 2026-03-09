@@ -46,7 +46,7 @@
     "workbench.editor.editorActionsLocation": "hidden",
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editor.pinnedTabSizing": "shrink",
-    "workbench.editor.showTabs": "none",
+    "workbench.editor.showTabs": "all",
     "workbench.editor.tabSizing": "shrink",
     "workbench.editor.tabSizingFixedMinWidth": 38,
     "workbench.editor.wrapTabs": false,

@@ -37,6 +37,7 @@ with pkgs.vscode-extensions; [
   ms-vscode-remote.remote-ssh-edit
   ms-vscode.remote-explorer
 
+
   # Docker
   ms-azuretools.vscode-docker
 
@@ -99,12 +100,6 @@ with pkgs.vscode-extensions; [
     sha256 = "sha256-6adXUaoh/OP5yYItH3GAQ7GpupfmTGaxkKP6hYUMYNQ=";
   }
   {
-    name = "custom-ui-style";
-    publisher = "subframe7536";
-    version = "0.6.8";
-    sha256 = "sha256-Z3W4Oi/ecQdCGggGavrTAu6M31BWw6soCNyi4hf/Z3g=";
-  }
-  {
     name = "leaderkey";
     publisher = "jimmyzjx";
     version = "1.7.2";
@@ -114,6 +109,12 @@ with pkgs.vscode-extensions; [
     name = "newyorkatnighttheme";
     publisher = "ggabi40";
     version = "1.0.7";
-    sha256 = "sha256-Y4D3UPv6CxGveblMgjzgLf4c7eOgJc+9EJC7ay53gIo=";
+    sha256 = "sha256-Y4D3UPv6CxGveblMgjzgLf4c7eOgJc+9EJC7ay53gIo="; 
+  }
+  {
+      name = "vscode-remote-control";
+      publisher = "eliostruyf";
+      version = "1.9.0";
+      sha256 = "sha256-Iq0lP6OMB9ZMry1Wl6GovPmZGVjq/z8/Hy9HXcg5Nmw=";
   }
 ]

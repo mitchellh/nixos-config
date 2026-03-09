@@ -122,13 +122,15 @@ in {
   home.packages = [
     pkgs.zellij
     pkgs.kitty
-    pkgs.ghostty
     pkgs.alacritty
     pkgs.uniclip  # Clipboard sharing (macOS <-> VM via SSH tunnel)
     pkgs.nerd-fonts.symbols-only  # icon font for Doom Emacs (+icons) and terminal apps
     pkgs.emacs-all-the-icons-fonts  # all-the-icons font family for Emacs
 
+    pkgs.devenv
+
     # CLI tools
+    pkgs.websocat
     pkgs.bat
     pkgs.eza
     pkgs.fd
@@ -250,6 +252,8 @@ in {
 
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
+    pkgs.ghostty-bin
+
     pkgs.skhd
     pkgs.cachix
     pkgs.gettext
@@ -268,6 +272,7 @@ in {
         2>/dev/null || true
     '')
 
+    pkgs.ghostty
     pkgs.chromium
     pkgs.clang
     (pkgs.librewolf.override {
@@ -342,7 +347,6 @@ in {
 
 
   xdg.configFile = {
-    "rofi/config.rasi".text = builtins.readFile ./rofi;
     "grm/repos.yaml".source = ./grm-repos.yaml;
     "opencode/plugins/superpowers.js".source = opencodeAwesome.superpowersPlugin;
     "opencode/skills/superpowers" = {
@@ -566,17 +570,17 @@ in {
       # "Mod+Shift+E".action.quit = {};
 
       # Focus (deep: navigates within app splits first, then niri columns)
-      "Mod+N".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "west" ];
-      "Mod+E".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "south" ];
-      "Mod+I".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "north" ];
-      "Mod+O".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "focus" "east" ];
+      "Mod+N".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "focus" "west" ];
+      "Mod+E".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "focus" "south" ];
+      "Mod+I".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "focus" "north" ];
+      "Mod+O".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "focus" "east" ];
 
       # Move (deep: tears app buffers into new windows at boundaries)
       "Mod+H".action.consume-or-expel-window-left = {};
-      "Mod+L".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "west" ];
-      "Mod+U".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "south" ];
-      "Mod+Y".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "north" ];
-      "Mod+Semicolon".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/niri-deep-debug.log" "--log-append" "move" "east" ];
+      "Mod+L".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "move" "west" ];
+      "Mod+U".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "move" "south" ];
+      "Mod+Y".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "move" "north" ];
+      "Mod+Semicolon".action.spawn = [ niriDeepDevBinary "--log-file=/tmp/yeet-and-yoink/debug.log" "--profile" "--log-append" "move" "east" ];
       "Mod+Return".action.consume-or-expel-window-right = {};
 
       # Workspaces
