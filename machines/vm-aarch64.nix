@@ -33,7 +33,7 @@
     ];
   };
 
-  fileSystems."/home/m/Projects" = {
+  fileSystems."/Users/m/Projects" = {
     fsType = "fuse./run/current-system/sw/bin/vmhgfs-fuse";
     device = ".host:/Projects";
     options = [

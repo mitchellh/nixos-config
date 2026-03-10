@@ -90,6 +90,23 @@
     cachix
   ];
 
+  # SSH daemon used by the VM to reach the host Docker socket.
+  # nix-darwin does not expose a structured `.settings` attribute like NixOS does,
+  # so all sshd_config directives must be supplied via `extraConfig`.
+  services.openssh = {
+    enable = true;
+    extraConfig = ''
+      # Only listen on the VMware host/guest interface so sshd is not reachable
+      # from other network interfaces (Wi-Fi, Ethernet, etc.).
+      ListenAddress 192.168.130.1
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitRootLogin no
+      X11Forwarding no
+      AllowUsers m
+    '';
+  };
+
   # sudo with Touch ID and Apple Watch
   security.pam.services.sudo_local = {
     touchIdAuth = true;

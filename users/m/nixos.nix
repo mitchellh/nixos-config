@@ -54,7 +54,7 @@ in
   users.users.m = {
     isNormalUser = true;
     home = "/home/m";
-    extraGroups = [ "docker" "lxd" "wheel" "networkmanager" ];
+    extraGroups = [ "lxd" "wheel" "networkmanager" ];
     shell = pkgs.zsh;
     hashedPasswordFile = config.sops.secrets."user/hashed-password".path;
     openssh.authorizedKeys.keyFiles = [ hostAuthorizedKeysFile ];

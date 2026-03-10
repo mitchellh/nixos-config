@@ -55,6 +55,7 @@ in
   users.users.m = {
     home = homeDir;
     shell = pkgs.zsh;
+    openssh.authorizedKeys.keyFiles = [ ../../machines/generated/mac-host-authorized-keys ];
   };
 
   # Required for some settings like homebrew to know what user to apply to.

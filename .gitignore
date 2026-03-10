@@ -13,6 +13,7 @@ machines/secrets.yaml
 !machines/generated/
 machines/generated/*
 !machines/generated/host-authorized-keys
+!machines/generated/mac-host-authorized-keys
 !machines/generated/vm-age-pubkey
 
 # bv (beads viewer) local config and caches

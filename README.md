@@ -53,3 +53,29 @@ I enjoy using macOS for the graphical applications (browser, calendars, mail app
 iMessage, Music etc.), LMStudio (MLX acceleratation available via native bindings), 
 and running Docker (virtualizing it is wasteful when I can do passtrough instead).
 
+### Docker: single daemon on macOS, used from the VM
+
+Docker Desktop runs **only on macOS** — there is no Docker daemon inside the VM.
+The VM reaches the host daemon over SSH via a Docker context named `host-mac`
+(endpoint `ssh://m@mac-host-docker`, which resolves to the VMware host-only
+interface at `192.168.130.1`).  `DOCKER_CONTEXT=host-mac` is exported
+automatically in the VM shell so every `docker` command is transparently
+forwarded to the host daemon.
+
+**SSH key provisioning:** the VM authenticates to the macOS host using the
+host's normal `~/.ssh/id_ed25519` key, which is copied into the VM by the
+`make vm/secrets` step (see `docs/secrets.md`).  The matching public key is
+stored in `machines/generated/mac-host-authorized-keys` and deployed to the
+macOS host's `~/.ssh/authorized_keys` by `darwin.nix`.  No separate
+VM-specific key is needed.
+
+**Bind-mount constraint:** because the daemon lives on macOS, bind-mount source
+paths are resolved on the **macOS host**, not on the VM.  Project files that
+need to be bind-mounted must live under `/Users/m/Projects` (the directory
+shared from macOS into the VM via VMware Shared Folders).
+
+**Diagnosing bind-mount failures:** prefer `--mount type=bind,src=…,dst=…`
+over the short `-v` flag.  With `--mount`, Docker errors immediately when the
+source path does not exist on the host; with `-v` it silently auto-creates the
+missing directory, which hides misconfigured paths.
+

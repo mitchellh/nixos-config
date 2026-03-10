@@ -397,7 +397,8 @@ Who can access Bitwarden vault?
 
 What's in the git repo (public)?
   → age public key (safe: encryption only, reveals nothing)
-  → SSH public key for host-authorized-keys (safe: public key)
+  → SSH public key for host-authorized-keys (safe: public key, authorizes host on VM)
+  → SSH public key for mac-host-authorized-keys (safe: public key, authorizes VM→host Docker-over-SSH)
 
 What's NOT in the git repo?
   → machines/secrets.yaml (gitignored; defense-in-depth)

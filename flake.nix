@@ -43,7 +43,7 @@
     niri.url = "github:sodiboo/niri-flake";
     niri-scratchpad.url = "github:argosnothing/niri-scratchpad-rs";
     # niri-deep = {
-    #   url = "/home/m/Projects/niri-deep";
+    #   url = "/Users/m/Projects/niri-deep";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
 

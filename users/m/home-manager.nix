@@ -7,7 +7,18 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
   opencodeAwesome = import ./opencode/awesome.nix { inherit pkgs lib; };
-  niriDeepDevBinary = "/home/m/Projects/yeet-and-yoink/target/release/yny";
+
+  # Migration bridge: the canonical mountpoint is /Users/m/Projects, but during
+  # the first nixos-rebuild switch that migrates the VM mountpoint, the new path
+  # does not yet exist.  Fall back to /home/m/Projects so evaluation succeeds on
+  # the old mount.  Once the switch completes the canonical path will be live and
+  # this fallback becomes a no-op.
+  projectsRoot =
+    if builtins.pathExists /Users/m/Projects
+    then /Users/m/Projects
+    else /home/m/Projects;
+
+  niriDeepDevBinary = "${toString projectsRoot}/yeet-and-yoink/target/release/yny";
   niriDeepZellijBreak = if isLinux then let
     rustToolchain = pkgs.rust-bin.stable.latest.default.override {
       targets = [ "wasm32-wasip1" ];
@@ -20,14 +31,14 @@ let
     pname = "yeet-and-yoink-zellij-break";
     version = "0.1.0";
     src = lib.cleanSourceWith {
-      src = /home/m/Projects/yeet-and-yoink/plugins/zellij-break;
+      src = projectsRoot + "/yeet-and-yoink/plugins/zellij-break";
       filter = path: type:
         let
           baseName = builtins.baseNameOf path;
         in
           baseName != "target" && baseName != ".git";
     };
-    cargoLock.lockFile = /home/m/Projects/yeet-and-yoink/plugins/zellij-break/Cargo.lock;
+    cargoLock.lockFile = projectsRoot + "/yeet-and-yoink/plugins/zellij-break/Cargo.lock";
     buildPhase = ''
       runHook preBuild
       cargo build --frozen --release --target wasm32-wasip1
@@ -272,6 +283,7 @@ in {
         2>/dev/null || true
     '')
 
+    pkgs.docker-client  # CLI only; daemon runs on macOS host via Docker Desktop
     pkgs.ghostty
     pkgs.chromium
     pkgs.clang
@@ -327,6 +339,8 @@ in {
   } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
     DISPLAY = "nixpkgs-390751";
+  } else {}) // (if (isLinux && !isWSL) then {
+    DOCKER_CONTEXT = "host-mac";
   } else {});
 
   home.file = {
@@ -451,6 +465,25 @@ in {
       "ctrl+shift+d" = "launch --location=vsplit --cwd=current";
     };
   };
+  # Enable Home Manager's SSH module so it owns ~/.ssh/config and the
+  # mac-host-docker alias below can be managed declaratively.
+  programs.ssh = lib.mkIf (isLinux && !isWSL) {
+    enable = true;
+    matchBlocks."mac-host-docker" = {
+      hostname = "192.168.130.1";
+      user = "m";
+      # This key is provisioned into the VM by `make vm/secrets`, which rsyncs
+      # ~/.ssh/ from the macOS host.  The host's public key is already in
+      # machines/generated/mac-host-authorized-keys and installed on the host
+      # by darwin.nix, so authentication is fully deterministic.
+      identityFile = "~/.ssh/id_ed25519";
+      controlMaster = "auto";
+      controlPersist = "10m";
+      controlPath = "~/.ssh/control-%h-%p-%r";
+      serverAliveInterval = 30;
+    };
+  };
+
   wayland.windowManager.hyprland = lib.mkIf (isLinux && !isWSL) {
     enable = true; # enable Hyprland
   };
@@ -610,7 +643,7 @@ in {
   # niri-deep (Linux only)
   # programs.niri-deep = lib.mkIf (isLinux && !isWSL) {
   #   enable = true;
-  #   # Mirrors runtime defaults in /home/m/Projects/niri-deep/src/config.rs.
+  #   # Mirrors runtime defaults in /Users/m/Projects/niri-deep/src/config.rs.
   #   config = {
   #     strategy = {
   #       move = "allow-composed";
@@ -1001,6 +1034,14 @@ in {
   # Ensure writable output directories for Noctalia user templates
   home.activation.createNoctaliaThemeDirs = lib.mkIf (isLinux && !isWSL) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run mkdir -p "$HOME/.local/share/noctalia/emacs-themes"
+  '');
+
+  # Create the remote Docker context pointing at the macOS host daemon if missing.
+  home.activation.ensureHostDockerContext = lib.mkIf (isLinux && !isWSL) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if ! ${pkgs.docker-client}/bin/docker context inspect host-mac >/dev/null 2>&1; then
+      run ${pkgs.docker-client}/bin/docker context create host-mac \
+        --docker "host=ssh://m@mac-host-docker"
+    fi
   '');
 
   # ActivityWatch on Linux VM: watchers only, forwarding to macOS server

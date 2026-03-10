@@ -71,7 +71,8 @@
   '';
 
   # Virtualization settings
-  virtualisation.docker.enable = true;
+  # No VM-local Docker daemon; host-Docker wiring (DOCKER_HOST) comes in a later task
+  virtualisation.docker.enable = false;
 
   # Noctalia prerequisites (wifi/bluetooth/power/battery integrations)
   hardware.bluetooth.enable = true;

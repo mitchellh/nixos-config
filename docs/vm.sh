@@ -386,7 +386,11 @@ vm_wait_for_ssh() {
 vm_prepare_host_authorized_keys() {
     [ -f "$HOST_SSH_PUBKEY_FILE" ] || die "SSH public key not found: $HOST_SSH_PUBKEY_FILE"
     mkdir -p "$GENERATED_DIR"
+    # host-authorized-keys  → authorizes the macOS host key on the VM (nixos.nix)
     cp "$HOST_SSH_PUBKEY_FILE" "$GENERATED_DIR/host-authorized-keys"
+    # mac-host-authorized-keys → authorizes the VM's use of the same key on the
+    # macOS host sshd (darwin.nix), enabling Docker-over-SSH from the VM.
+    cp "$HOST_SSH_PUBKEY_FILE" "$GENERATED_DIR/mac-host-authorized-keys"
 }
 
 # ─── Prepare SOPS Age Key ──────────────────────────────────────────────────
@@ -422,7 +426,7 @@ vm_collect_secrets() {
 vm_install() {
     vm_prepare_host_authorized_keys
     vm_prepare_sops_age_key
-    git -C "$NIX_CONFIG_DIR" add machines/generated/vm-age-pubkey machines/generated/host-authorized-keys
+    git -C "$NIX_CONFIG_DIR" add machines/generated/vm-age-pubkey machines/generated/host-authorized-keys machines/generated/mac-host-authorized-keys
     vm_collect_secrets
 
     sshpass -p "$INSTALL_SSH_PASSWORD" ssh $BOOTSTRAP_SSH_OPTIONS -p"$NIXPORT" "${NIXINSTALLUSER}@${NIXADDR}" "$REMOTE_FIX_INTERNET && $REMOTE_MOUNT_SHARED"' &&
@@ -556,7 +560,7 @@ cmd_switch() {
     echo "Switching NixOS config on VM at $addr..."
 
     ssh -t $SSH_OPTIONS -p"$NIXPORT" "${NIXUSER}@${addr}" "$REMOTE_MOUNT_SHARED"' &&
-        sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake "path:'"$VM_SHARED_NIX_CONFIG_DIR"'#'"$NIXNAME"'"
+        sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --impure --flake "path:'"$VM_SHARED_NIX_CONFIG_DIR"'#'"$NIXNAME"'"
     '
 }
 
@@ -582,7 +586,7 @@ cmd_refresh_secrets() {
     fi
 
     vm_prepare_host_authorized_keys
-    git -C "$NIX_CONFIG_DIR" add machines/generated/vm-age-pubkey machines/generated/host-authorized-keys
+    git -C "$NIX_CONFIG_DIR" add machines/generated/vm-age-pubkey machines/generated/host-authorized-keys machines/generated/mac-host-authorized-keys
     vm_collect_secrets
     echo "Secrets refreshed. Run 'vm switch' to apply."
 }
