@@ -17,7 +17,7 @@ in
   homebrew = {
     enable = true;
     taps = [
-      "jorgelbg/tap"
+      "lujstn/tap"
     ];
     casks  = [
       "activitywatch"
