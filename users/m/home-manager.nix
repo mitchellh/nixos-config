@@ -28,14 +28,19 @@ let
       exit 1
     fi
 
-    keygrip="$(${pkgs.gnupg}/bin/gpg --batch --with-colons --with-keygrip --list-secret-keys ${vmGitSigningKey} | ${pkgs.gawk}/bin/awk -F: '$1 == "grp" { print $10; exit }')"
-    if [ -z "$keygrip" ]; then
+    mapfile -t keygrips < <(
+      ${pkgs.gnupg}/bin/gpg --batch --with-colons --with-keygrip --list-secret-keys ${vmGitSigningKey} \
+        | ${pkgs.gawk}/bin/awk -F: '$1 == "grp" && $10 != "" { print $10 }'
+    )
+    if [ "''${#keygrips[@]}" -eq 0 ]; then
       echo "gpg-preset-passphrase-login: failed to resolve keygrip for ${vmGitSigningKey}" >&2
       exit 1
     fi
 
     ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null
-    printf '%s' "$passphrase" | ${pkgs.gnupg}/bin/gpg-preset-passphrase --preset "$keygrip"
+    for keygrip in "''${keygrips[@]}"; do
+      printf '%s' "$passphrase" | ${pkgs.gnupg}/bin/gpg-preset-passphrase --preset "$keygrip"
+    done
   '';
 
   # Migration bridge: the canonical mountpoint is /Users/m/Projects, but during
@@ -1154,14 +1159,16 @@ in {
   systemd.user.services.gpg-preset-passphrase-login = lib.mkIf (currentSystemName == "vm-aarch64") {
     Unit = {
       Description = "Preset GPG signing passphrase on login";
-      After = [ "graphical-session.target" "rbw-config.service" ];
+      After = [ "default.target" "rbw-config.service" ];
       Wants = [ "rbw-config.service" ];
     };
     Service = {
       Type = "oneshot";
       ExecStart = "${gpgPresetPassphraseLogin}/bin/gpg-preset-passphrase-login";
+      Restart = "on-failure";
+      RestartSec = 30;
     };
-    Install.WantedBy = [ "graphical-session.target" ];
+    Install.WantedBy = [ "default.target" ];
   };
 
   systemd.user.services.pywalfox-boot = lib.mkIf (isLinux && !isWSL) {
