@@ -15,6 +15,28 @@ let
     else legacyGitSigningKey;
   darwinPinentryProgram = "/opt/homebrew/opt/pinentry-touchid/bin/pinentry-touchid";
   opencodeAwesome = import ./opencode/awesome.nix { inherit pkgs lib; };
+  gpgPresetPassphraseLogin = pkgs.writeShellScriptBin "gpg-preset-passphrase-login" ''
+    set -euo pipefail
+
+    if ! passphrase="$(${pkgs.rbw}/bin/rbw get gpg-password-nixos-macbook-vm)"; then
+      echo "gpg-preset-passphrase-login: failed to read gpg-password-nixos-macbook-vm from rbw" >&2
+      exit 1
+    fi
+
+    if [ -z "$passphrase" ]; then
+      echo "gpg-preset-passphrase-login: empty passphrase from rbw" >&2
+      exit 1
+    fi
+
+    keygrip="$(${pkgs.gnupg}/bin/gpg --batch --with-colons --with-keygrip --list-secret-keys ${vmGitSigningKey} | ${pkgs.gawk}/bin/awk -F: '$1 == "grp" { print $10; exit }')"
+    if [ -z "$keygrip" ]; then
+      echo "gpg-preset-passphrase-login: failed to resolve keygrip for ${vmGitSigningKey}" >&2
+      exit 1
+    fi
+
+    ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null
+    printf '%s' "$passphrase" | ${pkgs.gnupg}/bin/gpg-preset-passphrase --preset --passphrase-fd 0 "$keygrip"
+  '';
 
   # Migration bridge: the canonical mountpoint is /Users/m/Projects, but during
   # the first nixos-rebuild switch that migrates the VM mountpoint, the new path
@@ -326,6 +348,8 @@ in {
 
       echo "==> Bootstrap complete!"
     '')
+  ]) ++ (lib.optionals (currentSystemName == "vm-aarch64") [
+    gpgPresetPassphraseLogin
   ]);
 
   #---------------------------------------------------------------------
@@ -788,9 +812,10 @@ in {
   services.gpg-agent = {
     enable = isLinux || isDarwin;
     pinentry.package = lib.mkIf isLinux pkgs.pinentry-tty;
-    extraConfig = lib.optionalString isDarwin ''
-      pinentry-program ${darwinPinentryProgram}
-    '';
+    extraConfig = lib.concatStringsSep "\n" (lib.filter (line: line != "") [
+      (lib.optionalString isDarwin "pinentry-program ${darwinPinentryProgram}")
+      (lib.optionalString (currentSystemName == "vm-aarch64") "allow-preset-passphrase")
+    ]);
 
     # cache the keys forever so we don't get asked for a password
     defaultCacheTtl = 31536000;
@@ -1122,6 +1147,19 @@ in {
       ''}";
       Restart = "on-failure";
       RestartSec = 5;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
+  systemd.user.services.gpg-preset-passphrase-login = lib.mkIf (currentSystemName == "vm-aarch64") {
+    Unit = {
+      Description = "Preset GPG signing passphrase on login";
+      After = [ "graphical-session.target" "rbw-config.service" ];
+      Wants = [ "rbw-config.service" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${gpgPresetPassphraseLogin}/bin/gpg-preset-passphrase-login";
     };
     Install.WantedBy = [ "graphical-session.target" ];
   };
