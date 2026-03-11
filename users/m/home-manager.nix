@@ -135,6 +135,7 @@ let
     nix-config = "nvim ~/.config/nix-config";
     niks = "cd ~/.config/nix && NIXPKGS_ALLOW_UNFREE=1 nix build --impure --extra-experimental-features 'nix-command flakes' '.#darwinConfigurations.macbook-pro-m1.system' --max-jobs 8 --cores 0 && sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild switch --impure --flake '.#macbook-pro-m1'";
     nikt = "cd ~/.config/nix && NIXPKGS_ALLOW_UNFREE=1 nix build --impure --extra-experimental-features 'nix-command flakes' '.#darwinConfigurations.macbook-pro-m1.system' && sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild test --impure --flake '.#macbook-pro-m1'";
+    pinentry = "pinentry-mac";
   } else {}));
 
   # For our MANPAGER env var
@@ -819,14 +820,13 @@ in {
     pinentry.package = lib.mkIf isLinux pkgs.pinentry-tty;
     extraConfig = lib.concatStringsSep "\n" (lib.filter (line: line != "") [
       (lib.optionalString isDarwin "pinentry-program ${darwinPinentryProgram}")
-      (lib.optionalString isDarwin "ignore-cache-for-signing")
       (lib.optionalString (currentSystemName == "vm-aarch64") "allow-preset-passphrase")
     ]);
 
-    # VM/user-session caches stay long, but Darwin signing bypasses cache so
-    # Touch ID can be requested on every signed commit.
-    defaultCacheTtl = 31536000;
-    maxCacheTtl = 31536000;
+    # Keep Darwin's internal agent cache effectively off so Touch ID can gate
+    # each signing operation without pinentry-touchid being bypassed.
+    defaultCacheTtl = if isDarwin then 1 else 31536000;
+    maxCacheTtl = if isDarwin then 1 else 31536000;
   };
 
   # gh with credential helper: replaces credential.helper = "store"
