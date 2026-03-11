@@ -819,10 +819,12 @@ in {
     pinentry.package = lib.mkIf isLinux pkgs.pinentry-tty;
     extraConfig = lib.concatStringsSep "\n" (lib.filter (line: line != "") [
       (lib.optionalString isDarwin "pinentry-program ${darwinPinentryProgram}")
+      (lib.optionalString isDarwin "ignore-cache-for-signing")
       (lib.optionalString (currentSystemName == "vm-aarch64") "allow-preset-passphrase")
     ]);
 
-    # cache the keys forever so we don't get asked for a password
+    # VM/user-session caches stay long, but Darwin signing bypasses cache so
+    # Touch ID can be requested on every signed commit.
     defaultCacheTtl = 31536000;
     maxCacheTtl = 31536000;
   };
