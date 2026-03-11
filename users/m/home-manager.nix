@@ -35,7 +35,7 @@ let
     fi
 
     ${pkgs.gnupg}/bin/gpg-connect-agent /bye >/dev/null
-    printf '%s' "$passphrase" | ${pkgs.gnupg}/bin/gpg-preset-passphrase --preset --passphrase-fd 0 "$keygrip"
+    printf '%s' "$passphrase" | ${pkgs.gnupg}/bin/gpg-preset-passphrase --preset "$keygrip"
   '';
 
   # Migration bridge: the canonical mountpoint is /Users/m/Projects, but during

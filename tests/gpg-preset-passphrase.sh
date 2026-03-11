@@ -29,6 +29,16 @@ mac_extra_config=$(nix_eval_raw .#darwinConfigurations.macbook-pro-m1.config.hom
 vm_helper_present=$(nix_eval_json .#nixosConfigurations.vm-aarch64.config.home-manager.users.m.home.packages --apply 'pkgs: builtins.any (pkg: (pkg.name or "") == "gpg-preset-passphrase-login") pkgs')
 [[ "$vm_helper_present" == "true" ]] || fail 'vm-aarch64 helper script package is missing'
 
+grep -Fq 'vmGitSigningKey = "071F6FE39FC26713930A702401E5F9A947FA8F5C";' "$source_file" || fail 'vm-aarch64 helper script does not target the VM signing key'
+grep -Fq 'printf '\''%s'\'' "$passphrase" |' "$source_file" || fail 'vm-aarch64 helper script does not pipe the passphrase via stdin'
+grep -Fq 'gpg-preset-passphrase --preset "$keygrip"' "$source_file" || fail 'vm-aarch64 helper script does not use supported gpg-preset-passphrase arguments'
+if grep -Fq -- '--passphrase-fd' "$source_file"; then
+  fail 'vm-aarch64 helper script still uses unsupported --passphrase-fd'
+fi
+if grep -Fq -- '--passphrase "$passphrase"' "$source_file"; then
+  fail 'vm-aarch64 helper script should not expose the passphrase via command-line arguments'
+fi
+
 grep -Fq ']) ++ (lib.optionals (currentSystemName == "vm-aarch64") [' "$source_file" || fail 'helper script is not guarded to vm-aarch64 in source'
 grep -Fq '(lib.optionalString (currentSystemName == "vm-aarch64") "allow-preset-passphrase")' "$source_file" || fail 'allow-preset-passphrase is not guarded to vm-aarch64 in source'
 
