@@ -107,8 +107,8 @@ let
   manpager = (pkgs.writeShellScriptBin "manpager" (if isDarwin then ''
     sh -c 'col -bx | bat -l man -p'
     '' else ''
-    cat "$1" | col -bx | bat --language man --style plain
-  ''));
+     cat "$1" | col -bx | bat --language man --style plain
+   ''));
 in {
   imports = [
     (import ./opencode/modules/home-manager.nix { inherit isWSL; })
@@ -283,6 +283,7 @@ in {
         2>/dev/null || true
     '')
 
+    pkgs.brave
     pkgs.docker-client  # CLI only; daemon runs on macOS host via Docker Desktop
     pkgs.ghostty
     pkgs.chromium

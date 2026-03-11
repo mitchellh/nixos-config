@@ -28,6 +28,7 @@ in
       "loop"
       "launchcontrol"
       "mullvad-vpn"
+      "orbstack"
       "spotify"
       "swiftbar"
     ];

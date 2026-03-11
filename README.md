@@ -2,7 +2,7 @@
 
 ## Installation and features
 
-Visit https://smallstepmna.github.io/
+Visit https://smallstepman.github.io/
 
 Study install scripts in `docs/` dir. 
 
@@ -36,7 +36,7 @@ However the WM/DE part of MacOS suckkkks soOoOoOoO much, don't get me started.
 So, I want a productive OS, and nothing ever surpassed my Arch/i3/doomemacs 
 config in terms of how quickly I could do things. I loved playing with Arch, 
 but I hated managing it, especially when I had to move machines (which will 100% 
-happen again, unless bus factor), so: NixOS-in-VM-on-Macbook-with-Nix-managed-MacOS. 
+happen again, unless bus factor), so: NixOS-in-VM-on-Macbook-with-nix-darwin. 
 
 Yes, Nix is very good. Of course I got helplessy addicted the moment I touched it, and 
 immediately started schememing how to install it on every single electricity-powerd thing I own.
