@@ -1,4 +1,4 @@
-{ isWSL, inputs, ... }:
+{ isWSL, inputs, currentSystemName, ... }:
 
 { config, lib, pkgs, ... }:
 
@@ -6,6 +6,14 @@ let
   sources = import ../../nix/sources.nix;
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
+  legacyGitSigningKey = "247AE5FC6A838272";
+  macosGitSigningKey = "9317B542250D33B34C41F62831D3B9C9754C0F5B";
+  vmGitSigningKey = "071F6FE39FC26713930A702401E5F9A947FA8F5C";
+  gitSigningKey =
+    if isDarwin then macosGitSigningKey
+    else if currentSystemName == "vm-aarch64" then vmGitSigningKey
+    else legacyGitSigningKey;
+  darwinPinentryProgram = "/opt/homebrew/opt/pinentry-touchid/bin/pinentry-touchid";
   opencodeAwesome = import ./opencode/awesome.nix { inherit pkgs lib; };
 
   # Migration bridge: the canonical mountpoint is /Users/m/Projects, but during
@@ -421,7 +429,7 @@ in {
     defaultEditor = false; # we set EDITOR to nvim elsewhere
   };
 
-  programs.gpg.enable = !isDarwin;
+  programs.gpg.enable = true;
 
   programs.tmux = {
     enable = true;
@@ -778,8 +786,11 @@ in {
   };
 
   services.gpg-agent = {
-    enable = isLinux;
-    pinentry.package = pkgs.pinentry-tty;
+    enable = isLinux || isDarwin;
+    pinentry.package = lib.mkIf isLinux pkgs.pinentry-tty;
+    extraConfig = lib.optionalString isDarwin ''
+      pinentry-program ${darwinPinentryProgram}
+    '';
 
     # cache the keys forever so we don't get asked for a password
     defaultCacheTtl = 31536000;
@@ -808,7 +819,7 @@ in {
   programs.git = {
     enable = true;
     signing = {
-      key = "247AE5FC6A838272";
+      key = gitSigningKey;
       signByDefault = true;
     };
     settings = {

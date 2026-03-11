@@ -16,6 +16,9 @@ in
 
   homebrew = {
     enable = true;
+    taps = [
+      "jorgelbg/tap"
+    ];
     casks  = [
       "activitywatch"
       "karabiner-elements"
@@ -37,6 +40,7 @@ in
       "gnupg"
       "kanata"
       "kanata-tray"
+      "pinentry-touchid"
     ];
 
     masApps = {
