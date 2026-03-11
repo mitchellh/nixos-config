@@ -25,6 +25,13 @@ vm_extra_config=$(nix_eval_raw .#nixosConfigurations.vm-aarch64.config.home-mana
 mac_extra_config=$(nix_eval_raw .#darwinConfigurations.macbook-pro-m1.config.home-manager.users.m.services.gpg-agent.extraConfig)
 [[ "$mac_extra_config" != *allow-preset-passphrase* ]] || fail 'macbook-pro-m1 unexpectedly allows preset passphrases'
 [[ "$mac_extra_config" == *pinentry-program* ]] || fail 'macbook-pro-m1 lost pinentry-program configuration'
+[[ "$mac_extra_config" != *ignore-cache-for-signing* ]] || fail 'macbook-pro-m1 should use short agent TTLs instead of ignore-cache-for-signing'
+
+mac_default_cache_ttl=$(nix_eval_json .#darwinConfigurations.macbook-pro-m1.config.home-manager.users.m.services.gpg-agent.defaultCacheTtl)
+[[ "$mac_default_cache_ttl" == "1" ]] || fail 'macbook-pro-m1 should keep gpg-agent cache entries for only 1 second'
+
+mac_max_cache_ttl=$(nix_eval_json .#darwinConfigurations.macbook-pro-m1.config.home-manager.users.m.services.gpg-agent.maxCacheTtl)
+[[ "$mac_max_cache_ttl" == "1" ]] || fail 'macbook-pro-m1 should cap gpg-agent cache entries at 1 second'
 
 vm_helper_present=$(nix_eval_json .#nixosConfigurations.vm-aarch64.config.home-manager.users.m.home.packages --apply 'pkgs: builtins.any (pkg: (pkg.name or "") == "gpg-preset-passphrase-login") pkgs')
 [[ "$vm_helper_present" == "true" ]] || fail 'vm-aarch64 helper script package is missing'
