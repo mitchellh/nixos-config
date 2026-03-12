@@ -769,6 +769,23 @@ in {
       copilot() { COPILOT_GITHUB_TOKEN=$(rbw get github-token) command copilot "$@"; }
       claude() { CLAUDE_CODE_OAUTH_TOKEN=$(rbw get claude-oauth-token) command claude "$@"; }
       codex() { OPENAI_API_KEY=$(rbw get openai-api-key) command codex "$@"; }
+
+      # Auto-fix fileMode for git repos on VMware shared folders
+      # (macOS reports all files as 755; git sees mode changes vs index)
+      # Only runs once per repo per shell session (caches in associative array)
+      typeset -gA _git_filemode_fixed
+      _fix_git_filemode() {
+        if [[ "$PWD" == /Users/m/Projects/* ]] && [[ -d .git ]]; then
+          local root=$(git rev-parse --show-toplevel 2>/dev/null)
+          [[ -z "$root" ]] && return
+          [[ -n "''${_git_filemode_fixed[$root]}" ]] && return
+          git config core.fileMode false 2>/dev/null
+          git submodule foreach --quiet 'git config core.fileMode false' 2>/dev/null
+          _git_filemode_fixed[$root]=1
+        fi
+      }
+      add-zsh-hook chpwd _fix_git_filemode
+      _fix_git_filemode  # run once on shell init
     '' else "");
   };
 
@@ -861,6 +878,10 @@ in {
       branch.autosetuprebase = "always";
       color.ui = true;
       core.askPass = ""; # needs to be empty to use terminal for ask pass
+      # Ignore file mode changes on Linux - VMware shared folders force different permissions
+      core.fileMode = !isLinux;
+      # Speed up git by caching untracked files
+      core.untrackedCache = true;
       # Git credentials handled by programs.gh.gitCredentialHelper
       github.user = "smallstepman";
       push.default = "tracking";

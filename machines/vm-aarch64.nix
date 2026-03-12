@@ -20,6 +20,9 @@
   virtualisation.vmware.guest.enable = true;
 
   # Share selected host directories
+  # Note: VMware HGFS shows all files as executable (755) because macOS doesn't
+  # distinguish file modes the same way. We accept this and use git's
+  # core.fileMode=false (set in home-manager) to ignore mode differences.
   fileSystems."/nixos-config" = {
     fsType = "fuse./run/current-system/sw/bin/vmhgfs-fuse";
     device = ".host:/nixos-config";
