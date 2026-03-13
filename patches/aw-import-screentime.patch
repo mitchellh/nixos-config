@@ -32,7 +32,7 @@ index 0000000..c541ece
 @@ -0,0 +1,3 @@
 +#!/bin/bash
 +
-+/opt/homebrew/bin/uv run aw-import-screentime events import --since 1d --limit 0 --storefront pl --storefront us --storefront ch
++uv run aw-import-screentime events import --since 1d --limit 0 --storefront pl --storefront us --storefront ch
 diff --git a/src/aw_import_screentime/__main__.py b/src/aw_import_screentime/__main__.py
 index b774744..dbb365d 100644
 --- a/src/aw_import_screentime/__main__.py

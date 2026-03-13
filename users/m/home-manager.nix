@@ -178,12 +178,14 @@ in {
 
     # CLI tools
     pkgs.websocat
+    pkgs.bats
     pkgs.bat
     pkgs.eza
     pkgs.fd
     pkgs.bws
     pkgs.fzf
     pkgs.jq
+    pkgs.yq
     pkgs.fluxcd
     pkgs.kubecolor
     pkgs.kubectl
@@ -191,6 +193,7 @@ in {
     pkgs.rbw
     pkgs.ripgrep
     pkgs.tree
+    pkgs.terragrunt
     pkgs.watch
     pkgs.yazi          # terminal file manager
     pkgs.btop          # system monitor
@@ -308,9 +311,24 @@ in {
     pkgs.rsync         # newer rsync than macOS ships
     pkgs.sshpass       # non-interactive ssh password auth
   ]) ++ (lib.optionals (isLinux && !isWSL) [
-    # Wrapper scripts: inject secrets from rbw per-process (not global env)
-    # gh is provided by programs.gh (with gitCredentialHelper); auth via shell function below
-    # Claude Code uses native apiKeyHelper instead (see home.file below)
+    # Custom git credential helper - wraps rbw to use 'github-token' entry for github.com
+    # (rbw's built-in git-credential-rbw expects entry named by hostname)
+    (pkgs.writeShellScriptBin "git-credential-github" ''
+      case "$1" in
+        get)
+          while IFS='=' read -r key value; do
+            [ -z "$key" ] && break
+            case "$key" in host) host="$value" ;; esac
+          done
+          case "$host" in
+            github.com|gist.github.com)
+              token=$(${pkgs.rbw}/bin/rbw get github-token 2>/dev/null)
+              [ -n "$token" ] && printf 'protocol=https\nhost=%s\nusername=smallstepman\npassword=%s\n' "$host" "$token"
+              ;;
+          esac
+          ;;
+      esac
+    '')
     # Called by Noctalia hooks/user-templates on wallpaper/dark-mode changes
     (pkgs.writeShellScriptBin "noctalia-theme-reload" ''
       # Reload Noctalia theme in running Emacs daemon
@@ -334,9 +352,9 @@ in {
     pkgs.grim         # screenshots
     pkgs.slurp        # region selection
 
-    # inputs.niri-scratchpad.packages.${pkgs.system}.default # external scratchpad daemon/cli
+    # inputs.niri-scratchpad.packages.${pkgs.stdenv.hostPlatform.system}.default # external scratchpad daemon/cli
     # Wayland utilities
-    inputs.mangowc.packages.${pkgs.system}.default  # window control
+    inputs.mangowc.packages.${pkgs.stdenv.hostPlatform.system}.default  # window control
     pkgs.wlr-which-key                              # which-key for wlroots
 
     # Wallpaper
@@ -364,6 +382,7 @@ in {
 
   home.sessionPath = lib.optionals isDarwin [
     "/Applications/VMware Fusion.app/Contents/Library"
+    "/Users/m/.cargo/bin"
   ];
 
   home.sessionVariables = {
@@ -508,6 +527,7 @@ in {
   # mac-host-docker alias below can be managed declaratively.
   programs.ssh = lib.mkIf (isLinux && !isWSL) {
     enable = true;
+    enableDefaultConfig = false; # suppress future deprecation warning
     matchBlocks."mac-host-docker" = {
       hostname = "192.168.130.1";
       user = "m";
@@ -524,7 +544,12 @@ in {
   };
 
   wayland.windowManager.hyprland = lib.mkIf (isLinux && !isWSL) {
-    enable = true; # enable Hyprland
+    enable = true;
+    settings = {
+      # Minimal config to silence "no configuration" warning.
+      # Hyprland is installed as a fallback compositor; Niri is primary.
+      monitor = ",preferred,auto,1";
+    };
   };
 
   # Niri Wayland compositor configuration (Linux only)
@@ -846,10 +871,10 @@ in {
     maxCacheTtl = if isDarwin then 1 else 31536000;
   };
 
-  # gh with credential helper: replaces credential.helper = "store"
+  # gh CLI - credential helper disabled on Linux (uses custom rbw-based helper below)
   programs.gh = {
     enable = true;
-    gitCredentialHelper.enable = true;
+    gitCredentialHelper.enable = isDarwin; # Darwin uses gh native auth; Linux uses rbw
   };
 
   # rbw (Bitwarden) configuration.
@@ -882,7 +907,6 @@ in {
       core.fileMode = !isLinux;
       # Speed up git by caching untracked files
       core.untrackedCache = true;
-      # Git credentials handled by programs.gh.gitCredentialHelper
       github.user = "smallstepman";
       push.default = "tracking";
       init.defaultBranch = "main";
@@ -892,7 +916,11 @@ in {
         root = "rev-parse --show-toplevel";
         ce = "git commit --amend --no-edit";
       };
-    };
+    } // (if isLinux then {
+      # Linux: use custom credential helper that reads GitHub token from rbw
+      "credential \"https://github.com\"".helper = "github";
+      "credential \"https://gist.github.com\"".helper = "github";
+    } else {});
   };
   
   programs.opencode = {

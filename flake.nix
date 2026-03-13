@@ -136,8 +136,8 @@
 
       # Build non-flake packages from source
       (final: prev: {
-        agent-of-empires = inputs.agent-of-empires-src.packages.${prev.system}.default;
-        gastown = inputs.gastown.packages.${prev.system}.gt.overrideAttrs (old: {
+        agent-of-empires = inputs.agent-of-empires-src.packages.${prev.stdenv.hostPlatform.system}.default;
+        gastown = inputs.gastown.packages.${prev.stdenv.hostPlatform.system}.gt.overrideAttrs (old: {
           vendorHash = "sha256-fZucwy6omCXV5/ebOzcqOgJ4SfouCHasmstEX2na5SQ=";
         });
 
@@ -255,7 +255,7 @@ PYEOF
         opencode-dev =
           let
             pkgs-unstable = import inputs.nixpkgs-unstable {
-              system = prev.system;
+              system = prev.stdenv.hostPlatform.system;
               config.allowUnfree = true;
             };
             src = builtins.fetchTarball {
@@ -276,7 +276,7 @@ PYEOF
       (final: prev:
         let
           pkgs-unstable = import inputs.nixpkgs-unstable {
-            system = prev.system;
+            system = prev.stdenv.hostPlatform.system;
             config.allowUnfree = true;
           };
         in rec {

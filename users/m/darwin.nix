@@ -269,6 +269,7 @@ in
       ];
       EnvironmentVariables = {
         AW_IMPORT_SRC = "${awImportScreentimeSrc}";
+        PATH = "/etc/profiles/per-user/m/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin";
       };
       RunAtLoad = true;
       StartInterval = 3600;

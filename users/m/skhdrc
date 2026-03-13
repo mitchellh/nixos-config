@@ -57,3 +57,36 @@ ctrl - d [
   "VMWare Fusion" ~
   *   : open -a /Applications/Ghostty.app
 ] 
+
+ctrl - n [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append focus west
+]
+ctrl - e [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append focus south
+]
+ctrl - i [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append focus north
+]
+ctrl - o [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append focus east
+]
+ctrl - l [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append move west
+]
+ctrl - u [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append move south
+]
+ctrl - y [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append move north
+]
+ctrl - 0x29 [
+  "VMWare Fusion" ~
+  *   : /Users/m/Projects/yeet-and-yoink/target/release/yny --log-file=/tmp/yeet-and-yoink/debug.log --profile --log-append move east
+]
