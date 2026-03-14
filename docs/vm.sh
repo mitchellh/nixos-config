@@ -5,6 +5,17 @@
 
 set -euo pipefail
 
+default_nix_config_dir() {
+    local script_dir candidate
+    script_dir=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd || pwd)
+    candidate=$(cd "$script_dir/.." >/dev/null 2>&1 && pwd || true)
+    if [ -n "$candidate" ] && [ -f "$candidate/flake.nix" ]; then
+        printf '%s\n' "$candidate"
+    else
+        printf '%s\n' "$HOME/.config/nix"
+    fi
+}
+
 # ─── Configuration ──────────────────────────────────────────────────────────
 NIXADDR="${NIXADDR:-192.168.130.3}"
 VM_STATIC_MAC="${VM_STATIC_MAC:-00:0c:29:95:ec:2c}"
@@ -12,8 +23,10 @@ NIXPORT="${NIXPORT:-22}"
 NIXUSER="${NIXUSER:-m}"
 NIXINSTALLUSER="${NIXINSTALLUSER:-root}"
 VM_SHARED_NIX_CONFIG_DIR="${VM_SHARED_NIX_CONFIG_DIR:-/nixos-config}"
+VM_SHARED_GENERATED_DIR="${VM_SHARED_GENERATED_DIR:-/nixos-generated}"
+VM_SHARED_PROJECTS_GUEST_DIR="${VM_SHARED_PROJECTS_GUEST_DIR:-/Users/m/Projects}"
 NIXNAME="${NIXNAME:-vm-aarch64}"
-NIX_CONFIG_DIR="${NIX_CONFIG_DIR:-$HOME/.config/nix}"
+NIX_CONFIG_DIR="${NIX_CONFIG_DIR:-$(default_nix_config_dir)}"
 
 SSH_OPTIONS="-o StrictHostKeyChecking=accept-new"
 BOOTSTRAP_SSH_OPTIONS="-o PubkeyAuthentication=no -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
@@ -21,7 +34,7 @@ INSTALL_SSH_PASSWORD="${INSTALL_SSH_PASSWORD:-root}"
 export DISPLAY=
 
 HOST_SSH_PUBKEY_FILE="${HOST_SSH_PUBKEY_FILE:-$HOME/.ssh/id_ed25519.pub}"
-GENERATED_DIR="$NIX_CONFIG_DIR/machines/generated"
+GENERATED_DIR="${GENERATED_DIR:-$HOME/.local/share/nix-config-generated}"
 
 VM_BASE_DIR="$HOME/Virtual Machines.localized"
 HOST_PROJECTS_DIR="${HOST_PROJECTS_DIR:-$HOME/Projects}"
@@ -69,16 +82,68 @@ fi'
 # On the NixOS ISO, vmhgfs-fuse lives in the nix profile after installing open-vm-tools.
 # After a full NixOS install it's on the system PATH.
 REMOTE_MOUNT_SHARED='sudo mkdir -p '"$VM_SHARED_NIX_CONFIG_DIR"';
+sudo mkdir -p '"$VM_SHARED_GENERATED_DIR"';
+sudo mkdir -p '"$VM_SHARED_PROJECTS_GUEST_DIR"';
 if ! mountpoint -q '"$VM_SHARED_NIX_CONFIG_DIR"'; then
     if ! command -v vmhgfs-fuse >/dev/null 2>&1; then
         sudo nix --experimental-features "nix-command flakes" profile add nixpkgs#open-vm-tools >/dev/null;
     fi;
     sudo vmhgfs-fuse .host:/nixos-config '"$VM_SHARED_NIX_CONFIG_DIR"' -o uid=0,gid=0,allow_other,auto_unmount;
+fi;
+if ! mountpoint -q '"$VM_SHARED_GENERATED_DIR"'; then
+    sudo vmhgfs-fuse .host:/nixos-generated '"$VM_SHARED_GENERATED_DIR"' -o uid=0,gid=0,allow_other,auto_unmount;
+fi;
+if ! mountpoint -q '"$VM_SHARED_PROJECTS_GUEST_DIR"'; then
+    sudo vmhgfs-fuse .host:/Projects '"$VM_SHARED_PROJECTS_GUEST_DIR"' -o uid=0,gid=0,allow_other,auto_unmount;
 fi'
 
 # ─── Helpers ────────────────────────────────────────────────────────────────
 
 die() { echo "error: $*" >&2; exit 1; }
+
+ensure_generated_dir() {
+    mkdir -p "$GENERATED_DIR"
+}
+
+require_generated_dir() {
+    [ -d "$GENERATED_DIR" ] || die "Generated dataset not found: $GENERATED_DIR"
+}
+
+source_external_input_flake() {
+    local helper="$NIX_CONFIG_DIR/scripts/external-input-flake.sh"
+    [ -f "$helper" ] || die "Wrapper helper not found: $helper"
+    # shellcheck source=../scripts/external-input-flake.sh
+    . "$helper"
+}
+
+local_wrapper_flake() {
+    source_external_input_flake
+    _nix_wrapper_dir=""
+    GENERATED_INPUT_DIR="$GENERATED_DIR" NIX_CONFIG_DIR="$NIX_CONFIG_DIR" mk_wrapper_flake
+}
+
+vm_ensure_shared_folder() {
+    local vmx="$1"
+    local share_name="$2"
+    local host_path="$3"
+
+    vmrun -T fusion setSharedFolderState "$vmx" "$share_name" "$host_path" writable >/dev/null 2>&1 \
+        || vmrun -T fusion addSharedFolder "$vmx" "$share_name" "$host_path" >/dev/null
+}
+
+vm_ensure_required_shared_folders() {
+    local vmx="$1"
+
+    [ -n "$vmx" ] || die "VMX path is required to configure shared folders"
+    ensure_generated_dir
+    mkdir -p "$HOST_PROJECTS_DIR"
+
+    vmrun -T fusion enableSharedFolders "$vmx" >/dev/null 2>&1 || true
+    vm_ensure_shared_folder "$vmx" "nixos-config" "$NIX_CONFIG_DIR"
+    vm_ensure_shared_folder "$vmx" "Projects" "$HOST_PROJECTS_DIR"
+    vm_ensure_shared_folder "$vmx" "nixos-generated" "$GENERATED_DIR"
+    vmrun -T fusion enableSharedFolders "$vmx" runtime >/dev/null 2>&1 || true
+}
 
 # Find the .vmx file for our NixOS VM
 vm_find_vmx() {
@@ -221,6 +286,7 @@ EOF
 vm_create() {
     command -v vmrun >/dev/null 2>&1 || die "vmrun not found. Install VMware Fusion first."
     [ -d "$NIX_CONFIG_DIR" ] || die "Nix config dir not found: $NIX_CONFIG_DIR"
+    ensure_generated_dir
     mkdir -p "$HOST_PROJECTS_DIR"
 
     # If a VM already exists, start it if needed and return
@@ -228,6 +294,7 @@ vm_create() {
     existing_vmx=$(vm_find_vmx 2>/dev/null) || true
     if [ -n "$existing_vmx" ]; then
         echo "VM already exists: $existing_vmx"
+        vm_ensure_required_shared_folders "$existing_vmx"
         if ! vmrun list | grep -qF "$existing_vmx"; then
             echo "Starting existing VM..."
             vmrun start "$existing_vmx"
@@ -331,7 +398,14 @@ sharedFolder1.writeAccess = "TRUE"
 sharedFolder1.hostPath = "$HOST_PROJECTS_DIR"
 sharedFolder1.guestName = "Projects"
 sharedFolder1.expiration = "never"
-sharedFolder.maxNum = "2"
+sharedFolder2.present = "TRUE"
+sharedFolder2.enabled = "TRUE"
+sharedFolder2.readAccess = "TRUE"
+sharedFolder2.writeAccess = "TRUE"
+sharedFolder2.hostPath = "$GENERATED_DIR"
+sharedFolder2.guestName = "nixos-generated"
+sharedFolder2.expiration = "never"
+sharedFolder.maxNum = "3"
 floppy0.present = "FALSE"
 mks.enable3d = "TRUE"
 svga.graphicsMemoryKB = "$((VM_VRAM_GB * 1024 * 1024))"
@@ -385,7 +459,7 @@ vm_wait_for_ssh() {
 
 vm_prepare_host_authorized_keys() {
     [ -f "$HOST_SSH_PUBKEY_FILE" ] || die "SSH public key not found: $HOST_SSH_PUBKEY_FILE"
-    mkdir -p "$GENERATED_DIR"
+    ensure_generated_dir
     # host-authorized-keys  → authorizes the macOS host key on the VM (nixos.nix)
     cp "$HOST_SSH_PUBKEY_FILE" "$GENERATED_DIR/host-authorized-keys"
     # mac-host-authorized-keys → authorizes the VM's use of the same key on the
@@ -396,7 +470,7 @@ vm_prepare_host_authorized_keys() {
 # ─── Prepare SOPS Age Key ──────────────────────────────────────────────────
 
 vm_prepare_sops_age_key() {
-    mkdir -p "$GENERATED_DIR"
+    ensure_generated_dir
     sshpass -p "$INSTALL_SSH_PASSWORD" ssh $BOOTSTRAP_SSH_OPTIONS -p"$NIXPORT" "${NIXINSTALLUSER}@${NIXADDR}" "$REMOTE_FIX_INTERNET"' &&
         sudo mkdir -p /var/lib/sops-nix
         sudo chmod 700 /var/lib/sops-nix
@@ -415,10 +489,12 @@ vm_prepare_sops_age_key() {
 # ─── Collect Secrets ────────────────────────────────────────────────────────
 
 vm_collect_secrets() {
-    touch "$NIX_CONFIG_DIR/machines/secrets.yaml"
-    git -C "$NIX_CONFIG_DIR" add -f machines/secrets.yaml
-    (cd "$NIX_CONFIG_DIR" && nix --extra-experimental-features 'nix-command flakes' run "$NIX_CONFIG_DIR#collect-secrets")
-    git -C "$NIX_CONFIG_DIR" reset -q -- machines/secrets.yaml
+    ensure_generated_dir
+    [ -f "$GENERATED_DIR/secrets.yaml" ] || : > "$GENERATED_DIR/secrets.yaml"
+    local wrapper
+    wrapper=$(local_wrapper_flake)
+    (cd "$NIX_CONFIG_DIR" && nix --extra-experimental-features 'nix-command flakes' run \
+        "path:$wrapper#collect-secrets" --no-write-lock-file)
 }
 
 # ─── VM Install ─────────────────────────────────────────────────────────────
@@ -426,7 +502,6 @@ vm_collect_secrets() {
 vm_install() {
     vm_prepare_host_authorized_keys
     vm_prepare_sops_age_key
-    git -C "$NIX_CONFIG_DIR" add machines/generated/vm-age-pubkey machines/generated/host-authorized-keys machines/generated/mac-host-authorized-keys
     vm_collect_secrets
 
     sshpass -p "$INSTALL_SSH_PASSWORD" ssh $BOOTSTRAP_SSH_OPTIONS -p"$NIXPORT" "${NIXINSTALLUSER}@${NIXADDR}" "$REMOTE_FIX_INTERNET && $REMOTE_MOUNT_SHARED"' &&
@@ -434,21 +509,37 @@ vm_install() {
             echo "Error: flake.nix not found in '"$VM_SHARED_NIX_CONFIG_DIR"'"
             exit 1
         fi &&
+        if [ ! -f '"$VM_SHARED_GENERATED_DIR"'/secrets.yaml ]; then
+            echo "Error: generated dataset not mounted at '"$VM_SHARED_GENERATED_DIR"'"
+            exit 1
+        fi &&
         cd '"$VM_SHARED_NIX_CONFIG_DIR"' &&
-        sudo nix --experimental-features "nix-command flakes" run \
-            github:nix-community/disko -- \
-            --mode disko \
-            '"$VM_SHARED_NIX_CONFIG_DIR"'/machines/hardware/disko-vm.nix &&
-        sudo mkdir -p /mnt/var/lib/sops-nix &&
-        sudo cp /var/lib/sops-nix/key.txt /mnt/var/lib/sops-nix/key.txt &&
-        sudo chmod 700 /mnt/var/lib/sops-nix &&
-        sudo chmod 600 /mnt/var/lib/sops-nix/key.txt &&
         NIXCFG_CLEAN=/tmp/nixos-config-clean &&
         rm -rf "$NIXCFG_CLEAN" &&
         mkdir -p "$NIXCFG_CLEAN" &&
         tar -C '"$VM_SHARED_NIX_CONFIG_DIR"' --exclude="*.sock" -cf - . | tar -C "$NIXCFG_CLEAN" -xf - &&
+        WRAPPER=$(NIX_CONFIG_DIR="$NIXCFG_CLEAN" GENERATED_INPUT_DIR='"$VM_SHARED_GENERATED_DIR"' YEET_AND_YOINK_INPUT_DIR='"$VM_SHARED_PROJECTS_GUEST_DIR"'/yeet-and-yoink bash '"$VM_SHARED_NIX_CONFIG_DIR"'/scripts/external-input-flake.sh) &&
+        DISKO_SCRIPT=$(sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nix build \
+            --extra-experimental-features "nix-command flakes" \
+            --no-write-lock-file \
+            --no-link --print-out-paths \
+            "path:$WRAPPER#nixosConfigurations.'"$NIXNAME"'.config.system.build.diskoScript") &&
+        if [ -d "$DISKO_SCRIPT" ] && [ -x "$DISKO_SCRIPT/bin/disko" ]; then
+            sudo "$DISKO_SCRIPT/bin/disko"
+        else
+            sudo "$DISKO_SCRIPT"
+        fi &&
+        sudo mkdir -p /mnt/var/lib/sops-nix &&
+        sudo cp /var/lib/sops-nix/key.txt /mnt/var/lib/sops-nix/key.txt &&
+        sudo chmod 700 /mnt/var/lib/sops-nix &&
+        sudo chmod 600 /mnt/var/lib/sops-nix/key.txt &&
+        SYSTEM_TOPLEVEL=$(sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nix build \
+            --extra-experimental-features "nix-command flakes" \
+            --no-write-lock-file \
+            --no-link --print-out-paths \
+            "path:$WRAPPER#nixosConfigurations.'"$NIXNAME"'.config.system.build.toplevel") &&
         sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-install \
-            --flake "path:$NIXCFG_CLEAN#'"$NIXNAME"'" \
+            --system "$SYSTEM_TOPLEVEL" \
             --no-root-passwd &&
         reboot
     '
@@ -556,11 +647,16 @@ cmd_bootstrap() {
 
 cmd_switch() {
     local addr
+    local vmx
+    vmx=$(vm_find_vmx) || die "No VM found. Run 'vm bootstrap' first."
+    vm_ensure_required_shared_folders "$vmx"
     addr=$(vm_detect_ip)
+    require_generated_dir
     echo "Switching NixOS config on VM at $addr..."
 
     ssh -t $SSH_OPTIONS -p"$NIXPORT" "${NIXUSER}@${addr}" "$REMOTE_MOUNT_SHARED"' &&
-        sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --impure --flake "path:'"$VM_SHARED_NIX_CONFIG_DIR"'#'"$NIXNAME"'"
+        WRAPPER=$(NIX_CONFIG_DIR='"$VM_SHARED_NIX_CONFIG_DIR"' GENERATED_INPUT_DIR='"$VM_SHARED_GENERATED_DIR"' YEET_AND_YOINK_INPUT_DIR='"$VM_SHARED_PROJECTS_GUEST_DIR"'/yeet-and-yoink bash '"$VM_SHARED_NIX_CONFIG_DIR"'/scripts/external-input-flake.sh) &&
+        sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake "path:$WRAPPER#'"$NIXNAME"'" --no-write-lock-file
     '
 }
 
@@ -570,7 +666,7 @@ cmd_refresh_secrets() {
     echo "Refreshing secrets for VM at $addr..."
 
     # Get VM age public key (uses normal SSH, not bootstrap)
-    mkdir -p "$GENERATED_DIR"
+    ensure_generated_dir
     ssh $SSH_OPTIONS -p"$NIXPORT" "${NIXUSER}@${addr}" "
         sudo mkdir -p /var/lib/sops-nix &&
         sudo chmod 700 /var/lib/sops-nix &&
@@ -586,7 +682,6 @@ cmd_refresh_secrets() {
     fi
 
     vm_prepare_host_authorized_keys
-    git -C "$NIX_CONFIG_DIR" add machines/generated/vm-age-pubkey machines/generated/host-authorized-keys machines/generated/mac-host-authorized-keys
     vm_collect_secrets
     echo "Secrets refreshed. Run 'vm switch' to apply."
 }

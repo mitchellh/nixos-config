@@ -91,7 +91,7 @@
           "llm-agents",
           "flake-parts"
         ],
-        "import-tree": "import-tree",
+        "import-tree": "import-tree_2",
         "nixpkgs": [
           "llm-agents",
           "nixpkgs"
@@ -155,6 +155,21 @@
         "type": "github"
       }
     },
+    "den": {
+      "locked": {
+        "lastModified": 1773392129,
+        "narHash": "sha256-SG1hP7CgNnWDIvF5wKfQLI692qGn39xgWm/UhRyrGUI=",
+        "owner": "vic",
+        "repo": "den",
+        "rev": "4bdcb63e6c337a2863af6b444b6da35702aac319",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "den",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -211,6 +226,21 @@
       "original": {
         "owner": "nix-community",
         "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
+    "flake-aspects": {
+      "locked": {
+        "lastModified": 1773339018,
+        "narHash": "sha256-sPPriYJpLmukixc6/KBzeOhw83OSodco5YbeayHzAgo=",
+        "owner": "vic",
+        "repo": "flake-aspects",
+        "rev": "b51a00bc0140e7708e421a64f20170a2e8ccae93",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "flake-aspects",
         "type": "github"
       }
     },
@@ -489,6 +519,21 @@
       }
     },
     "import-tree": {
+      "locked": {
+        "lastModified": 1772999353,
+        "narHash": "sha256-dPb0WxUhFaz6wuR3B6ysqFJpsu8txKDPZvS47AT2XLI=",
+        "owner": "vic",
+        "repo": "import-tree",
+        "rev": "545a4df146fce44d155573e47f5a777985acf912",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "import-tree",
+        "type": "github"
+      }
+    },
+    "import-tree_2": {
       "locked": {
         "lastModified": 1763762820,
         "narHash": "sha256-ZvYKbFib3AEwiNMLsejb/CWs/OL/srFQ8AogkebEPF0=",
@@ -1035,10 +1080,13 @@
         "agent-of-empires-src": "agent-of-empires-src",
         "aw-import-screentime-src": "aw-import-screentime-src",
         "darwin": "darwin",
+        "den": "den",
         "disko": "disko",
+        "flake-aspects": "flake-aspects",
         "gastown": "gastown",
         "git-repo-manager": "git-repo-manager",
         "home-manager": "home-manager",
+        "import-tree": "import-tree",
         "lazyvim": "lazyvim",
         "llm-agents": "llm-agents",
         "mangowc": "mangowc",

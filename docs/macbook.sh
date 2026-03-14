@@ -1,8 +1,35 @@
 #!/bin/bash
 # Bootstrap a fresh macbook with nix-darwin config
-# Usage: sh <(curl -sL https://smallstepman.github.io/macbook.sh)
+# Usage: bash <(curl -sL https://smallstepman.github.io/macbook.sh)
 
-set -e
+set -euo pipefail
+
+default_nix_config_dir() {
+    local script_dir candidate
+    script_dir=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" >/dev/null 2>&1 && pwd || pwd)
+    candidate=$(cd "$script_dir/.." >/dev/null 2>&1 && pwd || true)
+    if [ -n "$candidate" ] && [ -f "$candidate/flake.nix" ]; then
+        printf '%s
+' "$candidate"
+    else
+        printf '%s
+' "$HOME/.config/nix"
+    fi
+}
+
+NIX_CONFIG_DIR="${NIX_CONFIG_DIR:-$(default_nix_config_dir)}"
+GENERATED_DIR="${GENERATED_DIR:-$HOME/.local/share/nix-config-generated}"
+HOST_SSH_PUBKEY_FILE="${HOST_SSH_PUBKEY_FILE:-$HOME/.ssh/id_ed25519.pub}"
+
+die() { echo "error: $*" >&2; exit 1; }
+
+prepare_generated_dataset() {
+    [ -f "$HOST_SSH_PUBKEY_FILE" ] || die "SSH public key not found: $HOST_SSH_PUBKEY_FILE"
+    mkdir -p "$GENERATED_DIR"
+    cp "$HOST_SSH_PUBKEY_FILE" "$GENERATED_DIR/host-authorized-keys"
+    cp "$HOST_SSH_PUBKEY_FILE" "$GENERATED_DIR/mac-host-authorized-keys"
+    [ -f "$GENERATED_DIR/secrets.yaml" ] || : > "$GENERATED_DIR/secrets.yaml"
+}
 
 echo "==> macbook bootstrap"
 
@@ -26,7 +53,6 @@ else
 fi
 
 # ─── 3. Clone config repo ─────────────────────────────────────────────────
-NIX_CONFIG_DIR="$HOME/.config/nix"
 if [ ! -d "$NIX_CONFIG_DIR" ]; then
     echo "==> Cloning config repo..."
     mkdir -p "$HOME/.config"
@@ -45,17 +71,21 @@ else
     echo "==> Nix already installed."
 fi
 
-# ─── 5. Apply nix-darwin config ────────────────────────────────────────────
+# ─── 5. Prepare external generated dataset ────────────────────────────────
+echo "==> Preparing external generated dataset at $GENERATED_DIR..."
+prepare_generated_dataset
+
+# ─── 6. Apply nix-darwin config ────────────────────────────────────────────
 echo "==> Building and applying nix-darwin configuration..."
 cd "$NIX_CONFIG_DIR"
 
-NIXPKGS_ALLOW_UNFREE=1 nix build --impure \
-    --extra-experimental-features "nix-command flakes" \
-    ".#darwinConfigurations.macbook-pro-m1.system" \
-    --max-jobs 8 --cores 0
+# shellcheck source=../scripts/external-input-flake.sh
+. "$NIX_CONFIG_DIR/scripts/external-input-flake.sh"
+WRAPPER=$(GENERATED_INPUT_DIR="$GENERATED_DIR" NIX_CONFIG_DIR="$NIX_CONFIG_DIR" mk_wrapper_flake)
 
-sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild switch \
-    --impure --flake ".#macbook-pro-m1"
+NIXPKGS_ALLOW_UNFREE=1 nix build     --extra-experimental-features "nix-command flakes"     "path:$WRAPPER#darwinConfigurations.macbook-pro-m1.system"     --no-write-lock-file     --max-jobs 8 --cores 0
+
+sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild switch     --flake "path:$WRAPPER#macbook-pro-m1"     --no-write-lock-file
 
 echo ""
 echo "Done! Open a new terminal to pick up all changes."

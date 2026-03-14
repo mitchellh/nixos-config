@@ -4,6 +4,9 @@
 
 Visit https://smallstepman.github.io/
 
+This repository is now den-native: hosts are declared in `den/hosts.nix`, and
+platform/user behavior is composed from `den/aspects/...`.
+
 Study install scripts in `docs/` dir. 
 
 For detailed walktrough, visit upstream repo.
@@ -63,10 +66,10 @@ automatically in the VM shell so every `docker` command is transparently
 forwarded to the host daemon.
 
 **SSH key provisioning:** the VM authenticates to the macOS host using the
-host's normal `~/.ssh/id_ed25519` key, which is copied into the VM by the
-`make vm/secrets` step (see `docs/secrets.md`).  The matching public key is
-stored in `machines/generated/mac-host-authorized-keys` and deployed to the
-macOS host's `~/.ssh/authorized_keys` by `darwin.nix`.  No separate
+host's normal `~/.ssh/id_ed25519` key inside the VM. The matching public key is
+stored in the external generated dataset (`~/.local/share/nix-config-generated`
+on macOS, exposed to the VM as `/nixos-generated`) and deployed to the macOS
+host's `~/.ssh/authorized_keys` by the Darwin host aspects. No separate
 VM-specific key is needed.
 
 **Bind-mount constraint:** because the daemon lives on macOS, bind-mount source
@@ -78,4 +81,3 @@ shared from macOS into the VM via VMware Shared Folders).
 over the short `-v` flag.  With `--mount`, Docker errors immediately when the
 source path does not exist on the host; with `-v` it silently auto-creates the
 missing directory, which hides misconfigured paths.
-

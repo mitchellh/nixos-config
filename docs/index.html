@@ -3,204 +3,677 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dotfiles - one-line installers</title>
+    <title>den — One Flake Too Many</title>
+    <meta name="description" content="Three operating systems from one git checkout. NixOS, macOS, and WSL configured by a single flake that got out of hand. Encrypted secrets, patched Go binaries, 70+ AI agents, and a clipboard that works across VMware out of spite.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #F9F8F6;
+            --fg: #1A1A1A;
+            --muted-bg: #EBE5DE;
+            --muted-fg: #6C6863;
+            --accent: #D4AF37;
+            --accent-fg: #FFFFFF;
+            --code-bg: #1A1A1A;
+            --code-fg: #E8E6E3;
+            --code-comment: #6C6863;
+            --code-keyword: #D4AF37;
+            --code-string: #A8C97A;
+            --code-fn: #E8C9A0;
+        }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-            line-height: 1.6;
-            color: #c9d1d9;
-            background: #0d1117;
-            min-height: 100vh;
-            padding: 40px 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            line-height: 1.625;
+            color: var(--fg);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
-        .container { max-width: 900px; margin: 0 auto; }
-
-        h1 { color: #e6edf3; font-size: 1.8em; margin-bottom: 4px; }
-        h2 { color: #e6edf3; font-size: 1.2em; margin: 36px 0 12px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
-        h3 { color: #e6edf3; font-size: 1em; margin-bottom: 6px; }
-        p { margin: 8px 0; }
-        a { color: #58a6ff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
-        .subtitle { color: #8b949e; margin-bottom: 32px; }
-
-        .cmd-block {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin: 12px 0;
-            position: relative;
-            overflow-x: auto;
-        }
-        .cmd-block code { color: #c9d1d9; white-space: pre; display: block; }
-        .cmd-block .comment { color: #8b949e; }
-        .cmd-block .prompt { color: #8b949e; user-select: none; }
-
-        .copy-btn {
-            position: absolute; top: 8px; right: 8px;
-            background: #21262d; color: #c9d1d9; border: 1px solid #30363d;
-            padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em;
-            font-family: inherit;
-        }
-        .copy-btn:hover { background: #30363d; }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin: 16px 0;
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
         }
 
-        .card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            padding: 16px;
+        .grid-lines { position: fixed; inset: 0; z-index: 1; pointer-events: none; display: none; }
+        @media (min-width: 1024px) { .grid-lines { display: flex; justify-content: center; } }
+        .grid-lines-inner { width: 100%; max-width: 1600px; display: flex; justify-content: space-between; padding: 0 4rem; }
+        .grid-line { width: 1px; height: 100vh; background: rgba(26, 26, 26, 0.06); }
+
+        h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; font-weight: 400; }
+
+        .container { width: 100%; max-width: 1600px; margin: 0 auto; padding: 0 2rem; }
+        @media (min-width: 768px) { .container { padding: 0 4rem; } }
+
+        section { position: relative; z-index: 2; }
+
+        a { color: var(--fg); text-decoration: none; transition: color 500ms ease-out; }
+        a:hover { color: var(--accent); }
+        p a, li a, .overline a, h4 a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+        p a:hover, li a:hover, .overline a:hover, h4 a:hover { color: var(--accent); }
+        .section-dark p a, .section-dark li a, .section-dark .overline a, .section-dark h4 a { color: var(--bg); text-decoration-color: var(--accent); }
+        .section-dark p a:hover, .section-dark li a:hover, .section-dark h4 a:hover { color: var(--accent); }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            height: 48px; padding: 0 2rem;
+            font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            border: none; cursor: pointer; position: relative; overflow: hidden;
+            transition: all 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        .card h3 { margin-bottom: 4px; }
-        .card p { color: #8b949e; font-size: 0.9em; margin: 0; }
+        .btn-primary { background: var(--fg); color: var(--accent-fg); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+        .btn-primary:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+        .btn-primary .btn-gold { position: absolute; inset: 0; background: var(--accent); transform: translateX(-101%); transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .btn-primary:hover .btn-gold { transform: translateX(0); }
+        .btn-primary .btn-text { position: relative; z-index: 1; }
+        .btn-secondary { background: transparent; color: var(--fg); border: 1px solid var(--fg); }
+        .btn-secondary:hover { background: var(--fg); color: var(--bg); }
 
-        .section { margin: 28px 0; }
+        .overline { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted-fg); }
 
-        .tag {
-            display: inline-block;
-            background: #1f6feb22;
-            color: #58a6ff;
-            border: 1px solid #1f6feb44;
-            border-radius: 12px;
-            padding: 2px 10px;
-            font-size: 0.8em;
-            margin: 2px 4px 2px 0;
+        .code-block {
+            background: var(--code-bg); color: var(--code-fg);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.7;
+            padding: 2rem; overflow-x: auto; position: relative;
+            white-space: pre;
         }
+        .code-block .comment { color: var(--code-comment); }
+        .code-block .keyword { color: var(--code-keyword); }
+        .code-block .string { color: var(--code-string); }
+        .code-block .fn { color: var(--code-fn); }
 
-        table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-        td, th { text-align: left; padding: 6px 12px; border-bottom: 1px solid #21262d; }
-        th { color: #8b949e; font-weight: normal; font-size: 0.85em; }
-        td code { color: #79c0ff; }
+        .platform-cmd {
+            position: relative; cursor: pointer;
+            transition: background 300ms ease-out;
+        }
+        .platform-cmd::after {
+            content: 'click to copy';
+            position: absolute; top: 50%; right: 1rem; transform: translateY(-50%);
+            font-family: 'Inter', sans-serif; font-size: 0.6rem;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--code-comment); opacity: 0;
+            transition: opacity 300ms ease-out;
+            pointer-events: none;
+        }
+        .platform-cmd:hover::after { opacity: 1; }
+        .platform-cmd:hover { background: rgba(255,255,255,0.04); }
+        .platform-cmd.copied::after { content: 'copied!'; color: var(--accent); opacity: 1; }
 
-        footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid #21262d; color: #484f58; text-align: center; font-size: 0.85em; }
+        code:not([class]) { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: var(--muted-bg); padding: 0.15em 0.4em; color: var(--fg); }
+
+        .img-placeholder {
+            background: var(--muted-bg); border: 1px dashed rgba(26,26,26,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted-fg); font-family: 'Inter', sans-serif;
+            font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+            transition: all 700ms ease-out;
+        }
+        .img-placeholder:hover { border-color: var(--accent); color: var(--accent); }
+
+        .img-editorial {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(1);
+            transition: filter 1500ms ease-out, transform 1500ms ease-out;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(0,0,0,0.06);
+        }
+        .img-editorial:hover { filter: grayscale(0); transform: scale(1.02); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+
+        .line-h { height: 1px; background: var(--fg); }
+
+        .section-dark { background: var(--fg); color: var(--bg); }
+        .section-dark .overline { color: rgba(249,248,246,0.5); }
+        .section-dark a { color: var(--bg); }
+        .section-dark a:hover { color: var(--accent); }
+        .section-dark code:not([class]) { background: rgba(255,255,255,0.08); color: var(--bg); }
+
+        .hero { padding: 0rem 0 6rem; min-height: 90vh; display: flex; align-items: flex-end; }
+        @media (min-width: 768px) { .hero { padding: 10rem 0 8rem; } }
+        .hero-title { font-size: clamp(3rem, 10vw, 8rem); line-height: 0.9; letter-spacing: -0.02em; margin-bottom: 2rem; }
+        .hero-title em { font-style: italic; color: var(--accent); }
+        .hero-subtitle { font-family: 'Inter', sans-serif; font-size: clamp(1rem, 2vw, 1.125rem); line-height: 1.625; color: var(--muted-fg); max-width: 36rem; }
+        .hero-meta { display: flex; align-items: center; gap: 1.5rem; margin-top: 3rem; flex-wrap: wrap; }
+
+        .side-label { position: absolute; writing-mode: vertical-rl; text-orientation: mixed; font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted-fg); display: none; }
+        @media (min-width: 1024px) { .side-label { display: block; } }
+
+        .platform-grid { display: grid; gap: 0; }
+        @media (min-width: 768px) { .platform-grid { grid-template-columns: repeat(3, 1fr); } }
+        .platform-card { padding: 3rem 2rem; border-top: 1px solid rgba(26,26,26,0.12); transition: background 700ms ease-out; }
+        @media (min-width: 768px) { .platform-card { padding: 3rem; border-right: 1px solid rgba(26,26,26,0.12); } .platform-card:last-child { border-right: none; } }
+        .platform-card:hover { background: rgba(26,26,26,0.02); }
+        .platform-card h3 { font-size: 1.5rem; margin: 1rem 0 0.5rem; }
+        .platform-card p { color: var(--muted-fg); font-size: 0.875rem; margin-bottom: 1.5rem; }
+        .platform-cmd { background: var(--code-bg); color: var(--code-fg); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; padding: 1rem 1.25rem; overflow-x: auto; white-space: nowrap; position: relative; }
+        .platform-cmd .prompt { color: var(--code-comment); user-select: none; }
+
+        .feature-grid { display: grid; gap: 0; }
+        @media (min-width: 768px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .feature-grid { grid-template-columns: repeat(3, 1fr); } }
+        .feature-card { padding: 2.5rem 2rem; border-top: 1px solid rgba(26,26,26,0.12); transition: background 700ms ease-out; }
+        @media (min-width: 768px) { .feature-card { border-right: 1px solid rgba(26,26,26,0.12); } .feature-card:nth-child(2n) { border-right: none; } }
+        @media (min-width: 1024px) { .feature-card:nth-child(2n) { border-right: 1px solid rgba(26,26,26,0.12); } .feature-card:nth-child(3n) { border-right: none; } }
+        .feature-card:hover { background: rgba(26,26,26,0.02); }
+        .feature-card h4 { font-size: 1.25rem; margin: 0.75rem 0 0.5rem; }
+        .feature-card p { color: var(--muted-fg); font-size: 0.875rem; line-height: 1.625; }
+
+        .showcase-grid { display: grid; gap: 2rem; }
+        @media (min-width: 768px) { .showcase-grid { grid-template-columns: 7fr 5fr; gap: 3rem; } }
+
+        .arch-diagram { background: var(--code-bg); color: var(--code-fg); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.8; padding: 2.5rem; overflow-x: auto; white-space: pre; }
+
+        .cmd-table { width: 100%; border-collapse: collapse; }
+        .cmd-table th { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-fg); text-align: left; padding: 1rem 0; border-bottom: 1px solid var(--fg); }
+        .cmd-table td { padding: 1rem 0; border-bottom: 1px solid rgba(26,26,26,0.08); font-size: 0.9rem; }
+        .cmd-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; white-space: nowrap; padding-right: 2rem; }
+        .cmd-table td:last-child { color: var(--muted-fg); }
+        .section-dark .cmd-table th { color: rgba(249,248,246,0.5); border-bottom-color: rgba(249,248,246,0.3); }
+        .section-dark .cmd-table td { border-bottom-color: rgba(249,248,246,0.08); }
+        .section-dark .cmd-table td:last-child { color: rgba(249,248,246,0.6); }
+
+        .sec-grid { display: grid; gap: 0; }
+        @media (min-width: 768px) { .sec-grid { grid-template-columns: repeat(2, 1fr); } }
+        .sec-item { padding: 2rem 0; border-top: 1px solid rgba(26,26,26,0.08); }
+        @media (min-width: 768px) { .sec-item { padding: 2rem; } .sec-item:nth-child(odd) { border-right: 1px solid rgba(26,26,26,0.08); } }
+        .sec-item h4 { font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; }
+        .sec-item p { color: var(--muted-fg); font-size: 0.875rem; }
+
+        .aspect-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.75rem; border: 1px solid rgba(26,26,26,0.15); margin: 0.2rem; transition: all 500ms ease-out; }
+        .aspect-tag:hover { border-color: var(--accent); color: var(--accent); }
+        .section-dark .aspect-tag { border-color: rgba(249,248,246,0.15); color: rgba(249,248,246,0.8); }
+        .section-dark .aspect-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+        .drop-cap::first-letter { float: left; font-family: 'Playfair Display', serif; font-size: 4.5rem; line-height: 0.8; margin-right: 0.75rem; margin-top: 0.1rem; color: var(--fg); }
+
+        footer { padding: 4rem 0; border-top: 1px solid rgba(26,26,26,0.12); }
+        .footer-grid { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; }
+        .footer-links { display: flex; gap: 2rem; }
+        .footer-links a { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted-fg); }
+        .footer-copy { font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-fg); }
+
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important;animation-duration:0ms!important;}.img-editorial{filter:none;}}
+
+        .reveal { opacity: 0; transform: translateY(2rem); transition: opacity 800ms ease-out, transform 800ms ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>dotfiles</h1>
-        <p class="subtitle">Nix-based system config for macOS, NixOS VM, and WSL</p>
 
+    <div class="grid-lines" aria-hidden="true"><div class="grid-lines-inner"><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div><div class="grid-line"></div></div></div>
 
-        <!-- ─── Features ────────────────────────────────── -->
-        <h2>What's Included</h2>
-        <div class="card-grid">
-            <div class="card">
-                <h3>NixOS in VM, security hardened and straight outta r/unixporn</h3>
-                <p>Niri and Noctalia with autotheming based on wallpaper, greetd, Ghostty, foot</p>
+    <!--HERO-->
+    <section class="hero">
+        <div class="container" style="position: relative;">
+            <span class="side-label" style="right: 4rem; bottom: 0;">NixOS / nix-darwin / WSL</span>
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 3rem;">
+                <div class="line-h" style="width: 3rem;"></div>
+                <span class="overline">Nix-Based System Configuration</span>
             </div>
-            <div class="card">
-                <h3>Dev Tools</h3>
-                <p>Neovim (LazyVim), Doom Emacs, tmux, Rust, Go, Python, and Node. Deep Niri window management integrations for editors including edge-navigation passthrough and buffer-to-window tearing.</p>
-            </div>
-            <div class="card">
-                <h3>AI Agents</h3>
-                <p>Claude Code, OpenCode, 20+ agents via llm-agents.nix</p>
-            </div>
-            <div class="card">
-                <h3>Secrets</h3>
-                <p>sops-nix + sopsidy with Bitwarden/rbw backend. No "I keep my encrypted secrets in a public repo". Minimal exposure to SOPS, no secret value gets commited, most secrets handled by EU-hosted BitWarden.</p>
-            </div>
-            <div class="card">
-                <h3>Clipboard</h3>
-                <p>		Uniclip: encrypted clipboard sharing between macOS and a Linux VM — patched Uniclip over an SSH tunnel wrapped in a systemd unit, working around VMware’s lack of Wayland clipboard support.</p>
-            </div>
-            <div class="card">
-                <h3>Networking</h3>
-                <p>Tailscale, VMware NAT with static DHCP, SSH tunnels</p>
+            <h1 class="hero-title">One Flake.<br>Many <em>Machines</em>.</h1>
+            <p class="hero-subtitle">
+                Wayland experience straight outta <a href="https://reddit.com/r/unixporn">r/unixporn</a>.
+                Encrypted secrets that even I can't accidentally leak. AI agents. </br><code>MacOS <--VMWare--> Wayland</code> clipboard. 
+            </br></br>    <code><a href="https://github.com/mitchellh/nixos-config">mitchell's</a></code> config fork went overboard.
+            </p>
+            <div class="hero-meta">
+                <a href="#install" class="btn btn-primary"><span class="btn-gold"></span><span class="btn-text">Get Started</span></a>
+                <a href="https://github.com/smallstepman/smallstepman.github.io" class="btn btn-secondary">View Source</a>
             </div>
         </div>
+    </section>
 
-        <!-- ─── macOS ───────────────────────────────────── -->
-        <h2>macOS &mdash; Fresh MacBook Setup</h2>
-        <p>Installs Xcode CLT, Homebrew, Nix, clones this repo, and applies the full nix-darwin config.</p>
-        <div class="cmd-block">
-            <button class="copy-btn" onclick="copy(this)" data-cmd="curl -sL https://smallstepman.github.io/macbook.sh | tee ~/whatbootstrappedme.sh | sh">Copy</button>
-            <code><span class="prompt">$ </span>curl -sL https://smallstepman.github.io/macbook.sh | tee ~/whatbootstrappedme.sh | sh</code>
+    <!--PLATFORMS/INSTALL-->
+    <section id="install" style="padding: 6rem 0;">
+        <div class="container">
+            <div class="reveal" style="margin-bottom: 3rem;">
+                <span class="overline">Installation</span>
+                <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); line-height: 0.95; margin-top: 1rem;">curl | sh</em></h2>
+            </div>
+            <div class="platform-grid reveal">
+                <div class="platform-card">
+                    <span class="overline">Apple Silicon &amp; Intel</span>
+                    <h3>macOS</h3>
+                    <p>Installs Xcode CLT, Homebrew, Determinate Nix, clones the repo, and configures your entire Mac before you finish your coffee. Touch&nbsp;ID sudo.</p>
+                    <div class="platform-cmd" onclick="copyCmd(this)" data-cmd="curl -sL https://smallstepman.github.io/macbook.sh | sh">
+                        <span class="prompt">$ </span>curl -sL smallstepman.github.io/macbook.sh | sh
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted-fg);">Then <code>niks</code> to rebuild, or <code>vm&nbsp;bootstrap</code> to summon the Linux box.</p>
+                </div>
+                <div class="platform-card">
+                    <span class="overline">VMware Fusion / aarch64</span>
+                    <h3>NixOS VM</h3>
+                    <p>Pulls NixOS ISO, installs VMWare Fusion, creates a NixOS VM inside VMware Fusion, provisions it over shared folders.</p>
+                    <div class="platform-cmd" onclick="copyCmd(this)" data-cmd="curl -sL https://smallstepman.github.io/vm.sh | sh">
+                        <span class="prompt">$ </span>curl -sL smallstepman.github.io/vm.sh | sh
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted-fg);">Or, from a configured macOS host: <code>vm&nbsp;bootstrap</code></p>
+                </div>
+                <div class="platform-card">
+                    <span class="overline">Windows Subsystem for Linux</span>
+                    <h3>WSL</h3>
+                    <p>Enables WSL, installs a NixOS distribution, applies the flake config. All from an elevated PowerShell prompt.</p>
+                    <div class="platform-cmd" onclick="copyCmd(this)" data-cmd="iex (iwr -useb https://smallstepman.github.io/wsl.ps1)">
+                        <span class="prompt">PS&gt; </span>iex (iwr -useb smallstepman.github.io/wsl.ps1)
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted-fg);">Headless NixOS with flakes. No GUI.</p>
+                </div>
+            </div>
         </div>
-        <p>After install, use <code>niks</code> to rebuild the darwin config (which lives in <code>~/.config/nix</code>).</p>
-        <p>To install NixOS in VM:</p>
-        <div class="cmd-block">
-            <code><span class="prompt">$ </span>vm bootstrap</code>
+    </section>
+
+    <!--SCREENSHOT/SHOWCASE-->
+    <section style="padding: 6rem 0; border-top: 1px solid rgba(26,26,26,0.12);">
+        <div class="container">
+            <div class="showcase-grid reveal">
+                <div>
+                    <div style="aspect-ratio: 16/10; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(0,0,0,0.06);">
+                        <img src="screenshot.png" alt="NixOS desktop with Niri tiling window manager, Doom Emacs, and Ghostty terminal" class="img-editorial"
+                             onerror="this.style.display='none'; this.parentElement.classList.add('img-placeholder'); this.parentElement.style.aspectRatio='16/10'; this.parentElement.textContent='Desktop Screenshot';">
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted-fg);">
+                        Niri &middot; Noctalia Shell &middot; Doom Emacs &middot; Ghostty &middot; NixOS 25.11
+                    </p>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+                    <span class="overline">Desktop Environment</span>
+                    <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1; margin: 1rem 0;">Wayland-Native<br>Tiling <em>Desktop</em></h2>
+                    <p style="color: var(--muted-fg); font-size: 0.9rem; margin-bottom: 2rem;">
+                        <a href="https://github.com/sodiboo/niri-flake">Niri</a> scrollable-tiling compositor with
+                        <a href="https://github.com/noctalia-dev/noctalia-shell">Noctalia</a> shell &mdash; auto-themed
+                        from your wallpaper. greetd login manager,
+                        <a href="https://ghostty.org">Ghostty</a> for the main screen, foot for the quick throwaway.
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="img-placeholder" style="aspect-ratio: 4/3; font-size: 0.6rem;">Screenshot 2</div>
+                        <div class="img-placeholder" style="aspect-ratio: 4/3; font-size: 0.6rem;">Screenshot 3</div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- ─── NixOS VM ────────────────────────────────── -->
-        <h2>NixOS VM &mdash; VMware Fusion</h2>
-        <p>If you just want the VM, and no nix-darwin, run this:</p>
-        <div class="cmd-block">
-            <button class="copy-btn" onclick="copy(this)" data-cmd="curl -sL https://smallstepman.github.io/vm.sh | tee ~/whatbootstrappedvm.sh | sh">Copy</button>
-            <code><span class="prompt">$ </span>curl -sL https://smallstepman.github.io/vm.sh | tee ~/whatbootstrappedvm.sh | sh</code>
+    <!--FEATURES-->
+    <section style="padding: 6rem 0; border-top: 1px solid rgba(26,26,26,0.12);">
+        <div class="container">
+            <div class="reveal" style="margin-bottom: 3rem; max-width: 36rem;">
+                <span class="overline">Capabilities</span>
+            </div>
+            <div class="feature-grid reveal">
+                <div class="feature-card">
+                    <span class="overline">Compositors</span>
+                    <h4><a href="https://github.com/sodiboo/niri-flake">Niri</a> + <a href="https://github.com/noctalia-dev/noctalia-shell">Noctalia</a></h4>
+                    <p>X11 lost. Niri tiles windows in an infinite scrollable strip (like a toilet paper). Noctalia themes everything from your wallpaper. <a href="https://github.com/smallstepman/yeet-and-yoink">Edge-navigation passthrough for all editors, terminals, and web browsers.</a></p>
+                    <div class="img-placeholder" style="aspect-ratio: 16/9; margin-top: 1rem; font-size: 0.6rem;">GIF &mdash; Niri tiling &amp; theme switching</div>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">Editors &amp; Languages</span>
+                    <h4>Dev Toolchain</h4>
+                    <p>Nix-managed <a href="https://github.com/doomemacs/doomemacs">Doom Emacs</a> as a systemd daemon &amp; <a href="https://github.com/pfassina/lazyvim-nix">Neovim w/ LazyVim</a> (+VSCode mimicing doom emacs, just in case). Rust, Go, Python3 + uv, Node + fnm, and DevOps stack.  <a href="https://starship.rs">Starship</a> prompt.</p>
+                    <div class="img-placeholder" style="aspect-ratio: 16/9; margin-top: 1rem; font-size: 0.6rem;">GIF &mdash; Doom Emacs + Niri edge-nav passthrough</div>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">LLM-Native</span>
+                    <h4>AI Agents</h4>
+                    <p>Claude Code, OpenCode, and GitHub Copilot from <a href="https://github.com/numtide/llm-agents.nix">llm-agents.nix</a>.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="overline"><a href="https://github.com/Mic92/sops-nix">sops-nix</a> + <a href="https://github.com/doy/rbw">Bitwarden</a></span>
+                    <h4>Encrypted Secrets</h4>
+                    <p><a href="https://github.com/Mic92/sops-nix">sops-nix</a> + <a href="https://github.com/timewave-computer/sopsidy">sopsidy</a> keep boot-time secrets in an external generated dataset outside git, shared into the VM at <code>/nixos-generated</code>. Runtime tokens stay in Bitwarden/rbw and are injected per-process.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">Cross-Platform</span>
+                    <h4>Shared Clipboard</h4>
+                    <p>VMware Fusion doesn't do Wayland clipboard. Patched <a href="https://github.com/quackduck/uniclip">uniclip</a> so copy-paste work across operating systems now.</p>
+                    <div class="img-placeholder" style="aspect-ratio: 16/9; margin-top: 1rem; font-size: 0.6rem;">GIF &mdash; Clipboard sharing macOS &harr; VM</div>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">macOS Integration</span>
+                    <h4>Homebrew + Launchd</h4>
+                    <p>Some things Nix can't manage. Discord, Spotify, LM Studio, Mullvad VPN. Colemak layout (with right hand shifted 2 cols to the right so it's comfy) via <a href="https://github.com/jtroo/kanata">Kanata</a> keyboard remapping with homerowmod. <code>sudo</code> using TouchID.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">VMware Fusion</span>
+                    <h4>VM Orchestration</h4>
+                    <p>Full VM lifecycle from your Mac: bootstrap from zero, rebuild over SSH, start, stop, grab IP. DHCP pinned at <code>192.168.130.3</code>. Shared folders. Docker context forwarding from host MacOS to VM to save the battery.</p>
+                    <div class="img-placeholder" style="aspect-ratio: 16/9; margin-top: 1rem; font-size: 0.6rem;">GIF &mdash; vm bootstrap (terminal recording)</div>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">Networking</span>
+                    <h4>Tailscale + Tunnels</h4>
+                    <p><a href="https://tailscale.com">Tailscale</a> VPN &amp; SSH tunnels for Open WebUI and ActivityWatch between host and guest. VMware NAT with static DHCP reservation.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="overline">Disk &amp; Boot</span>
+                    <h4>Declarative Everything</h4>
+                    <p><a href="https://github.com/nix-community/disko">Disko</a> for declarative disk layout, systemd-boot, greetd for login. GPG-signed commits require TouchID. <a href="https://github.com/hakoerber/git-repo-manager"><code>git-repo-manager</code></a> to pull wallpapers mostly.</p>
+                </div>
+            </div>
         </div>
-        <p>It downloads VMware Fusion if needed, downloads NixOS ISO and creates an aarch64 VM, then finally installs via shared folder.</p>
-        <p>Nix config lives in <code>/nixos-config</code>.</p>
+    </section>
 
-        <div class="section">
-            <h3>vm commands</h3>
-            <table>
-                <tr><th>Command</th><th>Description</th></tr>
-                <tr><td><code>vm bootstrap [--redo]</code></td><td>Full setup from scratch. <code>--redo</code> destroys existing VM first.</td></tr>
-                <tr><td><code>vm switch</code></td><td>Apply config changes (nixos-rebuild switch)</td></tr>
-                <tr><td><code>vm up</code></td><td>Start the VM</td></tr>
-                <tr><td><code>vm down</code></td><td>Graceful shutdown</td></tr>
-                <tr><td><code>vm ssh [cmd]</code></td><td>SSH into the VM, or run a remote command</td></tr>
-                <tr><td><code>vm ip</code></td><td>Print the VM's current IP</td></tr>
-                <tr><td><code>vm refresh-secrets</code></td><td>Regenerate sops age keys and re-encrypt secrets</td></tr>
-            </table>
+    <!--ARCHITECTURE-->
+    <section class="section-dark" style="padding: 8rem 0;">
+        <div class="container">
+            <div class="reveal" style="position: relative;">
+                <span class="side-label" style="left: -2rem; top: 0; color: rgba(249,248,246,0.3);">Architecture</span>
+                <span class="overline">Built on <a href="https://github.com/vic/den">den</a></span>
+                <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); line-height: 0.95; margin-top: 1rem; margin-bottom: 1.5rem;">Aspect-Oriented <em>Composition</em></h2>
+                <p style="color: rgba(249,248,246,0.6); max-width: 36rem; margin-bottom: 3rem;">
+                    Instead of one massive file per machine &mdash; the NixOS starter pack &mdash;
+                    every concern is a reusable
+                    <strong style="color: var(--bg);">aspect</strong>: a self-contained slice of
+                    configuration that composes <code>nixos</code>, <code>darwin</code>, and
+                    <code>homeManager</code> options in one place. Hosts just pick which aspects
+                    they need. It sounds obvious when you say it out loud. It took
+                    embarrassingly long to get right.
+                </p>
+            </div>
+
+            <div class="reveal" style="display: grid; gap: 3rem;">
+                <div>
+                    <p class="overline" style="margin-bottom: 1rem;">How the flake assembles</p>
+                    <div class="arch-diagram" style="background: rgba(255,255,255,0.04);">flake.nix
+  &#9474;
+  &#9500;&#9472;&#9472; <span class="keyword">imports</span> ./den/default.nix    <span class="comment"># den bootstrap, overlays, host modules</span>
+  &#9500;&#9472;&#9472; <span class="keyword">imports</span> ./den/hosts.nix      <span class="comment"># host declarations + metadata</span>
+  &#9492;&#9472;&#9472; <span class="keyword">inherit</span> (den.flake)          <span class="comment"># nixosConfigurations, darwinConfigurations</span>
+
+den/hosts.nix
+  &#9500;&#9472;&#9472; den.hosts.aarch64-linux.<span class="fn">vm-aarch64</span>       <span class="comment"># NixOS VM</span>
+  &#9500;&#9472;&#9472; den.hosts.aarch64-darwin.<span class="fn">macbook-pro-m1</span>  <span class="comment"># macOS</span>
+  &#9492;&#9472;&#9472; den.hosts.x86_64-linux.<span class="fn">wsl</span>               <span class="comment"># Windows WSL</span>
+
+den/aspects/
+  &#9500;&#9472;&#9472; hosts/
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">vm-aarch64.nix</span>       <span class="comment"># &#8594; linux-core, secrets, linux-desktop, vmware</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">macbook-pro-m1.nix</span>   <span class="comment"># &#8594; darwin-core, darwin-desktop, homebrew, launchd</span>
+  &#9474;   &#9492;&#9472;&#9472; <span class="fn">wsl.nix</span>              <span class="comment"># &#8594; wsl-system</span>
+  &#9500;&#9472;&#9472; features/
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">ai-tools.nix</span>         <span class="comment"># Claude Code, OpenCode, llm-agents</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">darwin-core.nix</span>      <span class="comment"># nix.enable=false, Touch ID sudo, system state</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">darwin-desktop.nix</span>   <span class="comment"># yabai, skhd, Kanata, macOS UX</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">editors-devtools.nix</span> <span class="comment"># Doom Emacs, Neovim, tmux, Rust, Go, Python</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">gpg.nix</span>              <span class="comment"># GPG agent, signing, pinentry</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">home-base.nix</span>        <span class="comment"># XDG dirs, fonts, base packages</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">homebrew.nix</span>         <span class="comment"># casks, brews, mas apps</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">identity.nix</span>         <span class="comment"># user account, SSH keys, git identity</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">launchd.nix</span>          <span class="comment"># uniclip server, Open WebUI, ActivityWatch</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">linux-core.nix</span>       <span class="comment"># NixOS baseline, networking, systemd</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">linux-desktop.nix</span>    <span class="comment"># Niri, Noctalia, greetd, Ghostty</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">secrets.nix</span>          <span class="comment"># sops-nix, sopsidy, rbw</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">shell-git.nix</span>        <span class="comment"># zsh, direnv, atuin, git config</span>
+  &#9474;   &#9500;&#9472;&#9472; <span class="fn">vmware.nix</span>           <span class="comment"># VMware guest, uniclip, Docker forwarding</span>
+  &#9474;   &#9492;&#9472;&#9472; <span class="fn">wsl.nix</span>              <span class="comment"># WSL integration, default user, no GUI</span>
+  &#9492;&#9472;&#9472; users/
+      &#9492;&#9472;&#9472; <span class="fn">m.nix</span>                <span class="comment"># user composition: identity &#8594; shell &#8594; editors &#8594; ai</span></div>
+                </div>
+
+
         </div>
+    </section>
 
-        <!-- ─── WSL ─────────────────────────────────────── -->
-        <h2>WSL &mdash; Windows</h2>
-        <p>PowerShell (as Administrator):</p>
-        <div class="cmd-block">
-            <button class="copy-btn" onclick="copy(this)" data-cmd="iex (iwr -useb https://smallstepman.github.io/wsl.ps1)">Copy</button>
-            <code><span class="prompt">PS&gt; </span>iex (iwr -useb https://smallstepman.github.io/wsl.ps1)</code>
+    <!--SECURITY-->
+    <section style="padding: 6rem 0; border-top: 1px solid rgba(26,26,26,0.12);">
+        <div class="container">
+            <div class="reveal" style="max-width: 36rem; margin-bottom: 3rem;">
+                <span class="overline">Security Model</span>
+                <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); line-height: 0.95; margin-top: 1rem;">Zero Trust</h2>
+            </div>
+            <div class="reveal drop-cap" style="max-width: 40rem; margin-bottom: 3rem; color: var(--muted-fg); font-size: 0.95rem;">
+                Secret <em>values</em> never touch version control &mdash;
+                the repo keeps only declarative wiring, while boot-time secrets live in an
+                external generated dataset outside git and the VM keeps the matching age
+                private key. Runtime tokens stay in a EU-based Bitwarden vault
+                and are injected only into the process that needs them. 
+            </div>
+
+            <div class="reveal" style="margin-bottom: 3rem;">
+                <div class="arch-diagram">
+<span class="comment">&#9484;&#9472; Build Time &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
+&#9474;                                                                           &#9474;
+&#9474;  <span class="fn">nix run</span> <span class="fn">path:$WRAPPER</span>#collect-secrets  <span class="comment"># macOS, via wrapper flake</span>         &#9474;
+&#9474;    &#9474;                                                                      &#9474;
+&#9474;    &#9500;&#9472;&#9472; reads VM age pubkey       <span class="comment"># ~/.local/share/nix-config-generated</span>    &#9474;
+&#9474;    &#9500;&#9472;&#9472; fetches boot secrets      <span class="comment"># rbw / EU-hosted Bitwarden</span>              &#9474;
+&#9474;    &#9492;&#9472;&#9472; writes <span class="fn">secrets.yaml</span>     <span class="comment">  # external dataset, outside git</span>          &#9474;
+&#9474;                                                                           &#9474;
+<span class="comment">&#9500;&#9472; Deploy Time &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
+&#9474;                                                                           &#9474;
+&#9474;  <span class="fn">sops-nix</span> on the VM              <span class="comment"># decrypts generated input at activation</span> &#9474;
+&#9474;    &#9500;&#9472;&#9472; Tailscale auth key        <span class="comment"># /run/secrets/tailscale/auth-key</span>        &#9474;
+&#9474;    &#9500;&#9472;&#9472; rbw email + Uniclip       <span class="comment"># rbw/email + uniclip/password</span>           &#9474;
+&#9474;    &#9492;&#9472;&#9472; User password hash        <span class="comment"># /run/secrets/user/hashed-password</span>      &#9474;
+&#9474;                                                                           &#9474;
+<span class="comment">&#9500;&#9472; Runtime &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;</span>
+&#9474;                                                                           &#9474;
+&#9474;  API keys injected <span class="keyword">per-process</span>    <span class="comment"># NEVER as global env vars</span>              &#9474;
+&#9474;    &#9500;&#9472;&#9472; <span class="fn">gh()</span> / <span class="fn">claude()</span> / <span class="fn">codex()</span>  <span class="comment"># fetch via rbw on demand</span>               &#9474;
+&#9474;    &#9492;&#9472;&#9472; <span class="fn">with-openai</span> / <span class="fn">with-amp</span>     <span class="comment"># one process, one token scope</span>          &#9474;
+&#9474;                                                                           &#9474;
+<span class="comment">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span></div>
+            </div>
+
+            <div class="sec-grid reveal">
+                <div class="sec-item">
+                    <h4>Nothing useful in git</h4>
+                    <p>No plaintext secrets, no tracked generated dataset, no <code>.env.example</code>, no "just set these env vars" README. The repo keeps only declarative secret wiring; <code>~/.local/share/nix-config-generated</code> and the VM age private key live outside git. You could publish the whole repo and it wouldn't matter. (It is published. Hi.)</p>
+                </div>
+                <div class="sec-item">
+                    <h4>Per-process only</h4>
+                    <p>API keys are fetched from Bitwarden the moment they're needed and scoped to exactly one process. Your shell session never meets <code>OPENAI_API_KEY</code>.</p>
+                </div>
+                <div class="sec-item">
+                    <h4>Machine-locked keys</h4>
+                    <p>Each host has its own age keypair. The VM can't decrypt macOS secrets. The Mac can't decrypt VM secrets. A compromised machine gets exactly the secrets it was supposed to have and nothing else.</p>
+                </div>
+                <div class="sec-item">
+                    <h4>Biometrics &amp; signed commits</h4>
+                    <p>sudo and GPG-commit-sign via Touch ID. Every commit signed with GPG key <code>247AE5FC6A838272</code>.</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- ─── Aliases ─────────────────────────────────── -->
-        <h2>Shell Aliases</h2>
-        <table>
-            <tr><th>Alias</th><th>Description</th></tr>
-            <tr><td><code>niks</code></td><td>Rebuild &amp; switch the system config (macOS or NixOS-in-VM)</td></tr>
-            <tr><td><code>nikt</code></td><td>Build &amp; test without switching</td></tr>
-            <tr><td><code>vm &lt;cmd&gt;</code></td><td>NixOS VM management (macOS only)</td></tr>
-        </table>
-
-        <div class="section">
-            <span class="tag">nix-darwin</span>
-            <span class="tag">NixOS</span>
-            <span class="tag">home-manager</span>
-            <span class="tag">flakes</span>
-            <span class="tag">VMware Fusion</span>
-            <span class="tag">aarch64</span>
-            <span class="tag">sops-nix</span>
-            <span class="tag">WSL</span>
+    <!--CLIPBOARDSHARING-->
+    <section class="section-dark" style="padding: 6rem 0;">
+        <div class="container">
+            <div class="reveal" style="display: grid; gap: 3rem;">
+                <div style="max-width: 36rem;">
+                    <span class="overline">Cross-Platform</span>
+                    <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1; margin-top: 1rem; margin-bottom: 1.5rem;">Transparent <em>Clipboard</em></h2>
+                    <p style="color: rgba(249,248,246,0.6); font-size: 0.9rem; margin-bottom: 2rem;">
+                        VMware Fusion doesn't support Wayland clipboard sharing.
+                        Patched <a href="https://github.com/quackduck/uniclip" style="color: var(--bg);">uniclip</a> Go source to add <code>--bind</code> and
+                        <code>UNICLIP_PASSWORD</code> support, compiled it from source through Nix,
+                        and deployed it as managed services on both sides.
+                        Copy on macOS, paste in the VM, and vice-versa.
+                        Encrypted. Automatic. No manual setup after bootstrap.
+                    </p>
+                </div>
+                <div class="arch-diagram" style="background: rgba(255,255,255,0.04); font-size: 0.7rem;">
+macOS (host)                                    NixOS VM (guest)
+<span class="comment">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>              <span class="comment">&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;</span>
+&#9474;  <span class="fn">launchd</span> user agent              &#9474;              &#9474;  <span class="fn">systemd</span> user service            &#9474;
+&#9474;                                &#9474;              &#9474;                                &#9474;
+&#9474;  uniclip server <span class="keyword">--secure</span>       &#9474;              &#9474;  uniclip client <span class="keyword">--secure</span>       &#9474;
+&#9474;    --bind <span class="string">192.168.130.1</span>        &#9474;    TCP/TLS   &#9474;    <span class="string">192.168.130.1:53701</span>         &#9474;
+&#9474;    -p <span class="string">53701</span>                   &#9474; <span class="keyword">&#9668;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9658;</span> &#9474;                                &#9474;
+&#9474;                                &#9474;              &#9474;                                &#9474;
+&#9474;  UNICLIP_PASSWORD from <span class="fn">rbw</span>    &#9474;              &#9474;  UNICLIP_PASSWORD from <span class="fn">sops</span>   &#9474;
+<span class="comment">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>              <span class="comment">&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</span>
+            </div>
         </div>
+    </section>
 
-        <footer>
-            <a href="https://github.com/smallstepman/smallstepman.github.io">source</a>
-        </footer>
-    </div>
+    <!--VMMANAGEMENT-->
+    <section style="padding: 6rem 0; border-top: 1px solid rgba(26,26,26,0.12);">
+        <div class="container">
+            <div class="reveal" style="display: grid; gap: 4rem;">
+                <div style="display: grid; gap: 3rem;">
+                    <div>
+                        <span class="overline">Workflow</span>
+                        <h2 style="font-size: clamp(2rem, 5vw, 3.5rem); line-height: 0.95; margin-top: 1rem; margin-bottom: 1.5rem;">The <em>Incantations</em></h2>
+                        <p style="color: var(--muted-fg); max-width: 36rem;">
+                            Everything is a short alias because I'll forget anything longer than
+                            four characters. <code>niks</code> rebuilds whatever system you're on.
+                            <code>vm</code> manages the Linux VM from macOS. That's the whole interface.
+                        </p>
+                    </div>
+                    <div style="display: grid; gap: 3rem;">
+                        <div>
+                            <p class="overline" style="margin-bottom: 1rem;">VM Lifecycle</p>
+                            <table class="cmd-table">
+                                <thead><tr><th>Command</th><th>Description</th></tr></thead>
+                                <tbody>
+                                    <tr><td>vm bootstrap [--redo]</td><td>Everything from scratch. <code>--redo</code> destroys what's there first. No confirmation. Be sure.</td></tr>
+                                    <tr><td>vm switch</td><td>Apply config changes (nixos-rebuild switch over SSH)</td></tr>
+                                    <tr><td>vm up</td><td>Start the VM</td></tr>
+                                    <tr><td>vm down</td><td>Graceful shutdown</td></tr>
+                                    <tr><td>vm ssh [cmd]</td><td>SSH into the VM, or run a remote command</td></tr>
+                                    <tr><td>vm ip</td><td>Print the VM's current IP address</td></tr>
+                                    <tr><td>vm refresh-secrets</td><td>Refresh the external generated dataset (age pubkey, SSH pubkeys, encrypted secrets)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <p class="overline" style="margin-bottom: 1rem;">System Rebuild</p>
+                            <table class="cmd-table">
+                                <thead><tr><th>Alias</th><th>Description</th></tr></thead>
+                                <tbody>
+                                    <tr><td>niks</td><td>Rebuild &amp; switch &mdash; figures out if you're on macOS or NixOS and does the right thing</td></tr>
+                                    <tr><td>nikt</td><td>Build without switching. For the cautious. (Or the recently burned.)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--WHATEACHPLATFORMGETS-->
+    <section class="section-dark" style="padding: 6rem 0;">
+        <div class="container">
+            <div class="reveal">
+                <span class="overline">Platform Matrix</span>
+                <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1; margin-top: 1rem; margin-bottom: 3rem;">What Each Machine <em>Gets</em></h2>
+                <div style="overflow-x: auto;">
+                    <table class="cmd-table" style="min-width: 600px;">
+                        <thead><tr><th>Component</th><th>NixOS VM</th><th>macOS</th><th>WSL</th></tr></thead>
+                        <tbody>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">Window Manager</td><td>Niri / Mango (Wayland)</td><td>yabai + skhd</td><td style="color: rgba(249,248,246,0.3);">&mdash;</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">Terminal</td><td>Ghostty, foot</td><td>Native Terminal</td><td>Windows Terminal</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">Packages</td><td>Nix only</td><td>Nix + Homebrew</td><td>Nix only</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">Editors</td><td>Doom Emacs (daemon), Neovim</td><td>Doom Emacs, Neovim</td><td>Neovim</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">GUI Apps</td><td>LibreWolf, Chromium</td><td>Via Homebrew casks</td><td style="color: rgba(249,248,246,0.3);">&mdash;</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">Docker</td><td>Via SSH to macOS</td><td>OrbStack</td><td>Docker Desktop</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">Clipboard</td><td>Uniclip client</td><td>Uniclip server</td><td style="color: rgba(249,248,246,0.3);">&mdash;</td></tr>
+                            <tr><td style="font-family: 'Inter', sans-serif; font-size: 0.85rem;">AI Agents</td><td>20+ via llm-agents</td><td>Claude, Copilot</td><td>20+ via llm-agents</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--TESTING&CI-->
+    <section style="padding: 6rem 0; border-top: 1px solid rgba(26,26,26,0.12);">
+        <div class="container">
+            <div class="reveal" style="display: grid; gap: 3rem;">
+                <div style="max-width: 36rem;">
+                    <span class="overline">Quality</span>
+                    <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1; margin-top: 1rem; margin-bottom: 1rem;">11 Test <em>Suites</em></h2>
+                    <p style="color: var(--muted-fg); font-size: 0.9rem;">Every aspect validated independently because I've been burned by "it works on my machine" and my machine is three machines. Flake eval, host schemas, Home Manager integration, platform-specific config &mdash; all checked before any switch.</p>
+                </div>
+                <div class="code-block" style="font-size: 0.75rem;"><span class="comment"># tests/</span>
+&#9500;&#9472;&#9472; <span class="fn">flake-smoke.sh</span>       <span class="comment"># Flake evaluation sanity check</span>
+&#9500;&#9472;&#9472; <span class="fn">host-schema.sh</span>       <span class="comment"># Host declaration schema validation</span>
+&#9500;&#9472;&#9472; <span class="fn">home-manager-core.sh</span> <span class="comment"># Home Manager module integration</span>
+&#9500;&#9472;&#9472; <span class="fn">identity.sh</span>          <span class="comment"># User identity and shell provisioning</span>
+&#9500;&#9472;&#9472; <span class="fn">devtools.sh</span>          <span class="comment"># Editors, languages, dev tools present</span>
+&#9500;&#9472;&#9472; <span class="fn">darwin.sh</span>            <span class="comment"># macOS-specific config (nix-darwin)</span>
+&#9500;&#9472;&#9472; <span class="fn">linux-core.sh</span>        <span class="comment"># NixOS system baseline</span>
+&#9500;&#9472;&#9472; <span class="fn">vm-desktop.sh</span>        <span class="comment"># Graphical desktop (Niri, Noctalia, greetd)</span>
+&#9500;&#9472;&#9472; <span class="fn">wsl.sh</span>               <span class="comment"># WSL integration</span>
+&#9500;&#9472;&#9472; <span class="fn">no-legacy.sh</span>         <span class="comment"># Ensures no legacy code patterns remain</span>
+&#9492;&#9472;&#9472; <span class="fn">gpg-preset-passphrase.sh</span> <span class="comment"># GPG signing verification</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!--DEPENDENCIES-->
+    <section class="section-dark" style="padding: 6rem 0;">
+        <div class="container">
+            <div class="reveal">
+                <span class="overline">Flake Inputs</span>
+                <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1; margin-top: 1rem; margin-bottom: 1rem;">The <em>Dependencies</em></h2>
+                <p style="color: rgba(249,248,246,0.6); max-width: 36rem; margin-bottom: 3rem;">Stable channel for sanity, unstable for impatience. Everything pinned in <code>flake.lock</code> so "it worked yesterday" is a verifiable claim.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0;">
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Core</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/NixOS/nixpkgs">nixpkgs</a> 25.11</p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Framework</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/vic/den">den</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">macOS</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/nix-darwin/nix-darwin">nix-darwin</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Users</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/nix-community/home-manager">home-manager</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Compositor</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/sodiboo/niri-flake">niri</a> + <a href="https://github.com/noctalia-dev/noctalia-shell">noctalia</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Editors</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/marienz/nix-doom-emacs-unstraightened">doom-emacs</a> + <a href="https://github.com/pfassina/lazyvim-nix">lazyvim-nix</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Secrets</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/Mic92/sops-nix">sops-nix</a> + <a href="https://github.com/timewave-computer/sopsidy">sopsidy</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Rust</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/oxalica/rust-overlay">rust-overlay</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">AI</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/numtide/llm-agents.nix">llm-agents.nix</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Disk</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/nix-community/disko">disko</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">WSL</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/nix-community/NixOS-WSL">nixos-wsl</a></p></div>
+                    <div style="padding: 1rem 0; border-top: 1px solid rgba(249,248,246,0.08);"><span class="overline" style="font-size: 0.55rem;">Window Control</span><p style="font-size: 0.85rem; margin-top: 0.25rem;"><a href="https://github.com/DreamMaoMao/mangowc">mangowc</a></p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--FOOTER-->
+    <footer style="position: relative; z-index: 2;">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <p style="font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: 0.5rem;">den</p>
+                    <p class="footer-copy">Nix-based system configuration by smallstepman</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/smallstepman/smallstepman.github.io">Source</a>
+                    <a href="https://github.com/smallstepman">GitHub</a>
+                    <a href="clipboard-sharing.html">Clipboard Docs</a>
+                    <a href="secrets.html">Secrets Docs</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        function copy(btn) {
-            const cmd = btn.dataset.cmd;
-            navigator.clipboard.writeText(cmd).then(() => {
-                btn.textContent = 'Copied!';
-                setTimeout(() => btn.textContent = 'Copy', 1500);
-            }).catch(() => {
-                btn.textContent = 'Failed';
-                setTimeout(() => btn.textContent = 'Copy', 1500);
+        function copyCmd(el) {
+            navigator.clipboard.writeText(el.dataset.cmd).then(function() {
+                el.classList.add('copied');
+                setTimeout(function() { el.classList.remove('copied'); }, 1500);
             });
         }
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) { entry.target.classList.add('visible'); }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+        document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
     </script>
 </body>
 </html>
