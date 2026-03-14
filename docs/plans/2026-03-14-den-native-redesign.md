@@ -23,30 +23,28 @@
 - Modify: `tests/den/host-schema.sh`
 - Modify: `den/default.nix`
 - Modify: `den/hosts.nix`
+- Modify: `docs/plans/2026-03-14-den-native-redesign.md`
 
 **Step 1: Write the failing test**
 
-Update `tests/den/host-schema.sh` so it enforces the new architecture:
+Update `tests/den/host-schema.sh` so it enforces the corrected scope:
 
 ```bash
 grep -Fq 'den._.wsl' den/default.nix
+grep -Fq 'den.ctx.hm-host.includes' den/default.nix
 
 if grep -Fq 'options.profile' den/default.nix; then
   echo "ERROR: profile should be removed from den/default.nix" >&2
   exit 1
 fi
-if grep -Fq 'options.vmware.enable' den/default.nix; then
-  echo "ERROR: vmware.enable should be removed from den/default.nix" >&2
-  exit 1
-fi
-if grep -Fq 'options.graphical.enable' den/default.nix; then
-  echo "ERROR: graphical.enable should be removed from den/default.nix" >&2
-  exit 1
-fi
+grep -Fq 'options.vmware.enable' den/default.nix
+grep -Fq 'options.graphical.enable' den/default.nix
 
 grep -Fq 'den.hosts.x86_64-linux.wsl.wsl.enable = true' den/hosts.nix
-if rg -n 'profile = |vmware\.enable = |graphical\.enable = ' den/hosts.nix >/dev/null; then
-  echo "ERROR: den/hosts.nix still carries migration-era host flags" >&2
+grep -Fq 'den.hosts.aarch64-linux.vm-aarch64.vmware.enable = true' den/hosts.nix
+grep -Fq 'den.hosts.aarch64-linux.vm-aarch64.graphical.enable = true' den/hosts.nix
+if rg -n 'profile = ' den/hosts.nix >/dev/null; then
+  echo "ERROR: den/hosts.nix should drop only profile host assignments in Task 1" >&2
   exit 1
 fi
 ```
@@ -55,11 +53,11 @@ fi
 
 Run: `bash tests/den/host-schema.sh`
 
-Expected: FAIL because `den/default.nix` still defines `profile`, `vmware.enable`, and `graphical.enable`, and `den/hosts.nix` still sets those fields.
+Expected: FAIL because Task 1 must keep `vmware.enable` and `graphical.enable` in both schema and host assignments until Tasks 3-6 migrate their remaining consumers.
 
 **Step 3: Write minimal implementation**
 
-Refactor `den/default.nix` and `den/hosts.nix`:
+Refactor `den/default.nix` and `den/hosts.nix` only as far as this task needs:
 
 ```nix
 # den/default.nix
@@ -76,12 +74,19 @@ den.default = {
     nixpkgs.config.allowUnfree = true;
   };
 };
+
+den.schema.host = { lib, ... }: {
+  options.vmware.enable = lib.mkEnableOption "VMware-specific host behavior";
+  options.graphical.enable = lib.mkEnableOption "Graphical desktop behavior";
+};
 ```
 
 ```nix
 # den/hosts.nix
 {
   den.hosts.aarch64-linux.vm-aarch64.hostName = "vm-macbook";
+  den.hosts.aarch64-linux.vm-aarch64.vmware.enable = true;
+  den.hosts.aarch64-linux.vm-aarch64.graphical.enable = true;
   den.hosts.aarch64-linux.vm-aarch64.users.m = { };
 
   den.hosts.aarch64-darwin.macbook-pro-m1.users.m = { };
@@ -91,19 +96,19 @@ den.default = {
 }
 ```
 
-Delete the custom `den.schema.host` entries for `profile`, `vmware.enable`, and `graphical.enable` from `den/default.nix`.
+Remove only the `profile` schema and host assignments in Task 1. Keep `den.ctx.hm-host.includes` intact. Do not remove `vmware.enable` or `graphical.enable` until Tasks 3-6 have migrated `vmware.nix`, `linux-desktop.nix`, `gpg.nix`, and `shell-git.nix` away from those fields.
 
-**Step 4: Run test to verify it passes**
+**Step 4: Run tests to verify it passes**
 
-Run: `bash tests/den/host-schema.sh`
+Run: `bash tests/den/host-schema.sh && bash tests/den/vm-desktop.sh`
 
 Expected: PASS
 
 **Step 5: Commit**
 
 ```bash
-git add tests/den/host-schema.sh den/default.nix den/hosts.nix
-git -c commit.gpgsign=false commit -m "refactor: simplify den defaults and hosts" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+git add tests/den/host-schema.sh den/default.nix den/hosts.nix docs/plans/2026-03-14-den-native-redesign.md
+git -c commit.gpgsign=false commit -m "fix: restore den host flags for pending migrations" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 ```
 
 ### Task 2: Move WSL activation to den's WSL battery and the WSL host aspect

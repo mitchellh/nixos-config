@@ -1,4 +1,4 @@
-{ inputs, lib, overlays, ... }: {
+{ den, inputs, lib, overlays, ... }: {
   imports = [ inputs.den.flakeModule ];
 
   den.default = {
@@ -35,5 +35,14 @@
 
   den.schema.user = { ... }: {
     config.classes = lib.mkDefault [ "homeManager" ];
+  };
+
+  den.schema.host = { lib, ... }: {
+    options.vmware.enable = lib.mkEnableOption "VMware-specific host behavior";
+    options.graphical.enable = lib.mkEnableOption "Graphical desktop behavior";
+  };
+
+  den.provides.wsl = {
+    description = "Transitional alias for Den's built-in WSL support while repo-local WSL wiring remains in place until later tasks.";
   };
 }
