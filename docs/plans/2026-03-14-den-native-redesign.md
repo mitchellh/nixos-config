@@ -4,7 +4,7 @@
 
 **Goal:** Simplify the den rewrite so it follows den's own structure more closely, removes migration-era scaffolding, and handles WSL/VM behavior through den-native composition instead of repo-local special casing.
 
-**Architecture:** Keep `den/default.nix` limited to true global policy, schema, and integration hooks; let host aspects select features and own one-off behavior; use den's built-in WSL battery for WSL activation; and push WSL/VM-specific deltas out of broad reusable features and into host-owned config. The refactor should preserve current behavior for `vm-aarch64`, `macbook-pro-m1`, and `wsl` while making the graph easier to read and less stateful.
+**Architecture:** Keep `den/default.nix` limited to true global policy, schema, and integration hooks; let host aspects select features and own one-off behavior; keep WSL expressed the way den already supports it via `host.wsl.enable`; and push WSL/VM-specific deltas out of broad reusable features and into host-owned config. The refactor should preserve current behavior for `vm-aarch64`, `macbook-pro-m1`, and `wsl` while making the graph easier to read and less stateful.
 
 **Tech Stack:** Nix flakes, den, nixos-wsl, home-manager, nix-darwin, sops-nix, sopsidy, shell-based regression tests
 
@@ -30,7 +30,10 @@
 Update `tests/den/host-schema.sh` so it enforces the corrected scope:
 
 ```bash
-grep -Fq 'den._.wsl' den/default.nix
+if grep -Fq 'den._.wsl' den/default.nix; then
+  echo "ERROR: den/default.nix must not include den._.wsl" >&2
+  exit 1
+fi
 grep -Fq 'den.ctx.hm-host.includes' den/default.nix
 
 if grep -Fq 'options.profile' den/default.nix; then
@@ -62,8 +65,6 @@ Refactor `den/default.nix` and `den/hosts.nix` only as far as this task needs:
 ```nix
 # den/default.nix
 den.default = {
-  includes = [ den._.wsl ];
-
   nixos = {
     nixpkgs.overlays = overlays;
     nixpkgs.config.allowUnfree = true;
@@ -111,7 +112,7 @@ git add tests/den/host-schema.sh den/default.nix den/hosts.nix docs/plans/2026-0
 git -c commit.gpgsign=false commit -m "fix: restore den host flags for pending migrations" -m "Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
 ```
 
-### Task 2: Move WSL activation to den's WSL battery and the WSL host aspect
+### Task 2: Keep WSL activation on den's existing host wiring and the WSL host aspect
 
 **Files:**
 - Modify: `tests/den/wsl.sh`
@@ -124,7 +125,10 @@ git -c commit.gpgsign=false commit -m "fix: restore den host flags for pending m
 Update `tests/den/wsl.sh` so it stops expecting repo-local NixOS-WSL wiring and instead enforces den-native ownership:
 
 ```bash
-grep -Fq 'den._.wsl' den/default.nix
+if grep -Fq 'den._.wsl' den/default.nix; then
+  echo "FAIL: den/default.nix should not include den._.wsl" >&2
+  exit 1
+fi
 test -f den/aspects/hosts/wsl.nix
 if [ -e den/aspects/features/wsl.nix ]; then
   echo "FAIL: den/aspects/features/wsl.nix should be removed" >&2
@@ -176,7 +180,7 @@ Delete the repo-local WSL activation aspect and move only repo-specific WSL sett
 }
 ```
 
-Do not reintroduce `wsl.enable = true` or `imports = [ inputs.nixos-wsl.nixosModules.wsl ]` here; the den WSL battery should own that.
+Do not reintroduce `options.wsl.enable`, a custom `den.provides.wsl`, or `den._.wsl` here; keep relying on den's built-in host wiring via `den.hosts.x86_64-linux.wsl.wsl.enable = true`.
 
 **Step 4: Run test to verify it passes**
 

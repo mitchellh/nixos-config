@@ -2,8 +2,6 @@
   imports = [ inputs.den.flakeModule ];
 
   den.default = {
-    includes = [ den._.wsl ];
-
     nixos = {
       nixpkgs.overlays = overlays;
       nixpkgs.config.allowUnfree = true;

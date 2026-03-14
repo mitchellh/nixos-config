@@ -17,8 +17,15 @@ require_contains() {
 require_contains 'den.hosts.aarch64-linux.vm-aarch64.users.m' den/hosts.nix 'vm-aarch64 user declaration is missing from den/hosts.nix'
 require_contains 'den.hosts.aarch64-darwin.macbook-pro-m1.users.m' den/hosts.nix 'macbook-pro-m1 user declaration is missing from den/hosts.nix'
 require_contains 'den.hosts.x86_64-linux.wsl.users.m' den/hosts.nix 'wsl user declaration is missing from den/hosts.nix'
-require_contains 'den._.wsl' den/default.nix 'den/default.nix must include the built-in den WSL battery'
 require_contains 'den.ctx.hm-host.includes' den/default.nix 'den.ctx.hm-host.includes must remain intact in den/default.nix'
+if grep -Fq 'den._.wsl' den/default.nix; then
+  echo 'ERROR: den/default.nix must not include den._.wsl; WSL is enabled per-host via den.hosts.x86_64-linux.wsl.wsl.enable' >&2
+  exit 1
+fi
+if grep -Fq 'den.provides.wsl' den/default.nix; then
+  echo 'ERROR: den/default.nix must not redeclare or include den.provides.wsl' >&2
+  exit 1
+fi
 if grep -Fq 'options.profile' den/default.nix; then
   echo 'ERROR: profile should be removed from den/default.nix' >&2
   exit 1

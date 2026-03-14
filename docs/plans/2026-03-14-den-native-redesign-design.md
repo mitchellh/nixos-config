@@ -50,8 +50,8 @@ The current den rewrite works, but parts of it are still shaped by the migration
 
 1. `den/aspects/features/vmware.nix` mixes reusable VMware guest behavior with vm-aarch64-only Home Manager and first-switch bridge logic.
 2. `den/aspects/features/linux-desktop.nix` and `den/aspects/features/vmware.nix` are selected by host composition already, but still re-check `host.graphical.enable` and `host.vmware.enable` internally.
-3. Broad user features still carry WSL-only branches even though den already has WSL-aware context and a built-in WSL battery.
-4. `den/aspects/features/wsl.nix` duplicates den's documented WSL support instead of using it.
+3. Broad user features still carry WSL-only branches even though den already has WSL-aware host schema/context support.
+4. `den/aspects/features/wsl.nix` duplicates den's documented WSL support instead of using den's existing host wiring.
 5. Some host metadata looks migration-shaped rather than actively useful; keep only the metadata that drives real composition after the refactor.
 6. Den config files still contain migration/task commentary that should not survive the redesign.
 
@@ -69,13 +69,13 @@ The current den rewrite works, but parts of it are still shaped by the migration
 
 The Home Manager wiring should stay on `den.ctx.hm-host`, because den's Home Manager docs explicitly place `home-manager.useGlobalPkgs`, `home-manager.useUserPackages`, and related OS-side integration there, and `hm-host` only activates when at least one host user has the `homeManager` class.
 
-The redesign should add den's built-in WSL battery (`den._.wsl` / `den.provides.wsl`) to the den-global includes so WSL hosts get the documented `wsl-host` context and NixOS-WSL module import automatically. After that, `den/default.nix` should also be trimmed so it does not carry verbose migration commentary or schema fields that no longer drive anything.
+The redesign should keep WSL expressed through den's existing host wiring by setting `den.hosts.<system>.wsl.wsl.enable = true`, without adding `den._.wsl` or a custom `den.provides.wsl` alias in `den/default.nix`. `den/default.nix` should also be trimmed so it does not carry verbose migration commentary or schema fields that no longer drive anything.
 
 ### 2. Host declarations and metadata
 
 `den/hosts.nix` should stay small and declarative.
 
-- Keep `wsl.enable`, because den's WSL battery uses it to create `den.ctx.wsl-host`.
+- Keep `wsl.enable`, because den's existing WSL support uses it to create the right host context.
 - Re-evaluate `profile`, `graphical.enable`, and `vmware.enable` after the refactor:
   - if a field still drives a real reusable decision, keep it;
   - if host-aspect selection fully replaces it, remove it from schema and host declarations.
@@ -91,7 +91,7 @@ Concretely:
 - `den/aspects/features/vmware.nix` should keep reusable VMware guest behavior only.
 - vm-aarch64-only Home Manager/system behavior currently living in `features/vmware.nix` should move into `den/aspects/hosts/vm-aarch64.nix` or a VM-only sub-aspect included from there.
 - `den/aspects/features/linux-desktop.nix` should remain the graphical Linux desktop feature, but it should stop self-gating if only graphical hosts include it.
-- WSL-specific repo policy should live in a small WSL-owned aspect if needed, while the den battery owns WSL activation and module import.
+- WSL-specific repo policy should live in a small WSL-owned aspect if needed, while den's existing host wiring owns WSL activation.
 
 ### 4. WSL handling
 
@@ -105,7 +105,7 @@ The preferred structure is:
 
 Practical meaning:
 
-- custom WSL system enablement moves from `den/aspects/features/wsl.nix` to den's WSL battery;
+- custom WSL system enablement moves from `den/aspects/features/wsl.nix` to den's existing WSL host wiring plus the WSL host aspect;
 - WSL-only package/service/pinentry differences move out of broad features like `home-base`, `shell-git`, and `secrets` when they are really host-owned;
 - if an imported module still expects `isWSL`, compute it at the import site from host context instead of making it part of the repo's internal architecture.
 
@@ -116,7 +116,7 @@ The redesign should stop preserving conditionals just because the migration intr
 Use den composition first:
 
 - if a host aspect already decides whether `linux-desktop` or `vmware` is present, those aspects should not re-check the same condition internally;
-- use the WSL battery's context-driven dispatch for WSL;
+- use den's existing WSL context-driven dispatch for WSL;
 - keep ordinary attribute-level conditionals only where a feature genuinely spans multiple host classes and splitting it further would make the design worse.
 
 This keeps den's rule from `core-principles.mdx` in view: the context/composition should express the condition whenever possible.
@@ -132,7 +132,7 @@ Remove migration/task/history comments from den config files. Keep comments only
 ## Expected File-Level Changes
 
 - `den/default.nix`
-  - add the built-in WSL battery
+  - do not add `den._.wsl` or `den.provides.wsl`
   - keep Home Manager wiring on `den.ctx.hm-host`
   - trim dead schema fields if composition makes them redundant
 - `den/hosts.nix`
