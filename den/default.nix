@@ -42,7 +42,4 @@
     options.graphical.enable = lib.mkEnableOption "Graphical desktop behavior";
   };
 
-  den.provides.wsl = {
-    description = "Transitional alias for Den's built-in WSL support while repo-local WSL wiring remains in place until later tasks.";
-  };
 }
