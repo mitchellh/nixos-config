@@ -3,7 +3,6 @@
 { config, lib, pkgs, ... }:
 
 let
-  sources = import ../../nix/sources.nix;
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
   gopath = "${config.home.homeDirectory}/Developer/go";
@@ -94,7 +93,7 @@ in {
     pkgs.rofi
     pkgs.valgrind
     pkgs.zathura
-    pkgs.xfce.xfce4-terminal
+    pkgs.xfce4-terminal
   ]);
 
   #---------------------------------------------------------------------
@@ -266,7 +265,7 @@ in {
 
   programs.neovim = {
     enable = true;
-    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+    package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
     withPython3 = true;
     withRuby = true;
     initLua = ''

@@ -62,30 +62,26 @@ I've been doing this since late 2020, and I've developed
 I also use this VM on a MacBook Pro (to be fair, it is maxed out on specs),
 and I have no issues whatsoever.
 
-**Does this work with Apple Silicon Macs?** Yes, I use VMware Fusion
-but others have used my configurations successfully with Parallels or UTM.
-Folder syncing, clipboards, and graphics acceleration all work. I've been
-using an Apple Silicon Mac full time since Nov 2021 with this setup.
+**Does this work with Apple Silicon Macs?** Yes, I use VMware Fusion, and this
+repository also includes a UTM configuration. I've been using an Apple Silicon
+Mac full time since Nov 2021 with this setup.
 
-**Does this work on Windows?** Yes, I've tested this setup with both
-Hyper-V and VMware Workstation Pro and it works great in either case.
+**Does this work on Windows?** The maintained VM configurations target
+Apple Silicon Macs. See the WSL section below for the Windows environment.
 
 ## Setup (VM)
 
 Video: <https://www.youtube.com/watch?v=ubDMLoWz76U>
 
-**Note:** This setup guide will cover VMware Fusion because that is the
-hypervisor I use day to day. Others have reported getting my configurations
-working with Parallels or UTM but I don't maintain the changes necessary for
-that.
+**Note:** This setup guide covers VMware Fusion because that is the hypervisor
+I use day to day. A separate UTM configuration is also available.
 
 You can download the NixOS ISO from the
 [official NixOS download page](https://nixos.org/download.html#nixos-iso).
-There are ISOs for both `x86_64` and `aarch64` at the time of writing this.
+Use the `aarch64` ISO with the maintained VM configurations in this repository.
 
-Create a VMware Fusion VM with the following settings. My configurations
-are made for VMware Fusion exclusively currently and you will have issues
-on other virtualization solutions without minor changes.
+Create a VMware Fusion VM with the following settings. The primary VM
+configuration targets VMware Fusion; use the separate UTM target for UTM.
 
 * ISO: NixOS 25.05 or later.
 * Disk: SATA 150 GB+
@@ -123,18 +119,16 @@ set this to the `NIXADDR` env var:
 export NIXADDR=<VM ip address>
 ```
 
-The Makefile assumes an Intel processor by default. If you are using an
-ARM-based processor (M1, etc.), you must change `NIXNAME` so that the ARM-based
-configuration is used:
+The Makefile defaults to the macOS configuration when run on Darwin. Before
+bootstrapping an ARM-based VM, set `NIXNAME` to the appropriate VM
+configuration:
 
 ```
 export NIXNAME=vm-aarch64
 ```
 
-**Other Hypervisors:** If you are using Parallels, use `vm-aarch64-prl`.
-If you are using UTM, use `vm-aarch64-utm`. Note that the environments aren't
-_exactly_ equivalent between hypervisors but they're very close and they
-all work.
+**Other Hypervisors:** If you are using UTM, use `vm-aarch64-utm`. Note that
+the UTM environment isn't exactly equivalent to VMware, but both work.
 
 Perform the initial bootstrap. This will install NixOS on the VM disk image
 but will not setup any other configurations yet. This prepares the VM for

@@ -36,7 +36,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # VMware, Parallels both only support this being 0 otherwise you see
+  # Some VM firmware only supports this being 0, otherwise you see
   # "error switching console mode" on boot.
   boot.loader.systemd-boot.consoleMode = "0";
 
@@ -102,7 +102,7 @@
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
     (writeShellScriptBin "xrandr-auto" ''
-      xrandr --output Virtual-1 --auto
+      ${pkgs.xrandr}/bin/xrandr --output Virtual-1 --auto
     '')
   ] ++ lib.optionals (currentSystemName == "vm-aarch64") [
     # This is needed for the vmware user tools clipboard to work.

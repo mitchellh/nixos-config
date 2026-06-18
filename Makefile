@@ -6,37 +6,55 @@ NIXUSER ?= mitchellh
 # Get the path to this Makefile and directory
 MAKEFILE_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
-# The name of the nixosConfiguration in the flake
-NIXNAME ?= vm-intel
+# We need to do some OS switching below.
+UNAME := $(shell uname)
+
+# The name of the system configuration in the flake.
+ifeq ($(UNAME),Darwin)
+NIXNAME ?= macbook-pro-m1
+else
+NIXNAME ?= vm-aarch64
+endif
+
+# NixOS configuration built by the cache target, including from Darwin.
+NIXCACHE_NAME ?= vm-aarch64
 
 # SSH options that are used. These aren't meant to be overridden but are
 # reused a lot so we just store them up here.
 SSH_OPTIONS=-o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
 
-# We need to do some OS switching below.
-UNAME := $(shell uname)
-
+.PHONY: switch
 switch:
 ifeq ($(UNAME), Darwin)
-	NIXPKGS_ALLOW_UNFREE=1 nix build --impure --extra-experimental-features nix-command --extra-experimental-features flakes ".#darwinConfigurations.${NIXNAME}.system"
-	sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild switch --impure --flake "$$(pwd)#${NIXNAME}"
+	nix build ".#darwinConfigurations.${NIXNAME}.system"
+	sudo ./result/sw/bin/darwin-rebuild switch --flake "$$(pwd)#${NIXNAME}"
 else
-	sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --impure --flake ".#${NIXNAME}"
+	sudo nixos-rebuild switch --flake ".#${NIXNAME}"
 endif
 
+.PHONY: test
 test:
 ifeq ($(UNAME), Darwin)
-	NIXPKGS_ALLOW_UNFREE=1 nix build --impure ".#darwinConfigurations.${NIXNAME}.system"
-	sudo NIXPKGS_ALLOW_UNFREE=1 ./result/sw/bin/darwin-rebuild test --impure --flake "$$(pwd)#${NIXNAME}"
+	nix build ".#darwinConfigurations.${NIXNAME}.system"
+	sudo ./result/sw/bin/darwin-rebuild test --flake "$$(pwd)#${NIXNAME}"
 else
-	sudo NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild test --impure --flake ".#$(NIXNAME)"
+	sudo nixos-rebuild test --flake ".#$(NIXNAME)"
 endif
+
+.PHONY: check
+check:
+	nix flake check --all-systems --no-build
+	nix eval --raw '.#nixosConfigurations.vm-aarch64.config.system.build.toplevel.drvPath' >/dev/null
+	nix eval --raw '.#nixosConfigurations.vm-aarch64-utm.config.system.build.toplevel.drvPath' >/dev/null
+	nix eval --raw '.#nixosConfigurations.wsl.config.system.build.toplevel.drvPath' >/dev/null
+	nix eval --raw '.#darwinConfigurations.macbook-pro-m1.config.system.build.toplevel.drvPath' >/dev/null
 
 # This builds the given NixOS configuration and pushes the results to the
 # cache. This does not alter the current running system. This requires
 # cachix authentication to be configured out of band.
+.PHONY: cache
 cache:
-	nix build '.#nixosConfigurations.$(NIXNAME).config.system.build.toplevel' --json \
+	nix build '.#nixosConfigurations.$(NIXCACHE_NAME).config.system.build.toplevel' --json \
 		| jq -r '.[].outputs | to_entries[].value' \
 		| cachix push mitchellh-nixos-config
 
@@ -140,7 +158,7 @@ vm/copy:
 # have to run vm/copy before.
 vm/switch:
 	ssh $(SSH_OPTIONS) -p$(NIXPORT) $(NIXUSER)@$(NIXADDR) " \
-		sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake \"/nix-config#${NIXNAME}\" \
+		sudo nixos-rebuild switch --flake \"/nix-config#${NIXNAME}\" \
 	"
 
 # Build a WSL installer
