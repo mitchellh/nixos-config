@@ -51,6 +51,21 @@ in systemFunc rec {
       # see available options in module.nix's `options.nix-rosetta-builder`
       nix-rosetta-builder.onDemand = true;
 
+      # The cache.nixos.org substitute for openapv 0.2.1.2 has a NAR hash
+      # mismatch. Force this one package to build from source in the builder
+      # image instead of making every Linux dependency skip the cache.
+      # Try to remove this whenever we update nixpkgs.
+      nix-rosetta-builder.potentiallyInsecureExtraNixosModule = {
+        nixpkgs.overlays = [
+          (_final: prev: {
+            openapv = prev.openapv.overrideAttrs (_old: {
+              allowSubstitutes = false;
+              preferLocalBuild = true;
+            });
+          })
+        ];
+      };
+
       # `nix-rosetta-builder` depends on `lima`, which is currently
       # marked insecure in nixpkgs.
       nixpkgs.config.permittedInsecurePackages = [ "lima-1.2.2" ];

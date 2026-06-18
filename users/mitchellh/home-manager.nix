@@ -127,6 +127,7 @@ in {
 
   xdg.configFile = {
     "i3/config".text = builtins.readFile ./i3;
+    "nvim/init.lua".force = true;
     "rofi/config.rasi".text = builtins.readFile ./rofi;
   } // (if isDarwin then {
     # Rectangle.app. This has to be imported manually using the app.
@@ -266,6 +267,11 @@ in {
   programs.neovim = {
     enable = true;
     package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+    withPython3 = true;
+    withRuby = true;
+    initLua = ''
+      require("config.lazy")
+    '';
   };
 
   programs.npm = {
