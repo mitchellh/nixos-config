@@ -70,7 +70,7 @@ cache:
 .PHONY: darwin/copy
 darwin/copy:
 	nix build ".#darwinConfigurations.$(NIXNAME).system"
-	nix copy -s --to "ssh-ng://$(NIXUSER)@$(NIXADDR)?remote-program=/nix/var/nix/profiles/default/bin/nix-daemon" ./result
+	nix copy -s --no-check-sigs --to "ssh-ng://$(NIXUSER)@$(NIXADDR)?remote-program=/nix/var/nix/profiles/default/bin/nix-daemon" ./result
 
 # Backup secrets so that we can transer them to new machines via
 # sneakernet or other means.
