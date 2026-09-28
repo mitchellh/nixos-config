@@ -107,5 +107,11 @@
       user   = "mitchellh";
       darwin = true;
     };
+
+    darwinConfigurations.mac-studio = mkSystem "mac-studio" {
+      system = "aarch64-darwin";
+      user   = "mitchellh";
+      darwin = true;
+    };
   };
 }

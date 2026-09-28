@@ -11,7 +11,11 @@ UNAME := $(shell uname)
 
 # The name of the system configuration in the flake.
 ifeq ($(UNAME),Darwin)
+ifeq ($(shell scutil --get LocalHostName 2>/dev/null),mac-studio)
+NIXNAME ?= mac-studio
+else
 NIXNAME ?= macbook-pro-m1
+endif
 else
 NIXNAME ?= vm-aarch64
 endif
@@ -48,6 +52,7 @@ check:
 	nix eval --raw '.#nixosConfigurations.vm-aarch64-utm.config.system.build.toplevel.drvPath' >/dev/null
 	nix eval --raw '.#nixosConfigurations.wsl.config.system.build.toplevel.drvPath' >/dev/null
 	nix eval --raw '.#darwinConfigurations.macbook-pro-m1.config.system.build.toplevel.drvPath' >/dev/null
+	nix eval --raw '.#darwinConfigurations.mac-studio.config.system.build.toplevel.drvPath' >/dev/null
 
 # This builds the given NixOS configuration and pushes the results to the
 # cache. This does not alter the current running system. This requires

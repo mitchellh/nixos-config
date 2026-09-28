@@ -1,24 +1,11 @@
 { inputs, pkgs, ... }:
 
 {
+  # Apps every Mac gets. Machine-specific apps are in machines/*.nix.
   homebrew = {
     enable = true;
     casks  = [
       "1password"
-      "claude"
-      "cleanshot"
-      "discord"
-      "fantastical"
-      "google-chrome"
-      "hammerspoon"
-      "imageoptim"
-      "istat-menus"
-      "monodraw"
-      "raycast"
-      "rectangle"
-      "screenflow"
-      "slack"
-      "spotify"
     ];
 
     brews = [

@@ -79,6 +79,7 @@ in systemFunc rec {
       home-manager.users.${user} = import userHMConfig {
         isWSL = isWSL;
         inputs = inputs;
+        currentSystemName = name;
       };
     }
 

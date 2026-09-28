@@ -1,4 +1,4 @@
-{ isWSL, inputs, ... }:
+{ isWSL, inputs, currentSystemName, ... }:
 
 { config, lib, pkgs, ... }:
 
@@ -77,12 +77,13 @@ in {
     pkgs.gopls
     pkgs.zigpkgs."0.15.2"
 
-    pkgs.claude-code
-    pkgs.codex
-
     # Node is required for Copilot.vim
     pkgs.nodejs
-  ] ++ (lib.optionals isDarwin [
+  ] ++ (lib.optionals (currentSystemName != "mac-studio") [
+    # Installed by hand on the Mac Studio so they can self-update.
+    pkgs.claude-code
+    pkgs.codex
+  ]) ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
     pkgs.gettext
