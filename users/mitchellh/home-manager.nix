@@ -38,6 +38,8 @@ let
     cat "$1" | col -bx | bat --language man --style plain
   ''));
 in {
+  imports = [ inputs.direnv-instant.homeModules.direnv-instant ];
+
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
   home.stateVersion = "18.09";
@@ -165,6 +167,9 @@ in {
       };
     };
   };
+
+  # This module replaces direnv's shell hooks with its asynchronous hooks.
+  programs.direnv-instant.enable = true;
 
   programs.fish = {
     enable = true;
