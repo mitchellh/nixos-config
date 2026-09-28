@@ -36,8 +36,12 @@ if test -z "$SSH_ENV"
     set -xg SSH_ENV $HOME/.ssh/environment
 end
 
-if not __ssh_agent_is_started
-    __ssh_agent_start
+# macOS already runs an ssh-agent via launchd and exports SSH_AUTH_SOCK,
+# so only manage our own agent on other platforms.
+if test (uname) != Darwin
+    if not __ssh_agent_is_started
+        __ssh_agent_start
+    end
 end
 
 #-------------------------------------------------------------------------------
