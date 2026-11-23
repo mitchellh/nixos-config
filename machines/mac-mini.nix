@@ -33,5 +33,6 @@
     "screenflow"
     "slack"
     "spotify"
+    "tailscale-app"
   ];
 }
