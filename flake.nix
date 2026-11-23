@@ -118,5 +118,11 @@
       user   = "mitchellh";
       darwin = true;
     };
+
+    darwinConfigurations.mac-mini = mkSystem "mac-mini" {
+      system = "aarch64-darwin";
+      user   = "mitchellh";
+      darwin = true;
+    };
   };
 }
