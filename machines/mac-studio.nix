@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: {
   imports = [
     ./darwin-shared.nix
+    ./darwin-nushell.nix
   ];
 
   # Set in Sept 2026 for the initial install.
